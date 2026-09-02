@@ -1,0 +1,1 @@
+{"id":"verite","name":"Verite","version":"1.2.7","description":"Read-only network punishment enforcement for Verite.","authors":["teacommontea"],"dependencies":[],"main":"teacommontea.veriteproxy.platform.velocity.VelocityProxy"}

@@ -1,0 +1,306 @@
+general:
+
+  # The public facing prefix on every Verité message
+  prefix: "<#808080>[<#B1C7F0>Verité<#808080>]<reset>"
+
+  # Automatically append changes to the config when updating the plugin.
+  # Does not bypass tokenizer updates.
+  auto.update.config: true
+
+# ---- Shared database ----
+database:
+
+  # Options for database mode: embedded, host, remote
+  mode: embedded
+
+  # TCP port
+  port: 9092
+
+  # Remote mode server ip or ip:port.
+  host.address: "127.0.0.1:9092"
+
+  # When a backend and the proxy live on the SAME machine and share the same file,
+  # embedded mode can auto-serve without a dedicated host. Leave false unless you
+  # specifically run a single-box network.
+  auto.server: false
+
+# ---- Veritédoux (Chat filter) ----
+chat.filter:
+  enabled: true
+
+  # Automatically update the .eve configuration files when new entries are added.
+  # When enabled, any custom entries will be overwritten and/or discarded when the
+  # .eve files are replaced with the updated versions.
+  auto.update.eve: false
+
+  # The notices shown when a message is blocked by the chat filter
+  # Supports &-codes and &#RRGGBB hex. Use @prefix to insert your chosen prefix.
+  block.message: "@prefix Your message wasn't sent. Please keep chat friendly."
+  repeat.message: "@prefix You've already sent that message. Please wait a moment before repeating yourself."
+
+  # Self-harm block message notice
+  # For security reasons, the self harm block message cannot be changed. This ensures that users are
+  # always provided the proper guidance and support when dealing with self-harm related content.
+
+  # Which languages should be content-checked?
+  # All profanity detection is disabled by default as some servers are perfectly content with casual
+  # swearing. Adjust these settings according to your server's tolerance.
+  general.lang:
+    english:
+      allowed: true
+      self.harm.detection: true
+      abuse.detection: true
+      slur.detection: true
+      profanity.global: false
+    spanish:
+      allowed: true
+      self.harm.detection: true
+      abuse.detection: true
+      slur.detection: true
+      profanity.spain: false
+      profanity.argentinian: false
+      profanity.chilean: false
+      profanity.colombian: false
+      profanity.mexican: false
+      profanity.peruvian: false
+      profanity.venezuelan: false
+      profanity.uruguayan: false
+      profanity.cuban: false
+      profanity.dominican: false
+      profanity.panamanian: false
+      profanity.global: false
+    french:
+      allowed: true
+      self.harm.detection: true
+      abuse.detection: true
+      slur.detection: true
+      profanity.france: false
+      profanity.canadian: false
+    portuguese:
+      allowed: true
+      self.harm.detection: true
+      abuse.detection: true
+      slur.detection: true
+      profanity.european: false
+      profanity.brazilian: false
+    german:
+      allowed: true
+      self.harm.detection: true
+      abuse.detection: true
+      slur.detection: true
+      profanity.global: false
+    italian:
+      allowed: true
+      self.harm.detection: true
+      abuse.detection: true
+      slur.detection: true
+      profanity.global: false
+    unknown.lang:
+      allowed: true
+    undeterminable:
+      allowed: true
+
+  advanced:
+
+    # Whether to block messages that may make chat unreadable
+    # Blocks 𝒻𝒶𝓃𝒸𝓎 𝒻𝑜𝓃𝓉𝓈 that may disrupt chat, even if the message can be caught by the chat filter.
+    # Emojis are not blocked.
+    keep.chat.readable: false
+
+    # Leverage Verité's tokenizer to detect and block possible spam messages and advertisements. 
+    # This feature has a 84.78% accuracy rate and commonly underestimates spam in certain contexts.
+    block.possible.spam: false
+
+    # Block repeating messages. This feature is designed to prevent users from spamming
+    # the chat with the same or similar messages. Every setting below only applies when this is enabled.
+    block.repeat.messages: false
+
+    # Block a message identical to a recent one from the same user.
+    # Comparison ignores case, accents, and repeated letters, so "HELLO", "hello", and "helllo" all count as the same.
+    block.repeat.exact: true
+
+    # Block a message that is merely similar (not identical) to a recent one from the same user.
+    # How similar counts as a match is set by block.repeat.similarity.threshold below.
+    block.repeat.near: true
+
+    # How many of each user's most recent messages are remembered and checked for repeats.
+    # Set to -1 to remember all messages, or 0 to disable repeat detection entirely.
+    block.repeat.history.size: 5
+
+    # How far back in time (milliseconds) a remembered message still counts as a repeat.
+    # Messages older than this are ignored.
+    # Set to -1 to ignore time and remember messages indefinitely, or 0 to disable repeat 
+    # detection entirely.
+    block.repeat.window.ms: 5000
+
+    # For near-repeat matching: how alike two messages must be to count as a repeat.
+    # A value between 0 and 1, where 1 means identical. Higher = stricter (fewer blocks); lower = more aggressive.
+    block.repeat.similarity.threshold: 0.85
+
+    # Block languages Verité does not yet support
+    # We currently support English, Spanish, French, Italian, Portuguese, and German. All other languages
+    # will be blocked if this setting is enabled.
+    block.unsupported.languages: false
+
+    language:
+
+      # Weight for a word a language's dictionary knows but the rate table
+      # doesn't list. Higher = dictionary membership counts for more.
+      known.word.weight: 50
+
+      # floor weight for a word no dictionary knows and the table omits.
+      unknown.word.weight: 0.1
+
+    # Disabling evasion passes may reduce latency by a few µs.
+    evasion:
+      homoglyph: true # fullwidth / Cyrillic / math-bold letter spoofs -> ascii
+      entity: true # &#8221;evil person -> evil person
+      deobfuscate: true # e!v!i!l!p!e!r!s!o!n / spaced-out words
+      segmentation: true # youareanevilperson -> you are an evil person
+      fingerprint: true # transposed slurs (eivl preosn)
+
+    # Profanity confidence threshold determines the minimum confidence
+    # required before a message is considered profane.
+    use.profanity.confidence:
+      enabled: true
+      profanity.confidence.threshold: 0.30 # The minimum confidence required to consider a message profane
+
+# ---- Veritésauver (moderation) ----
+moderation:
+  enabled: true
+
+  # Compare LuckPerms group weight so staff cannot punish equal/higher ranks.
+  # Operators are always considered the highest rank, regardless of LuckPerms weight.
+  use.rank.weights: true
+
+  # Automatically ban alts of a banned player regardless of if the player
+  # was IP-banned. We discourage the use of this flag on servers
+  # that share IP addresses between multiple distinct users.
+  auto.ban.alts: false 
+
+  # Commands a muted player may not use. If your server is hosted on a network with
+  # proxy injection, these commands may not be blocked by Verité, meaning the muted
+  # user could still possibly use them.
+  muted.command.blacklist:
+    - "me"
+    - "say"
+    - "tell"
+    - "whisper"
+    - "reply"
+    - "pm"
+    - "message"
+    - "msg"
+    - "msgall"
+    - "tellall"
+    - "speak"
+    - "emsg"
+    - "epm"
+    - "etell"
+    - "ewhisper"
+    - "w"
+    - "m"
+    - "t"
+    - "r"
+    - "mail"
+
+  # How long a warning counts as active before it lapses.
+  expire.warns.after: 7d
+
+  # Compare LuckPerms group weight so staff cannot punish equal/higher ranks.
+  exempt:
+    use.group.weights: false # Allow acting on an equal-weight target when use.group.weights is on.
+    permit.same.weight: true
+
+  # Limit for the number of accounts to show in a duplicate IP-scan.
+  shared.ip.scan.limit: 20
+
+  # Supports \n (Newline), @duration, @enforcer, @target, @reason, @punishment and @total.warns quantifiers
+  # If a reason was not set, @reason will be replaced with "No reason provided."
+  punish.message.templates:
+    ban.template.temporary: {You have been banned for @duration.\n@reason}
+    ban.template.permanent: {You have been permanently banned.\n@reason}
+    mute.template.temporary: {You have been muted by @enforcer for @duration.\n@reason}
+    mute.template.permanent: {You have been muted by @enforcer.\n@reason}
+    mute.notice: {You are muted. Time remaining: @remaining}
+    mute.notice.permanent: {You are muted.}
+    warn.template: {You have been warned by @enforcer. Active warnings: @total.warns\n@reason}
+    kick.template: {You have been kicked by @enforcer.\n@reason}
+    admin.receipt.template: {@target was @punishment by @enforcer.\n@reason}
+
+# Punishment tree for Verité's moderation system. Each category has a set of punishments that 
+# will be applied in order. Supports warn, mute, kick and ban. 
+# Choose specific items to show on the GUI when enacting a punishment. Preface item names with "minecraft:".
+  tree:
+    enabled: true
+    # Inheritance is supported.
+    permissions:
+      # Replace with your LuckPerms group names.
+      # Hierarchy is supported top-down. If your groups go helper > moderator > admin, admin will inherit moderator and helper permissions, and moderator will inherit helper permissions.
+      luckperms:
+        helper: {harassment, threats, spam, advertising, macroing, misinformation, inappropriate.content}
+        mod: {exploiting, discrimination, impersonation}
+        admin: {hacking, fraud, evading.punishment, inappropriate.username, inappropriate.skin, griefing}
+    categories:
+      harassment: {kick, ban: 14d, ban, minecraft:nether_star}
+      threats: {mute: 5h, ban: 14d, ban, minecraft:tnt}
+      spam: {warn, mute: 10m, mute: 1h, ban: 3d, ban, minecraft:cactus}
+      advertising: {mute: 1d, ban: 3d, ban, minecraft:redstone_block}
+      macroing: {warn, kick, ban: 7d, ban: 31d, ban, minecraft:redstone_torch}
+      misinformation: {warn, mute: 20m, mute: 1h, ban: 3d, ban, minecraft:paper}
+      inappropriate.content: {warn, mute: 1h, mute: 7h, ban: 7d, ban, minecraft:book}
+      exploiting: {warn, warn, warn, ban: 2d, ban, minecraft:lever}
+      discrimination: {ban: 31d, ban, minecraft:iron_sword}
+      impersonation: {ban: 7d, ban, minecraft:player_head}
+      hacking: {ban: 31d, ban, minecraft:diamond_sword}
+      fraud: {ban: 31d, ban, minecraft:gold_ingot}
+      evading.punishment: {ban: 31d, ban, minecraft:ender_pearl}
+      inappropriate.username: {ban, minecraft:name_tag}
+      inappropriate.skin: {ban, minecraft:leather_chestplate}
+      griefing: {ban: 7d, ban, minecraft:stone_pickaxe}
+      staff.disruption: {warn, kick, ban: 7d, minecraft:bottle_o_enchanting}
+      chat.violation: {warn, mute: 1h, ban: 3d, minecraft:book_and_quill}
+  use.fields: true # Use Minecraft 1.21.7+ Fields for punishment completion rather than chat.
+
+invsee:
+  enable-offline-player-support: true
+  enable-unknown-player-support: true
+  tabcomplete-offline-players: true
+
+# ---- Veritévoiler (Vanish) ----
+vanish:
+  enabled: true
+  features:
+    fake.message: true
+    actionbar: true
+    self.view: true
+    fly: true
+    invulnerability: true
+    effects: true
+    gamemode: true
+    ride.entity: true
+    silent.container: true
+    inventory.inspect: true
+    server.ping: true
+    ghost: true
+    prevent.chat: true
+    prevent.pickup: true
+    prevent.drop: true
+    prevent.interact: true
+    prevent.block.break: true
+    prevent.block.place: true
+    prevent.target: true
+    prevent.damage: true
+    prevent.food: true
+    prevent.buckets: true
+    prevent.advancement: true
+    prevent.projectiles: true
+    muffle.sounds: true
+    muffle.particles: true
+
+fake.connect:
+  enabled: true
+
+  # The messages broadcast by /fakejoin and /fakeleave.
+  # Supports &-codes and &#RRGGBB hex.
+  join.message: "&#FFFF55%player% joined the game"
+  leave.message: "&#FFFF55%player% left the game"

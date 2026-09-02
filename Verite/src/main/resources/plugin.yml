@@ -1,0 +1,427 @@
+name: Verite
+version: 1.2.7
+main: teacommontea.VeritePlugin
+api-version: '1.19'
+folia-supported: true
+author: teacommontea
+description: "Privacy-centred Minecraft moderation and chat management plugin with 6 supported languages."
+softdepend: [floodgate, PlaceholderAPI, LuckPerms, Skript, TAB]
+
+libraries:
+  - com.h2database:h2:2.4.240
+
+commands:
+  verite:
+    description: "Verite admin: status, reload, count <player>."
+    usage: "/<command> [status|reload|count <player>]"
+    aliases: [vt]
+
+  veriteflag:
+    description: "Read and edit Verite config flags in-game."
+    usage: "/<command> <flag> [value]"
+    permission: veritedoux.flag
+
+  vanish:
+    description: "Toggle your vanish, or another player's with permission."
+    usage: "/<command> [player]"
+    permission: verite.vanish
+    aliases: [v]
+
+  fakejoin:
+    description: "Broadcast a fake join message for yourself or another player."
+    usage: "/<command> [player]"
+    permission: verite.fakejoin
+    aliases: [fjoin]
+
+  fakeleave:
+    description: "Broadcast a fake leave message for yourself or another player."
+    usage: "/<command> [player]"
+    permission: verite.fakeleave
+    aliases: [fleave]
+
+  showbarriers:
+    description: "Reveal nearby or all barrier blocks to yourself while building."
+    usage: "/<command> all|move|off"
+    permission: veritedoux.showbarriers
+    aliases: [sb, sbar]
+
+  showlight:
+    description: "Reveal nearby or all light blocks to yourself while building."
+    usage: "/<command> all|move|off"
+    permission: veritedoux.showlight
+    aliases: [sl, slig]
+
+  invsee:
+    description: "View a player's inventory."
+    usage: "/<command> <username|uuid>"
+    permission: drigz.staff.invsee
+    aliases: [inventorysee, isee]
+
+  endersee:
+    description: "View a player's ender chest."
+    usage: "/<command> <username|uuid>"
+    permission: drigz.staff.endersee
+    aliases: [enderchestsee, esee]
+
+  ban:
+    description: "Ban a player (permanent unless a duration leads the reason)."
+    usage: "/<command> <player> [-s] [reason]"
+    permission: veritesauver.ban
+  tempban:
+    description: "Temporarily ban a player."
+    usage: "/<command> <player> <duration> [-s] [reason]"
+    permission: veritesauver.ban
+  mute:
+    description: "Mute a player."
+    usage: "/<command> <player> [-s] [reason]"
+    permission: veritesauver.mute
+  tempmute:
+    description: "Temporarily mute a player."
+    usage: "/<command> <player> <duration> [-s] [reason]"
+    permission: veritesauver.mute
+  ipban:
+    description: "Ban a player or IP address by IP."
+    usage: "/<command> <player|IP> [-s] [duration] [reason]"
+    permission: veritesauver.ipban
+  ipmute:
+    description: "Mute a player or IP address by IP."
+    usage: "/<command> <player|IP> [-s] [duration] [reason]"
+    permission: veritesauver.ipmute
+  kick:
+    description: "Kick an online player."
+    usage: "/<command> <player> [-s] [reason]"
+    permission: veritesauver.kick
+  captcha:
+    description: "Manually challenge a player. /captcha <standard|detailed> <player|*>."
+    usage: "/<command> <standard|detailed> <player|*>"
+    permission: veritesauver.captcha
+  warn:
+    description: "Warn a player."
+    usage: "/<command> <player> [-s] [reason]"
+    permission: veritesauver.warn
+  unwarn:
+    description: "Remove a player's most recent warning."
+    usage: "/<command> <player> [reason]"
+    permission: veritesauver.unwarn
+  warnings:
+    description: "Show a player's active warnings (or your own)."
+    usage: "/<command> [player]"
+  checkwarn:
+    description: "Show how many active warnings a player has."
+    usage: "/<command> <player>"
+    permission: veritesauver.checkwarn
+  warnlist:
+    description: "List every active warning on the server."
+    usage: "/<command> [page]"
+    permission: veritesauver.warnlist
+  unban:
+    description: "Unban a player."
+    usage: "/<command> <player> [reason]"
+    permission: veritesauver.unban.own
+  unmute:
+    description: "Unmute a player."
+    usage: "/<command> <player> [reason]"
+    permission: veritesauver.unmute.own
+  checkban:
+    description: "Check a player's ban status."
+    usage: "/<command> <player>"
+    permission: veritesauver.checkban
+  checkmute:
+    description: "Check a player's mute status."
+    usage: "/<command> <player>"
+    permission: veritesauver.checkmute
+  dupeip:
+    description: "List accounts sharing a player's or IP's address."
+    usage: "/<command> <player|IP>"
+    permission: veritesauver.dupeip
+  iphistory:
+    description: "Show the IPs an account has connected from."
+    usage: "/<command> <player>"
+    permission: veritesauver.iphistory
+  namehistory:
+    description: "Show the usernames an account has used."
+    usage: "/<command> <player>"
+    permission: veritesauver.namehistory
+  lastuuid:
+    description: "Show the UUID last seen for a name."
+    usage: "/<command> <player>"
+    permission: veritesauver.lastuuid
+  banlist:
+    description: "List active bans."
+    usage: "/<command> [page]"
+    permission: veritesauver.checkban
+  mutelist:
+    description: "List active mutes."
+    usage: "/<command> [page]"
+    permission: veritesauver.checkmute
+  history:
+    description: "Show a player's punishment history."
+    usage: "/<command> <player>"
+    permission: veritesauver.history
+  staffhistory:
+    description: "Show punishments issued by a staff member."
+    usage: "/<command> <player>"
+    permission: veritesauver.staffhistory
+  staffrollback:
+    description: "Reverse a staff member's recent punishments."
+    usage: "/<command> <staff> [duration]"
+    permission: veritesauver.staffrollback
+  prunehistory:
+    description: "Delete a player's inactive punishment history."
+    usage: "/<command> <player> [duration]"
+    permission: veritesauver.prunehistory
+  lockdown:
+    description: "Seal the server, or lift the lockdown."
+    usage: "/<command> <reason|end>"
+    permission: veritesauver.lockdown
+  geoip:
+    description: "Look up the country for a player or IP."
+    usage: "/<command> <player|IP>"
+    permission: veritesauver.geoip
+  whois:
+    description: "Show a player's full account dossier (online, offline, or never-joined)."
+    usage: "/<command> <player>"
+    permission: veritesauver.whois
+  seen:
+    description: "Show when a player was last online."
+    usage: "/<command> <player>"
+    permission: veritesauver.seen
+  punish:
+    description: "Open the punishment tree GUI to punish a player."
+    usage: "/<command> [player]"
+    aliases: [punishtree, ptree]
+  bc:
+    description: "Broadcast a message to the whole server."
+    usage: "/<command> <message>"
+    aliases: [broadcast]
+    permission: veritesauver.broadcast
+  chatclear:
+    description: "Clear chat for everyone."
+    usage: "/<command>"
+    aliases: [cc]
+    permission: veritesauver.chatclear
+  chatmute:
+    description: "Freeze or unfreeze global chat."
+    usage: "/<command>"
+    permission: veritesauver.chatmute
+  slowmode:
+    description: "Set chat slowmode (global or per-player)."
+    usage: "/<command> <duration|off> [player]"
+    permission: veritesauver.slowmode
+
+permissions:
+  verite.admin:
+    description: Use Verite admin commands.
+    default: op
+  verite.bypass:
+    description: Exempt from captcha challenges.
+    default: false
+  verite.fakejoin:
+    description: Broadcast a fake join message for yourself.
+    default: op
+    children:
+      verite.fakejoin.others: true
+  verite.fakejoin.others:
+    description: Broadcast a fake join message for another player.
+    default: op
+  verite.fakeleave:
+    description: Broadcast a fake leave message for yourself.
+    default: op
+    children:
+      verite.fakeleave.others: true
+  verite.fakeleave.others:
+    description: Broadcast a fake leave message for another player.
+    default: op
+
+  veritedoux.flag:
+    description: Read and edit Verite config flags in-game.
+    default: op
+
+  veritesauver.ban:
+    description: Ban and tempban players.
+    default: op
+  veritesauver.mute:
+    description: Mute and tempmute players.
+    default: op
+  veritesauver.ipban:
+    description: IP-ban players or addresses.
+    default: op
+  veritesauver.ipmute:
+    description: IP-mute players or addresses.
+    default: op
+  veritesauver.kick:
+    description: Kick players.
+    default: op
+  veritesauver.captcha:
+    description: Manually challenge a player with a captcha.
+    default: op
+  veritesauver.warn:
+    description: Warn players.
+    default: op
+  veritesauver.unwarn:
+    description: Remove warnings.
+    default: op
+  veritesauver.warnings:
+    description: View other players' warnings.
+    default: op
+  veritesauver.checkwarn:
+    description: Check a player's warning count.
+    default: op
+  veritesauver.warnlist:
+    description: List all active warnings.
+    default: op
+  veritesauver.unban:
+    description: Unban players (any).
+    default: op
+    children:
+      veritesauver.unban.own: true
+  veritesauver.unban.own:
+    description: Unban only punishments you issued.
+    default: false
+  veritesauver.unmute:
+    description: Unmute players (any).
+    default: op
+    children:
+      veritesauver.unmute.own: true
+  veritesauver.unmute.own:
+    description: Unmute only punishments you issued.
+    default: false
+  veritesauver.checkban:
+    description: Check a player's ban status.
+    default: op
+  veritesauver.checkmute:
+    description: Check a player's mute status.
+    default: op
+  veritesauver.dupeip:
+    description: List accounts sharing an IP.
+    default: op
+  veritesauver.iphistory:
+    description: View IP history.
+    default: op
+  veritesauver.namehistory:
+    description: View name history.
+    default: op
+  veritesauver.lastuuid:
+    description: Resolve a name to its last UUID.
+    default: op
+  veritesauver.history:
+    description: View a player's punishment history.
+    default: op
+  veritesauver.staffhistory:
+    description: View punishments a staff member issued.
+    default: op
+  veritesauver.staffrollback:
+    description: Reverse a staff member's recent punishments.
+    default: op
+  veritesauver.prunehistory:
+    description: Delete inactive punishment history.
+    default: op
+  veritesauver.lockdown:
+    description: Seal or lift a server lockdown.
+    default: op
+  veritesauver.lockdown.bypass:
+    description: Join the server during a lockdown.
+    default: op
+  veritesauver.geoip:
+    description: Look up the country for a player or IP.
+    default: op
+  veritesauver.whois:
+    description: View a player's full account dossier.
+    default: op
+  veritesauver.whois.ip:
+    description: Include the raw last IP in a whois dossier.
+    default: op
+  veritesauver.seen:
+    description: Show when a player was last online.
+    default: op
+  veritesauver.broadcast:
+    description: Broadcast a message to the server.
+    default: op
+  veritesauver.chatclear:
+    description: Clear chat for everyone.
+    default: op
+  veritesauver.chatmute:
+    description: Freeze or unfreeze global chat.
+    default: op
+  veritesauver.slowmode:
+    description: Set chat slowmode.
+    default: op
+  veritesauver.chat.bypass:
+    description: Speak past a chat mute and ignore slowmode.
+    default: op
+  veritesauver.admin:
+    description: Reload the moderation component; bypass duration caps and cooldowns.
+    default: op
+    children:
+      veritesauver.tree: true
+      veritesauver.tree.all: true
+  veritesauver.tree:
+    description: Open the punishment tree GUI.
+    default: op
+  veritesauver.tree.all:
+    description: Use every punishment tree category regardless of rank mapping.
+    default: op
+    children:
+      veritesauver.tree: true
+  veritesauver.exempt:
+    description: Cannot be punished (unless the issuer has the bypass).
+    default: false
+  veritesauver.exempt.bypass:
+    description: Punish players who are otherwise exempt.
+    default: op
+  veritesauver.notify.broadcast:
+    description: See public punishment broadcasts.
+    default: false
+  veritesauver.notify.silent:
+    description: See silent (-s) punishment broadcasts.
+    default: op
+  veritesauver.notify.dupeip_join:
+    description: Be alerted when an alt of a punished account joins.
+    default: op
+  veritesauver.notify.client_join:
+    description: Be alerted when a player joins on a non-vanilla client.
+    default: op
+  veritesauver.notify.banned_join:
+    description: Be alerted when a banned player is turned away at login.
+    default: op
+  veritesauver.notify.captcha:
+    description: See captcha pass/fail announcements.
+    default: false
+  drigz.staff.invsee:
+    description: View a player's inventory.
+    default: op
+    children:
+      drigz.staff.invsee.tabcomplete: true
+  drigz.staff.endersee:
+    description: View a player's ender chest.
+    default: op
+    children:
+      drigz.staff.invsee.tabcomplete: true
+  drigz.staff.invsee.edit:
+    description: Edit a player's inventory while spectating.
+    default: op
+    children:
+      drigz.staff.invsee: true
+  drigz.staff.endersee.edit:
+    description: Edit a player's ender chest while spectating.
+    default: op
+    children:
+      drigz.staff.endersee: true
+  invsee.no.takeout:
+    description: While spectating, allow putting items in but never taking items out.
+    default: false
+  drigz.staff.invsee.tabcomplete:
+    description: Tab-complete player names for spectate commands.
+    default: op
+  drigz.staff.invsee.bypass-exempt:
+    description: Ignore inventory spectate exemption on targets.
+    default: op
+  drigz.staff.endersee.bypass-exempt:
+    description: Ignore ender chest spectate exemption on targets.
+    default: op
+  drigz.invsee.exempt:
+    description: Protects the holder from having their inventory spectated.
+    default: false
+  drigz.endersee.exempt:
+    description: Protects the holder from having their ender chest spectated.
+    default: false
