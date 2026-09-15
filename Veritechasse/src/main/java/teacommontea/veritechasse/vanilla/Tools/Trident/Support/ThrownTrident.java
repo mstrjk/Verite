@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Item.Trident;
+package teacommontea.veritechasse.vanilla.Tools.Trident.Support;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -6,6 +6,7 @@ import teacommontea.veritechasse.vanilla.Era;
 import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 import teacommontea.veritechasse.vanilla.Enchantments.Loyalty;
+import teacommontea.veritechasse.vanilla.Tools.Trident.Trident;
 
 public final class ThrownTrident {
 

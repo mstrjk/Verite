@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Item.Trident;
+package teacommontea.veritechasse.vanilla.Tools.Trident.Support;
 
 import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
