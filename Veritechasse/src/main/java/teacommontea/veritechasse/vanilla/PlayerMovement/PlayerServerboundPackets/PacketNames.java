@@ -1,0 +1,84 @@
+package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets;
+
+public final class PacketNames {
+
+    public static final String ACCEPT_CODE_OF_CONDUCT = "accept_code_of_conduct";
+    public static final String ACCEPT_TELEPORTATION = "accept_teleportation";
+    public static final String ATTACK = "attack";
+    public static final String BLOCK_ENTITY_TAG_QUERY = "block_entity_tag_query";
+    public static final String CHANGE_DIFFICULTY = "change_difficulty";
+    public static final String CHANGE_GAME_MODE = "change_game_mode";
+    public static final String CHAT = "chat";
+    public static final String CHAT_ACK = "chat_ack";
+    public static final String CHAT_COMMAND = "chat_command";
+    public static final String CHAT_COMMAND_SIGNED = "chat_command_signed";
+    public static final String CHAT_PREVIEW = "chat_preview";
+    public static final String CHAT_SESSION_UPDATE = "chat_session_update";
+    public static final String CHUNK_BATCH_RECEIVED = "chunk_batch_received";
+    public static final String CLIENT_COMMAND = "client_command";
+    public static final String CLIENT_INFORMATION = "client_information";
+    public static final String CLIENT_TICK_END = "client_tick_end";
+    public static final String COMMAND_SUGGESTION = "command_suggestion";
+    public static final String CONFIGURATION_ACKNOWLEDGED = "configuration_acknowledged";
+    public static final String CONTAINER_BUTTON_CLICK = "container_button_click";
+    public static final String CONTAINER_CLICK = "container_click";
+    public static final String CONTAINER_CLOSE = "container_close";
+    public static final String CONTAINER_SLOT_STATE_CHANGED = "container_slot_state_changed";
+    public static final String COOKIE_RESPONSE = "cookie_response";
+    public static final String CUSTOM_CLICK_ACTION = "custom_click_action";
+    public static final String CUSTOM_PAYLOAD = "custom_payload";
+    public static final String CUSTOM_QUERY_ANSWER = "custom_query_answer";
+    public static final String DEBUG_SUBSCRIPTION_REQUEST = "debug_subscription_request";
+    public static final String EDIT_BOOK = "edit_book";
+    public static final String ENTITY_TAG_QUERY = "entity_tag_query";
+    public static final String FINISH_CONFIGURATION = "finish_configuration";
+    public static final String HELLO = "hello";
+    public static final String INTERACT = "interact";
+    public static final String JIGSAW_GENERATE = "jigsaw_generate";
+    public static final String KEEP_ALIVE = "keep_alive";
+    public static final String KEY = "key";
+    public static final String LOCK_DIFFICULTY = "lock_difficulty";
+    public static final String LOGIN_ACKNOWLEDGED = "login_acknowledged";
+    public static final String MOVE_PLAYER = "move_player";
+    public static final String MOVE_VEHICLE = "move_vehicle";
+    public static final String PADDLE_BOAT = "paddle_boat";
+    public static final String PICK_ITEM = "pick_item";
+    public static final String PICK_ITEM_FROM_BLOCK = "pick_item_from_block";
+    public static final String PICK_ITEM_FROM_ENTITY = "pick_item_from_entity";
+    public static final String PING_REQUEST = "ping_request";
+    public static final String PLACE_RECIPE = "place_recipe";
+    public static final String PLAYER_ABILITIES = "player_abilities";
+    public static final String PLAYER_ACTION = "player_action";
+    public static final String PLAYER_COMMAND = "player_command";
+    public static final String PLAYER_INPUT = "player_input";
+    public static final String PLAYER_LOADED = "player_loaded";
+    public static final String PONG = "pong";
+    public static final String RECIPE_BOOK_CHANGE_SETTINGS = "recipe_book_change_settings";
+    public static final String RECIPE_BOOK_SEEN_RECIPE = "recipe_book_seen_recipe";
+    public static final String RENAME_ITEM = "rename_item";
+    public static final String RESOURCE_PACK = "resource_pack";
+    public static final String SEEN_ADVANCEMENTS = "seen_advancements";
+    public static final String SELECT_BUNDLE_ITEM = "select_bundle_item";
+    public static final String SELECT_KNOWN_PACKS = "select_known_packs";
+    public static final String SELECT_TRADE = "select_trade";
+    public static final String SET_BEACON = "set_beacon";
+    public static final String SET_CARRIED_ITEM = "set_carried_item";
+    public static final String SET_COMMAND_BLOCK = "set_command_block";
+    public static final String SET_COMMAND_MINECART = "set_command_minecart";
+    public static final String SET_CREATIVE_MODE_SLOT = "set_creative_mode_slot";
+    public static final String SET_GAME_RULE = "set_game_rule";
+    public static final String SET_JIGSAW_BLOCK = "set_jigsaw_block";
+    public static final String SET_STRUCTURE_BLOCK = "set_structure_block";
+    public static final String SET_TEST_BLOCK = "set_test_block";
+    public static final String SIGN_UPDATE = "sign_update";
+    public static final String SPECTATOR_ACTION = "spectator_action";
+    public static final String STATUS_REQUEST = "status_request";
+    public static final String SWING = "swing";
+    public static final String TELEPORT_TO_ENTITY = "teleport_to_entity";
+    public static final String TEST_INSTANCE_BLOCK_ACTION = "test_instance_block_action";
+    public static final String USE_ITEM = "use_item";
+    public static final String USE_ITEM_ON = "use_item_on";
+
+    private PacketNames() {
+    }
+}

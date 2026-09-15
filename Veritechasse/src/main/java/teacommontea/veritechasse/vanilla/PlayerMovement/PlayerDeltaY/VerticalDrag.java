@@ -12,7 +12,7 @@ public final class VerticalDrag {
     public static final boolean PLAYERS_ARE_OMNIDIRECTIONAL = false;
 
     public static final int MODIFIER_PROTOCOL_MAJOR = 26;
-    public static final int MODIFIER_PROTOCOL_MINOR = 1;
+    public static final int MODIFIER_PROTOCOL_MINOR = 2;
     public static final int MODIFIER_PROTOCOL_PATCH = 0;
 
     private VerticalDrag() {
