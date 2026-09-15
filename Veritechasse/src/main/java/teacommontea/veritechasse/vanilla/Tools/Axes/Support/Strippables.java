@@ -79,7 +79,7 @@ public final class Strippables {
     }
 
     private static Map<String, String> mapFor(Protocol protocol) {
-        if (protocol.atLeast(1, 21, 3)) {
+        if (protocol.atLeast(1, 21, 2)) {
             return MAP;
         }
         if (protocol.atLeast(1, 19, 4)) {

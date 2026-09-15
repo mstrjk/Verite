@@ -22,7 +22,7 @@ public final class CopperSword {
     }
 
     public static boolean exists(Protocol protocol) {
-        return protocol.atLeast(1, 21, 11);
+        return protocol.atLeast(1, 21, 9);
     }
 
     public static double attackDamage() {

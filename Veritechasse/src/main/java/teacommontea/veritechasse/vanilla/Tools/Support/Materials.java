@@ -28,7 +28,7 @@ public final class Materials {
     }
 
     public static boolean copperExists(Protocol protocol) {
-        return protocol.atLeast(1, 21, 11);
+        return protocol.atLeast(1, 21, 9);
     }
 
     public static Material byKey(String key) {

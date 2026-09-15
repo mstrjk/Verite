@@ -8,6 +8,6 @@ public enum ToolEra {
     MATERIALS_WITH_TAGS;
 
     public static ToolEra of(Protocol protocol) {
-        return protocol.atLeast(1, 21, 3) ? MATERIALS_WITH_TAGS : TIERS_WITH_LEVELS;
+        return protocol.atLeast(1, 20, 5) ? MATERIALS_WITH_TAGS : TIERS_WITH_LEVELS;
     }
 }

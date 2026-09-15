@@ -24,7 +24,7 @@ public final class SwordInstantlyMines {
         }
         if (era != ToolEra.MATERIALS_WITH_TAGS) {
             throw new IllegalStateException(
-                KEY + " does not exist before 1.21.3; use MiningTier levels instead");
+                KEY + " does not exist before 1.20.5; use MiningTier levels instead");
         }
         return TAG.contains(blockName.toLowerCase(Locale.ROOT));
     }

@@ -30,7 +30,7 @@ public final class Sword {
     }
 
     public static boolean miningIsTagDriven(Protocol protocol) {
-        return protocol.atLeast(1, 21, 3);
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static double attackDamage(Material material) {

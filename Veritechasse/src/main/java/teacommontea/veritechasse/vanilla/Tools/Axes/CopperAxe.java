@@ -26,7 +26,7 @@ public final class CopperAxe {
     }
 
     public static boolean exists(Protocol protocol) {
-        return protocol.atLeast(1, 21, 11);
+        return protocol.atLeast(1, 21, 9);
     }
 
     public static float baseDestroySpeed(String blockName, ToolEra era) {
