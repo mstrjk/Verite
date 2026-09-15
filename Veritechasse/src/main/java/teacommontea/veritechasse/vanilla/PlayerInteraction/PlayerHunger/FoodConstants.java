@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger;
 
 import teacommontea.veritechasse.vanilla.Protocol;
 

@@ -24,7 +24,23 @@ public final class Spear {
 
     public static final String DAMAGE_TYPE = "spear";
 
+    public static final boolean USE_PERMITS_SPRINTING = true;
+    public static final boolean USE_EMITS_VIBRATIONS = false;
+    public static final float USE_SPEED_MULTIPLIER = 1.0F;
+
     private Spear() {
+    }
+
+    public static boolean slowsWhileUsed() {
+        return USE_SPEED_MULTIPLIER < 1.0F;
+    }
+
+    public static float useSpeedMultiplier() {
+        return USE_SPEED_MULTIPLIER;
+    }
+
+    public static boolean permitsSprintingWhileUsed() {
+        return USE_PERMITS_SPRINTING;
     }
 
     public static boolean exists(Protocol protocol) {

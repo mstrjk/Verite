@@ -4,6 +4,8 @@ import java.util.Set;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import teacommontea.veritechasse.reality.MovementProbe;
+import teacommontea.veritechasse.reality.RealityMonitor;
 import teacommontea.veritechasse.vanilla.Era;
 import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Enchantments.Support.Catalogue;
@@ -12,6 +14,7 @@ import teacommontea.veritechasse.vanilla.Enchantments.Support.Registry;
 public final class ChassePlugin extends JavaPlugin {
 
     private Protocol protocol;
+    private RealityMonitor monitor;
 
     @Override
     public void onEnable() {
@@ -20,6 +23,17 @@ public final class ChassePlugin extends JavaPlugin {
             + " (enchantments: " + Era.enchantments(this.protocol) + ")");
 
         verifyRegistry();
+
+        this.monitor = new RealityMonitor(this, this.protocol);
+        getServer().getPluginManager().registerEvents(this.monitor, this);
+        this.monitor.start();
+    }
+
+    @Override
+    public void onDisable() {
+        if (this.monitor != null) {
+            this.monitor.stop();
+        }
     }
 
     private void verifyRegistry() {
@@ -45,5 +59,13 @@ public final class ChassePlugin extends JavaPlugin {
 
     public Protocol protocol() {
         return this.protocol;
+    }
+
+    public RealityMonitor monitor() {
+        return this.monitor;
+    }
+
+    public MovementProbe newProbe() {
+        return new MovementProbe(this);
     }
 }

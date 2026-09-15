@@ -45,6 +45,16 @@ public final class JumpReality {
         return currentHorizontal + horizontalImpulse(sprinting);
     }
 
+    public static double maximumTakeoffHorizontal(
+            double carriedHorizontal,
+            double groundAcceleration,
+            float airDrag,
+            boolean sprinting) {
+        return carriedHorizontal * (double) airDrag
+            + groundAcceleration
+            + horizontalImpulse(sprinting);
+    }
+
     public static boolean jumpedWithoutGround(
             boolean claimsJumped,
             double attemptedY,

@@ -25,6 +25,21 @@ public final class Brush {
         "suspicious_sand",
         "suspicious_gravel");
 
+    public static final boolean USE_PERMITS_SPRINTING = false;
+    public static final float USE_SPEED_MULTIPLIER = 0.2F;
+
+    public static boolean slowsWhileUsed() {
+        return USE_SPEED_MULTIPLIER < 1.0F;
+    }
+
+    public static float useSpeedMultiplier() {
+        return USE_SPEED_MULTIPLIER;
+    }
+
+    public static boolean permitsSprintingWhileUsed() {
+        return USE_PERMITS_SPRINTING;
+    }
+
     private Brush() {
     }
 
