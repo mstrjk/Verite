@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import teacommontea.veritechasse.reality.InteractionMonitor;
 import teacommontea.veritechasse.reality.MovementProbe;
 import teacommontea.veritechasse.reality.RealityMonitor;
 import teacommontea.veritechasse.vanilla.Era;
@@ -15,6 +16,7 @@ public final class ChassePlugin extends JavaPlugin {
 
     private Protocol protocol;
     private RealityMonitor monitor;
+    private InteractionMonitor interactions;
 
     @Override
     public void onEnable() {
@@ -27,12 +29,19 @@ public final class ChassePlugin extends JavaPlugin {
         this.monitor = new RealityMonitor(this, this.protocol);
         getServer().getPluginManager().registerEvents(this.monitor, this);
         this.monitor.start();
+
+        this.interactions = new InteractionMonitor(this, this.protocol);
+        getServer().getPluginManager().registerEvents(this.interactions, this);
+        this.monitor.attachInteractions(this.interactions);
     }
 
     @Override
     public void onDisable() {
         if (this.monitor != null) {
             this.monitor.stop();
+        }
+        if (this.interactions != null) {
+            this.interactions.reportTotals();
         }
     }
 

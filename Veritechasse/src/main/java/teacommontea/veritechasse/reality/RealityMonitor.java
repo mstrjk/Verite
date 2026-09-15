@@ -38,6 +38,7 @@ public final class RealityMonitor implements Listener {
     private BukkitTask task;
     private long tick;
     private boolean verbose = true;
+    private InteractionMonitor interactions;
 
     public RealityMonitor(JavaPlugin plugin, Protocol protocol) {
         this.plugin = plugin;
@@ -71,9 +72,19 @@ public final class RealityMonitor implements Listener {
         return this.verbose;
     }
 
+    public void attachInteractions(InteractionMonitor interactions) {
+        this.interactions = interactions;
+        if (interactions != null) {
+            interactions.setTick(this.tick);
+        }
+    }
+
     private void sample() {
         this.tick++;
         this.packetsThisTick.clear();
+        if (this.interactions != null) {
+            this.interactions.setTick(this.tick);
+        }
     }
 
     private void samplePlayer(Player player) {
