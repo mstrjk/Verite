@@ -59,6 +59,32 @@ public final class BlockMovementFactors {
         return here;
     }
 
+    public static final String SLIME_BLOCK = "slime_block";
+    public static final double SLIME_STEP_BASE = 0.4D;
+    public static final double SLIME_STEP_PER_DELTA_Y = 0.2D;
+    public static final double SLIME_STEP_MAX_DELTA_Y = 0.1D;
+
+    public static boolean slimeStepApplies(String blockSteppedOn, double deltaY, boolean sneaking) {
+        if (blockSteppedOn == null || sneaking) {
+            return false;
+        }
+        if (!blockSteppedOn.toLowerCase(Locale.ROOT).equals(SLIME_BLOCK)) {
+            return false;
+        }
+        return Math.abs(deltaY) < SLIME_STEP_MAX_DELTA_Y;
+    }
+
+    public static double slimeStepMultiplier(double deltaY) {
+        return SLIME_STEP_BASE + Math.abs(deltaY) * SLIME_STEP_PER_DELTA_Y;
+    }
+
+    public static double afterSlimeStep(double horizontal, String blockSteppedOn, double deltaY, boolean sneaking) {
+        if (!slimeStepApplies(blockSteppedOn, deltaY, sneaking)) {
+            return horizontal;
+        }
+        return horizontal * slimeStepMultiplier(deltaY);
+    }
+
     public static boolean slowsMovement(String blockName) {
         return speedFactorOf(blockName) < DEFAULT_SPEED_FACTOR;
     }
