@@ -21,8 +21,12 @@ public final class BadOmen {
     private BadOmen() {
     }
 
+    public static final int OMINOUS_BOTTLE_MAJOR = 1;
+    public static final int OMINOUS_BOTTLE_MINOR = 20;
+    public static final int OMINOUS_BOTTLE_PATCH = 5;
+
     public static boolean ominousBottleExists(Protocol protocol) {
-        return protocol.atLeast(1, 21, 2);
+        return protocol.atLeast(OMINOUS_BOTTLE_MAJOR, OMINOUS_BOTTLE_MINOR, OMINOUS_BOTTLE_PATCH);
     }
 
     public static boolean grantedByOminousBottle(int amplifier, Protocol protocol) {
@@ -47,6 +51,19 @@ public final class BadOmen {
 
     public static boolean canTrigger(boolean spectator, boolean peaceful, boolean inVillage) {
         return !spectator && !peaceful && inVillage;
+    }
+
+    public static boolean canTrigger(
+            boolean spectator,
+            boolean peaceful,
+            boolean inVillage,
+            boolean raidPresent,
+            int raidOmenLevel,
+            int maxRaidOmenLevel) {
+        if (!canTrigger(spectator, peaceful, inVillage)) {
+            return false;
+        }
+        return !raidPresent || raidOmenLevel < maxRaidOmenLevel;
     }
 
     public static int raidOmenAmplifier(int amplifier) {

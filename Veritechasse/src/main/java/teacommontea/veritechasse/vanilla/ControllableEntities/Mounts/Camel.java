@@ -1,5 +1,9 @@
 package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
 
+import java.util.Locale;
+import java.util.Set;
+
+import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
@@ -7,6 +11,13 @@ import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.Mov
 public final class Camel {
 
     public static final String KEY = "camel";
+    public static final String HUSK_KEY = "camel_husk";
+
+    public static final Set<String> MEMBERS = Set.of(KEY, HUSK_KEY);
+
+    public static final int HUSK_PROTOCOL_MAJOR = 1;
+    public static final int HUSK_PROTOCOL_MINOR = 21;
+    public static final int HUSK_PROTOCOL_PATCH = 11;
 
     public static final double MOVEMENT_SPEED_BASE = 0.09D;
     public static final double JUMP_STRENGTH_BASE = 0.42D;
@@ -27,6 +38,24 @@ public final class Camel {
         new MovementEnvelope(STEERABLE, CAN_JUMP, CAN_FLY, CAN_DASH, 1.0F, Horses.BACKWARDS_MOVE_SPEED_FACTOR);
 
     private Camel() {
+    }
+
+    public static boolean contains(String entityName) {
+        return entityName != null
+            && MEMBERS.contains(entityName.toLowerCase(Locale.ROOT));
+    }
+
+    public static boolean isHusk(String entityName) {
+        return entityName != null
+            && HUSK_KEY.equals(entityName.toLowerCase(Locale.ROOT));
+    }
+
+    public static boolean huskExists(Protocol protocol) {
+        return protocol.atLeast(HUSK_PROTOCOL_MAJOR, HUSK_PROTOCOL_MINOR, HUSK_PROTOCOL_PATCH);
+    }
+
+    public static boolean canBeABaby(String entityName) {
+        return !isHusk(entityName);
     }
 
     public static ControlGate controlGate() {

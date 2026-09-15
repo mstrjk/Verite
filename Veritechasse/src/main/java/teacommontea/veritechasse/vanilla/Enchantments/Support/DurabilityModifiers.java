@@ -29,11 +29,15 @@ public final class DurabilityModifiers {
             : Unbreaking.expectedDurabilityPerUse(level, era);
     }
 
-    public static double expectedUses(ItemStack stack, int maxDurability, Era era) {
+    public static double expectedUses(ItemStack stack, int maxDurability, boolean isArmor, Era era) {
         if (stack == null) {
             return (double) maxDurability;
         }
-        return Unbreaking.expectedUsesFor(maxDurability, Unbreaking.levelOn(stack), era);
+        return Unbreaking.expectedUsesFor(maxDurability, Unbreaking.levelOn(stack), isArmor, era);
+    }
+
+    public static double expectedUses(ItemStack stack, int maxDurability, Era era) {
+        return expectedUses(stack, maxDurability, false, era);
     }
 
     public static boolean hasMending(ItemStack stack) {

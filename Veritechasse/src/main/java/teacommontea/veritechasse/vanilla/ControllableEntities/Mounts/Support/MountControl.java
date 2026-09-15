@@ -6,6 +6,7 @@ import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Camel;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.HappyGhast;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Horses;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Llamas;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Nautilus;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Pig;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Strider;
 import teacommontea.veritechasse.vanilla.Reality;
@@ -29,7 +30,7 @@ public final class MountControl {
         if (name.equals(HappyGhast.KEY)) {
             return HappyGhast.controlGate();
         }
-        if (name.equals(Camel.KEY)) {
+        if (Camel.contains(name)) {
             return Camel.controlGate();
         }
         if (Horses.contains(name)) {
@@ -37,6 +38,9 @@ public final class MountControl {
         }
         if (Llamas.contains(name)) {
             return Llamas.controlGate();
+        }
+        if (Nautilus.contains(name)) {
+            return Nautilus.controlGate();
         }
         return ControlGate.NONE;
     }
@@ -55,7 +59,7 @@ public final class MountControl {
         if (name.equals(HappyGhast.KEY)) {
             return HappyGhast.ENVELOPE;
         }
-        if (name.equals(Camel.KEY)) {
+        if (Camel.contains(name)) {
             return Camel.ENVELOPE;
         }
         if (Horses.contains(name)) {
@@ -63,6 +67,9 @@ public final class MountControl {
         }
         if (Llamas.contains(name)) {
             return Llamas.ENVELOPE;
+        }
+        if (Nautilus.contains(name)) {
+            return Nautilus.ENVELOPE;
         }
         return null;
     }
@@ -95,10 +102,10 @@ public final class MountControl {
     }
 
     public static Reality steeringInfluence(String entityName) {
-        if (!isSteerable(entityName)) {
+        MovementEnvelope envelope = envelopeFor(entityName);
+        if (envelope == null || !envelope.steerable()) {
             return Reality.impossible();
         }
-        MovementEnvelope envelope = envelopeFor(entityName);
         return Reality.of(envelope.speedMultiplier());
     }
 }

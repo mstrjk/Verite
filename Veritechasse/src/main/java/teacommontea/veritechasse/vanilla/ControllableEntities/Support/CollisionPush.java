@@ -44,6 +44,17 @@ public final class CollisionPush {
         return PUSH_SCALE;
     }
 
+    public static double maximumHorizontalImpulse() {
+        return PUSH_SCALE * Math.sqrt(2.0D);
+    }
+
+    public static double maximumHorizontalImpulse(int simultaneousPushers) {
+        if (simultaneousPushers <= 0) {
+            return 0.0D;
+        }
+        return maximumHorizontalImpulse() * (double) simultaneousPushers;
+    }
+
     public static boolean canPush(boolean isVehicle, boolean pushable) {
         if (isVehicle) {
             return VEHICLES_ARE_PUSHED;

@@ -8,7 +8,8 @@ public final class Pig {
 
     public static final String KEY = "pig";
 
-    public static final float SPEED_MULTIPLIER = 0.225F;
+    public static final double SPEED_MULTIPLIER = 0.225D;
+    public static final float ENVELOPE_SPEED_MULTIPLIER = 0.225F;
     public static final double MOVEMENT_SPEED_BASE = 0.25D;
 
     public static final boolean STEERABLE = false;
@@ -25,7 +26,7 @@ public final class Pig {
     public static final boolean REQUIRES_TAMED = false;
 
     public static final MovementEnvelope ENVELOPE =
-        new MovementEnvelope(STEERABLE, CAN_JUMP, CAN_FLY, CAN_DASH, SPEED_MULTIPLIER, 0.0F);
+        new MovementEnvelope(STEERABLE, CAN_JUMP, CAN_FLY, CAN_DASH, ENVELOPE_SPEED_MULTIPLIER, 0.0F);
 
     private Pig() {
     }
@@ -39,7 +40,7 @@ public final class Pig {
     }
 
     public static double maxSpeed(double movementSpeedAttribute, float boostFactor) {
-        return movementSpeedAttribute * SPEED_MULTIPLIER * boostFactor;
+        return movementSpeedAttribute * SPEED_MULTIPLIER * (double) boostFactor;
     }
 
     public static double maxSpeed(float boostFactor) {

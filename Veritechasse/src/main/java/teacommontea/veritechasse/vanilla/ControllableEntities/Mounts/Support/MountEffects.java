@@ -6,11 +6,13 @@ import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Camel;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.HappyGhast;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Horses;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Llamas;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Nautilus;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Pig;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Strider;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BlockMovementFactors;
 import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
 import teacommontea.veritechasse.vanilla.Potions.Support.EffectResolver;
+import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 
 public final class MountEffects {
@@ -35,8 +37,11 @@ public final class MountEffects {
         if (name.equals(Strider.KEY)) {
             return Strider.MOVEMENT_SPEED_BASE;
         }
-        if (name.equals(Camel.KEY)) {
+        if (Camel.contains(name)) {
             return Camel.MOVEMENT_SPEED_BASE;
+        }
+        if (Nautilus.contains(name)) {
+            return Nautilus.MOVEMENT_SPEED_BASE;
         }
         if (name.equals(HappyGhast.KEY)) {
             return HappyGhast.MOVEMENT_SPEED_BASE;
@@ -45,7 +50,7 @@ public final class MountEffects {
             return Llamas.MOVEMENT_SPEED_BASE;
         }
         if (Horses.contains(name)) {
-            return Horses.MAX_MOVEMENT_SPEED;
+            return Horses.maximumMovementSpeed(name);
         }
         return 0.0D;
     }
@@ -55,14 +60,14 @@ public final class MountEffects {
             return 0.0D;
         }
         String name = entityName.toLowerCase(Locale.ROOT);
-        if (name.equals(Camel.KEY)) {
+        if (Camel.contains(name)) {
             return Camel.JUMP_STRENGTH_BASE;
         }
         if (Llamas.contains(name)) {
             return Llamas.JUMP_STRENGTH_BASE;
         }
         if (Horses.contains(name)) {
-            return Horses.MAX_JUMP_STRENGTH;
+            return Horses.maximumJumpStrength(name);
         }
         return 0.0D;
     }
@@ -91,17 +96,26 @@ public final class MountEffects {
         return EffectResolver.jumpPower(base, blockJumpFactor, effects);
     }
 
-    public static double riddenSpeed(String entityName, ActiveEffects effects, float boostFactor, boolean suffocating) {
+    public static double riddenSpeed(
+            String entityName,
+            ActiveEffects effects,
+            float boostFactor,
+            boolean suffocating,
+            boolean inWater,
+            Protocol protocol) {
         if (entityName == null) {
             return 0.0D;
         }
         String name = entityName.toLowerCase(Locale.ROOT);
         double resolved = movementSpeed(name, effects);
         if (name.equals(Pig.KEY)) {
-            return resolved * Pig.SPEED_MULTIPLIER * boostFactor;
+            return resolved * Pig.SPEED_MULTIPLIER * (double) boostFactor;
         }
         if (name.equals(Strider.KEY)) {
-            return resolved * Strider.speedMultiplier(suffocating) * boostFactor;
+            return Strider.maxSpeed(resolved, suffocating, boostFactor, protocol);
+        }
+        if (Nautilus.contains(name)) {
+            return Nautilus.terminalSpeed(resolved, inWater);
         }
         if (name.equals(HappyGhast.KEY)) {
             return HappyGhast.FLYING_SPEED_BASE * HappyGhast.RIDDEN_INPUT_SCALE;
@@ -117,8 +131,11 @@ public final class MountEffects {
             String entityName,
             ActiveEffects effects,
             float boostFactor,
-            boolean suffocating) {
-        return Reality.of(riddenSpeed(entityName, effects, boostFactor, suffocating));
+            boolean suffocating,
+            boolean inWater,
+            Protocol protocol) {
+        return Reality.of(
+            riddenSpeed(entityName, effects, boostFactor, suffocating, inWater, protocol));
     }
 
     public static Reality jumpFrom(String entityName, ActiveEffects effects, String blockBelow) {

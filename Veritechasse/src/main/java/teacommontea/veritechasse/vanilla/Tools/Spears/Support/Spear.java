@@ -18,7 +18,11 @@ public final class Spear {
     public static final float MOB_ACTION_FACTOR = 0.2F;
 
     public static final float ATTACK_RANGE_MIN = 2.0F;
-    public static final float ATTACK_RANGE_MAX = 6.5F;
+    public static final float ATTACK_RANGE_MAX = 4.5F;
+    public static final float CREATIVE_ATTACK_RANGE_MIN = 2.0F;
+    public static final float CREATIVE_ATTACK_RANGE_MAX = 6.5F;
+    public static final float HITBOX_MARGIN = 0.125F;
+    public static final float MOB_RANGE_FACTOR = 0.5F;
 
     public static final double MOTION_SCALE = 20.0D;
 
@@ -92,8 +96,36 @@ public final class Spear {
         return Reality.of(damage(baseAttackDamage, relativeSpeed, damageMultiplier));
     }
 
-    public static Reality rangeFrom(double observedRange) {
-        if (observedRange > ATTACK_RANGE_MAX) {
+    public static float maximumRange(boolean creative) {
+        return creative ? CREATIVE_ATTACK_RANGE_MAX : ATTACK_RANGE_MAX;
+    }
+
+    public static float minimumRange(boolean creative) {
+        return creative ? CREATIVE_ATTACK_RANGE_MIN : ATTACK_RANGE_MIN;
+    }
+
+    public static float maximumRange(boolean creative, boolean isPlayer) {
+        if (!isPlayer) {
+            return ATTACK_RANGE_MAX * MOB_RANGE_FACTOR;
+        }
+        return maximumRange(creative);
+    }
+
+    public static float minimumRange(boolean creative, boolean isPlayer) {
+        if (!isPlayer) {
+            return ATTACK_RANGE_MIN * MOB_RANGE_FACTOR;
+        }
+        return minimumRange(creative);
+    }
+
+    public static boolean rangeIsPossible(double observedRange, boolean creative, boolean isPlayer) {
+        double max = (double) maximumRange(creative, isPlayer) + (double) HITBOX_MARGIN;
+        double min = (double) minimumRange(creative, isPlayer) - (double) HITBOX_MARGIN;
+        return observedRange >= min && observedRange <= max;
+    }
+
+    public static Reality rangeFrom(double observedRange, boolean creative, boolean isPlayer) {
+        if (!rangeIsPossible(observedRange, creative, isPlayer)) {
             return Reality.impossible();
         }
         return Reality.of(observedRange);

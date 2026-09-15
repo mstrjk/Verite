@@ -28,6 +28,8 @@ public final class Smite {
 
     private static final LevelValue DAMAGE = new LinearValue(2.5F, 2.5F);
 
+    public static final float LEGACY_DAMAGE_PER_LEVEL = 2.5F;
+
     private Smite() {
     }
 
@@ -43,7 +45,10 @@ public final class Smite {
         if (level <= 0) {
             return 0.0F;
         }
-        return DAMAGE.calculate(level);
+        if (era == Era.ENCHANTS_AS_DATA) {
+            return DAMAGE.calculate(level);
+        }
+        return (float) level * LEGACY_DAMAGE_PER_LEVEL;
     }
 
     public static float bonusDamageAgainst(int level, EntityType target, Era era) {

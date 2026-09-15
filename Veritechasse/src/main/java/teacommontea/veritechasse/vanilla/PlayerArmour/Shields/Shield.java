@@ -6,7 +6,6 @@ import java.util.Set;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.BindingCurse;
 import teacommontea.veritechasse.vanilla.Enchantments.Mending;
 import teacommontea.veritechasse.vanilla.Enchantments.Support.DurabilityModifiers;
 import teacommontea.veritechasse.vanilla.Enchantments.Support.Exclusivity;
@@ -37,8 +36,7 @@ public final class Shield {
     private static final Set<String> LEGAL_ENCHANTS = Set.of(
         Unbreaking.KEY,
         Mending.KEY,
-        VanishingCurse.KEY,
-        BindingCurse.KEY);
+        VanishingCurse.KEY);
 
     public static final boolean USE_PERMITS_SPRINTING = false;
     public static final float USE_SPEED_MULTIPLIER = 0.2F;

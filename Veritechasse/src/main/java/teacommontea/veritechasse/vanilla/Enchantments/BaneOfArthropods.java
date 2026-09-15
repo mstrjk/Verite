@@ -29,6 +29,10 @@ public final class BaneOfArthropods {
     public static final int SLOWNESS_AMPLIFIER = 3;
     public static final float SLOWNESS_MIN_SECONDS = 1.5F;
 
+    public static final float LEGACY_DAMAGE_PER_LEVEL = 2.5F;
+    public static final int LEGACY_SLOWNESS_BASE_TICKS = 20;
+    public static final int LEGACY_SLOWNESS_RANDOM_PER_LEVEL = 10;
+
     private static final LevelValue DAMAGE = new LinearValue(2.5F, 2.5F);
     private static final LevelValue SLOWNESS_MAX_SECONDS = new LinearValue(1.5F, 0.5F);
 
@@ -47,7 +51,10 @@ public final class BaneOfArthropods {
         if (level <= 0) {
             return 0.0F;
         }
-        return DAMAGE.calculate(level);
+        if (era == Era.ENCHANTS_AS_DATA) {
+            return DAMAGE.calculate(level);
+        }
+        return (float) level * LEGACY_DAMAGE_PER_LEVEL;
     }
 
     public static float bonusDamageAgainst(int level, EntityType target, Era era) {
@@ -63,5 +70,33 @@ public final class BaneOfArthropods {
 
     public static int slownessMaxTicks(int level) {
         return (int) (slownessMaxSeconds(level) * 20.0F);
+    }
+
+    public static int slownessMinTicks(int level, Era era) {
+        if (level <= 0) {
+            return 0;
+        }
+        if (era == Era.ENCHANTS_AS_DATA) {
+            return (int) (SLOWNESS_MIN_SECONDS * 20.0F);
+        }
+        return LEGACY_SLOWNESS_BASE_TICKS;
+    }
+
+    public static int slownessMaxTicks(int level, Era era) {
+        if (level <= 0) {
+            return 0;
+        }
+        if (era == Era.ENCHANTS_AS_DATA) {
+            return slownessMaxTicks(level);
+        }
+        return LEGACY_SLOWNESS_BASE_TICKS + LEGACY_SLOWNESS_RANDOM_PER_LEVEL * level - 1;
+    }
+
+    public static boolean slownessDurationIsPossible(int observedTicks, int level, Era era) {
+        if (level <= 0) {
+            return observedTicks == 0;
+        }
+        return observedTicks >= slownessMinTicks(level, era)
+            && observedTicks <= slownessMaxTicks(level, era);
     }
 }
