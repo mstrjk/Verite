@@ -30,11 +30,11 @@ public final class JumpBoost {
     }
 
     public static boolean jumpStrengthIsAttributeDriven(Protocol protocol) {
-        return protocol.atLeast(1, 20, 6);
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static boolean grantsSafeFallDistance(Protocol protocol) {
-        return protocol.atLeast(1, 20, 6);
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static float jumpPower(float baseJumpStrength, float blockJumpFactor, int amplifier) {

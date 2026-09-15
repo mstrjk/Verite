@@ -16,7 +16,7 @@ public final class ShieldDisable {
     }
 
     public static boolean isChanceBased(Protocol protocol) {
-        return protocol.below(1, 20, 6);
+        return protocol.below(1, 20, 5);
     }
 
     public static float legacyChance(int efficiencyLevel, boolean sprinting) {

@@ -18,7 +18,7 @@ public final class BadOmen {
     }
 
     public static boolean convertsToRaidOmen(Protocol protocol) {
-        return protocol.atLeast(1, 20, 6);
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static boolean triggersRaidDirectly(Protocol protocol) {

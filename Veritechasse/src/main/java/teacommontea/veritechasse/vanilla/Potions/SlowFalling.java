@@ -23,7 +23,7 @@ public final class SlowFalling {
     }
 
     public static boolean gravityIsAttributeDriven(Protocol protocol) {
-        return protocol.atLeast(1, 20, 6);
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static double effectiveGravity(double gravity, double deltaY, Protocol protocol) {

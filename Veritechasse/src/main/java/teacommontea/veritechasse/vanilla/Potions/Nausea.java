@@ -22,7 +22,13 @@ public final class Nausea {
     }
 
     public static boolean hasBlendDuration(Protocol protocol) {
-        return protocol.atLeast(1, 21, 5);
+        if (protocol.atLeast(26, 1, 0)) {
+            return true;
+        }
+        if (protocol.atLeast(1, 21, 5)) {
+            return false;
+        }
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static int blendInTicks(Protocol protocol) {

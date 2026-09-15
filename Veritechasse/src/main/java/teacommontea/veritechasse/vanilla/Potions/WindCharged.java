@@ -20,7 +20,7 @@ public final class WindCharged {
     }
 
     public static boolean exists(Protocol protocol) {
-        return protocol.atLeast(1, 20, 6);
+        return protocol.atLeast(1, 20, 5);
     }
 
     public static boolean triggersOnDeath() {
