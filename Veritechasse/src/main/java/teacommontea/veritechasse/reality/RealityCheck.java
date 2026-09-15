@@ -2,6 +2,11 @@ package teacommontea.veritechasse.reality;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import teacommontea.veritechasse.vanilla.Era;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerClimb.ClimbMotion;
@@ -87,7 +92,7 @@ public final class RealityCheck {
         checkVertical(observations, previous, current, derivedGround, airborne);
         checkPose(observations, current);
         checkFlight(observations, current);
-        checkGlide(observations, current);
+        checkGlide(observations, current, derivedGround);
         checkFall(observations, previous, current, derivedGround);
         return observations;
     }
@@ -173,7 +178,7 @@ public final class RealityCheck {
             return;
         }
         if (current.inLava()) {
-            double bound = LiquidReality.maximumLavaSpeed(true, false);
+            double bound = LiquidReality.maximumLavaSpeed(true, current.ultraWarm());
             compare(observations, "lava-xz", observed, bound);
             return;
         }
@@ -298,15 +303,46 @@ public final class RealityCheck {
         }
     }
 
-    private void checkGlide(List<Observation> observations, PlayerSnapshot current) {
+    private void checkGlide(
+            List<Observation> observations,
+            PlayerSnapshot current,
+            boolean derivedGround) {
         if (!current.gliding()) {
             return;
         }
-        boolean hasGlider = GlideGate.gliderIsUsable(true, true, false);
+        boolean hasGlider = hasUsableGlider(current);
         if (GlideReality.glidingWithoutGlider(
-                true, false, false, current.effects(), hasGlider)) {
-            observations.add(Observation.suspect("glide", "gliding with no usable glider"));
+                true, derivedGround, false, current.effects(), hasGlider)) {
+            observations.add(Observation.suspect("glide",
+                "gliding with no usable glider"
+                    + " chest=" + itemName(current.chestplate())
+                    + " ground=" + derivedGround));
         }
+    }
+
+    private boolean hasUsableGlider(PlayerSnapshot current) {
+        ItemStack chest = current.chestplate();
+        if (chest == null) {
+            return false;
+        }
+        String key = itemName(chest);
+        int maxDamage = chest.getType().getMaxDurability();
+        return GlideGate.legacyElytraIsUsable(key, damageOf(chest), maxDamage);
+    }
+
+    private static String itemName(ItemStack stack) {
+        if (stack == null) {
+            return "";
+        }
+        return stack.getType().name().toLowerCase(Locale.ROOT);
+    }
+
+    private static int damageOf(ItemStack stack) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta instanceof Damageable) {
+            return ((Damageable) meta).getDamage();
+        }
+        return 0;
     }
 
     private void checkFall(

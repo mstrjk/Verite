@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -47,6 +48,7 @@ public final class PlayerSnapshot {
     private final String pose;
 
     private final String worldName;
+    private final boolean ultraWarm;
 
     private final double fallDistance;
     private final double health;
@@ -54,6 +56,8 @@ public final class PlayerSnapshot {
     private final ActiveEffects effects;
     private final ItemStack boots;
     private final ItemStack leggings;
+    private final ItemStack chestplate;
+    private final ItemStack helmet;
     private final ItemStack heldItem;
 
     private final long tick;
@@ -89,11 +93,14 @@ public final class PlayerSnapshot {
         this.blockBelow = builder.blockBelow;
         this.pose = builder.pose;
         this.worldName = builder.worldName;
+        this.ultraWarm = builder.ultraWarm;
         this.fallDistance = builder.fallDistance;
         this.health = builder.health;
         this.effects = builder.effects;
         this.boots = builder.boots;
         this.leggings = builder.leggings;
+        this.chestplate = builder.chestplate;
+        this.helmet = builder.helmet;
         this.heldItem = builder.heldItem;
         this.tick = builder.tick;
         this.packetIndex = builder.packetIndex;
@@ -128,11 +135,15 @@ public final class PlayerSnapshot {
         builder.blockBelow = blockNameAt(player, -1);
         builder.pose = player.getPose().name().toLowerCase(Locale.ROOT);
         builder.worldName = location.getWorld() == null ? "" : location.getWorld().getName();
+        builder.ultraWarm = location.getWorld() != null
+            && location.getWorld().getEnvironment() == World.Environment.NETHER;
         builder.fallDistance = player.getFallDistance();
         builder.health = player.getHealth();
         builder.effects = effectsOf(player);
         builder.boots = player.getInventory().getBoots();
         builder.leggings = player.getInventory().getLeggings();
+        builder.chestplate = player.getInventory().getChestplate();
+        builder.helmet = player.getInventory().getHelmet();
         builder.heldItem = player.getInventory().getItemInMainHand();
         builder.tick = tick;
         builder.packetIndex = packetIndex;
@@ -278,6 +289,10 @@ public final class PlayerSnapshot {
         return this.worldName;
     }
 
+    public boolean ultraWarm() {
+        return this.ultraWarm;
+    }
+
     public double fallDistance() {
         return this.fallDistance;
     }
@@ -296,6 +311,14 @@ public final class PlayerSnapshot {
 
     public ItemStack leggings() {
         return this.leggings;
+    }
+
+    public ItemStack chestplate() {
+        return this.chestplate;
+    }
+
+    public ItemStack helmet() {
+        return this.helmet;
     }
 
     public ItemStack heldItem() {
@@ -371,11 +394,14 @@ public final class PlayerSnapshot {
         private String blockBelow;
         private String pose;
         private String worldName;
+        private boolean ultraWarm;
         private double fallDistance;
         private double health;
         private ActiveEffects effects;
         private ItemStack boots;
         private ItemStack leggings;
+        private ItemStack chestplate;
+        private ItemStack helmet;
         private ItemStack heldItem;
         private long tick;
         private int packetIndex;
