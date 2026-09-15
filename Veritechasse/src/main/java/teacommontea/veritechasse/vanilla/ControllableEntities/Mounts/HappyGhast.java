@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.RideableArmour.Mounts;
+package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
 
 import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.ControlGate;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.MovementEnvelope;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
 
 public final class HappyGhast {
 
@@ -31,6 +31,7 @@ public final class HappyGhast {
     public static final boolean CAN_JUMP = false;
     public static final boolean CAN_FLY = true;
     public static final boolean CAN_DASH = false;
+    public static final boolean ACCEPTS_POTION_EFFECTS = true;
 
     public static final MovementEnvelope ENVELOPE =
         new MovementEnvelope(STEERABLE, CAN_JUMP, CAN_FLY, CAN_DASH, RIDDEN_INPUT_SCALE, BACKWARD_LOOK_FACTOR);
@@ -72,5 +73,9 @@ public final class HappyGhast {
 
     public static Reality riddenSpeedFrom() {
         return Reality.of(maxRiddenSpeed());
+    }
+
+    public static boolean acceptsPotionEffects() {
+        return ACCEPTS_POTION_EFFECTS;
     }
 }

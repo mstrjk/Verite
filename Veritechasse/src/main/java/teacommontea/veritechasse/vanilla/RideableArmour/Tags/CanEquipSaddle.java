@@ -63,6 +63,42 @@ public final class CanEquipSaddle {
         return protocol.atLeast(EXPANDED_PROTOCOL_MAJOR, EXPANDED_PROTOCOL_MINOR, EXPANDED_PROTOCOL_PATCH);
     }
 
+    public static final Set<String> REQUIRES_TAMING = Set.of(
+        "camel",
+        "donkey",
+        "horse",
+        "mule",
+        "nautilus",
+        "zombie_nautilus");
+
+    public static final Set<String> IGNORES_SLOT_RESTRICTIONS = Set.of(
+        "skeleton_horse",
+        "zombie_horse");
+
+    public static boolean requiresTaming(String entityName) {
+        if (entityName == null) {
+            return false;
+        }
+        return REQUIRES_TAMING.contains(entityName.toLowerCase(Locale.ROOT));
+    }
+
+    public static boolean ignoresSlotRestrictions(String entityName) {
+        if (entityName == null) {
+            return false;
+        }
+        return IGNORES_SLOT_RESTRICTIONS.contains(entityName.toLowerCase(Locale.ROOT));
+    }
+
+    public static boolean individualPermits(String entityName, boolean alive, boolean baby, boolean tamed) {
+        if (ignoresSlotRestrictions(entityName)) {
+            return true;
+        }
+        if (!alive || baby) {
+            return false;
+        }
+        return !requiresTaming(entityName) || tamed;
+    }
+
     public static boolean contains(String entityName, Protocol protocol) {
         if (entityName == null) {
             return false;

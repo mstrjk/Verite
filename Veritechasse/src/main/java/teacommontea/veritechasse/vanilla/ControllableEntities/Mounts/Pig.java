@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.RideableArmour.Mounts;
+package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
 
 import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.ControlGate;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.MovementEnvelope;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
 
 public final class Pig {
 
@@ -15,6 +15,7 @@ public final class Pig {
     public static final boolean CAN_JUMP = false;
     public static final boolean CAN_FLY = false;
     public static final boolean CAN_DASH = false;
+    public static final boolean ACCEPTS_POTION_EFFECTS = true;
 
     public static final float FORWARD_INPUT_X = 0.0F;
     public static final float FORWARD_INPUT_Y = 0.0F;
@@ -51,5 +52,9 @@ public final class Pig {
 
     public static Reality jumpFrom() {
         return Reality.impossible();
+    }
+
+    public static boolean acceptsPotionEffects() {
+        return ACCEPTS_POTION_EFFECTS;
     }
 }

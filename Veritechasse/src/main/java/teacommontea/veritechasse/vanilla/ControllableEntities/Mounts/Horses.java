@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.RideableArmour.Mounts;
+package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
 
 import java.util.Locale;
 import java.util.Set;
 
 import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.ControlGate;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.MovementEnvelope;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
 
 public final class Horses {
 
@@ -42,6 +42,7 @@ public final class Horses {
     public static final boolean CAN_JUMP = true;
     public static final boolean CAN_FLY = false;
     public static final boolean CAN_DASH = false;
+    public static final boolean ACCEPTS_POTION_EFFECTS = true;
 
     public static final MovementEnvelope ENVELOPE =
         new MovementEnvelope(STEERABLE, CAN_JUMP, CAN_FLY, CAN_DASH, 1.0F, BACKWARDS_MOVE_SPEED_FACTOR);
@@ -105,5 +106,9 @@ public final class Horses {
     public static boolean jumpIsGeneratable(double observed) {
         return observed >= MIN_JUMP_STRENGTH - GENERATION_TOLERANCE
             && observed <= MAX_JUMP_STRENGTH + GENERATION_TOLERANCE;
+    }
+
+    public static boolean acceptsPotionEffects() {
+        return ACCEPTS_POTION_EFFECTS;
     }
 }

@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.RideableArmour.Mounts;
+package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
 
 import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.ControlGate;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.MovementEnvelope;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
 
 public final class Camel {
 
@@ -21,6 +21,7 @@ public final class Camel {
     public static final boolean CAN_JUMP = true;
     public static final boolean CAN_FLY = false;
     public static final boolean CAN_DASH = true;
+    public static final boolean ACCEPTS_POTION_EFFECTS = true;
 
     public static final MovementEnvelope ENVELOPE =
         new MovementEnvelope(STEERABLE, CAN_JUMP, CAN_FLY, CAN_DASH, 1.0F, Horses.BACKWARDS_MOVE_SPEED_FACTOR);
@@ -59,5 +60,9 @@ public final class Camel {
 
     public static Reality dashFrom(float jumpScale, double movementSpeedAttribute, double blockSpeedFactor) {
         return Reality.of(dashHorizontalImpulse(jumpScale, movementSpeedAttribute, blockSpeedFactor));
+    }
+
+    public static boolean acceptsPotionEffects() {
+        return ACCEPTS_POTION_EFFECTS;
     }
 }

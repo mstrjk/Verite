@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.RideableArmour.Support;
+package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support;
 
 public final class MovementEnvelope {
 

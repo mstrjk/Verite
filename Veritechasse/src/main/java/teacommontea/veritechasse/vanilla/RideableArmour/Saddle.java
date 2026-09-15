@@ -5,7 +5,6 @@ import java.util.Locale;
 import org.bukkit.inventory.ItemStack;
 
 import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.RideableArmour.Support.ControlGate;
 import teacommontea.veritechasse.vanilla.RideableArmour.Tags.CanEquipSaddle;
 
 public final class Saddle {
@@ -44,28 +43,10 @@ public final class Saddle {
         return CanEquipSaddle.contains(entityName, protocol);
     }
 
-    public static ControlGate controlGate(String entityName) {
-        if (entityName == null) {
-            return ControlGate.NONE;
-        }
-        String name = entityName.toLowerCase(Locale.ROOT);
-        if (name.equals("pig")) {
-            return ControlGate.SADDLE_AND_CARROT_ON_A_STICK;
-        }
-        if (name.equals("strider")) {
-            return ControlGate.SADDLE_AND_WARPED_FUNGUS_ON_A_STICK;
-        }
-        return ControlGate.SADDLE_ONLY;
-    }
-
-    public static boolean grantsControl(
-            String entityName,
-            boolean saddled,
-            String heldItemName,
-            Protocol protocol) {
+    public static boolean canBeEquippedTo(String entityName, boolean alive, boolean baby, boolean tamed, Protocol protocol) {
         if (!canBeEquippedTo(entityName, protocol)) {
             return false;
         }
-        return controlGate(entityName).satisfiedBy(saddled, heldItemName, false);
+        return CanEquipSaddle.individualPermits(entityName, alive, baby, tamed);
     }
 }
