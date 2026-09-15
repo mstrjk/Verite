@@ -1,5 +1,9 @@
 package teacommontea.veritechasse.vanilla.Tools.Swords.Support;
 
+import org.bukkit.inventory.ItemStack;
+
+import teacommontea.veritechasse.vanilla.Enchantments.Support.LootModifiers;
+import teacommontea.veritechasse.vanilla.Era;
 import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 
@@ -57,11 +61,23 @@ public final class SweepAttack {
         return sweepDamage(baseDamage, sweepingDamageRatio) * attackStrengthScale;
     }
 
+    public static float sweepDamage(ItemStack sword, float baseDamage, Era era) {
+        return LootModifiers.sweepDamage(sword, baseDamage, era);
+    }
+
+    public static float sweepDamageAfterCharge(ItemStack sword, float baseDamage, float attackStrengthScale, Era era) {
+        return sweepDamage(sword, baseDamage, era) * attackStrengthScale;
+    }
+
     public static boolean withinReach(double distanceSqr) {
         return distanceSqr < REACH_SQR;
     }
 
     public static Reality damageFrom(float baseDamage, double sweepingDamageRatio, float attackStrengthScale) {
         return Reality.of(sweepDamageAfterCharge(baseDamage, sweepingDamageRatio, attackStrengthScale));
+    }
+
+    public static Reality damageFrom(ItemStack sword, float baseDamage, float attackStrengthScale, Era era) {
+        return Reality.of(sweepDamageAfterCharge(sword, baseDamage, attackStrengthScale, era));
     }
 }
