@@ -1,5 +1,6 @@
 package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerMisc;
 
+import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ.GroundSpeed;
 import teacommontea.veritechasse.vanilla.Reality;
 
 public final class CreativeFlight {
@@ -27,6 +28,24 @@ public final class CreativeFlight {
 
     public static float horizontalSpeed(boolean sprinting) {
         return horizontalSpeed(DEFAULT_FLYING_SPEED, sprinting);
+    }
+
+    public static double horizontalTerminal(float flyingSpeed, boolean sprinting) {
+        float drag = GroundSpeed.AIR_DRAG;
+        if (drag >= 1.0F) {
+            return Double.POSITIVE_INFINITY;
+        }
+        return (double) horizontalSpeed(flyingSpeed, sprinting)
+            / (1.0D - (double) drag);
+    }
+
+    public static double horizontalTerminal(boolean sprinting) {
+        return horizontalTerminal(DEFAULT_FLYING_SPEED, sprinting);
+    }
+
+    public static double horizontalAfterTick(double currentHorizontal, float flyingSpeed, boolean sprinting) {
+        return currentHorizontal * (double) GroundSpeed.AIR_DRAG
+            + (double) horizontalSpeed(flyingSpeed, sprinting);
     }
 
     public static double verticalAfterTravel(double deltaYBeforeTravel) {

@@ -167,9 +167,13 @@ public final class RealityCheck {
             boolean derivedGround) {
         double observed = current.observedHorizontal();
         if (current.flying()) {
+            boolean flightSprint = current.sprinting() || previous.sprinting();
             double bound = MiscReality.maximumFlightHorizontal(
-                CreativeFlight.DEFAULT_FLYING_SPEED, current.sprinting());
-            compare(observations, "fly-xz", observed, bound);
+                previous.observedHorizontal(),
+                CreativeFlight.DEFAULT_FLYING_SPEED, flightSprint);
+            compare(observations, "fly-xz", observed, bound,
+                " carried=" + format(previous.observedHorizontal())
+                    + " sprint=" + flightSprint);
             return;
         }
         if (current.gliding()) {
