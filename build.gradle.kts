@@ -30,7 +30,7 @@ val proxyCompile: Configuration by configurations.creating
 val velocityAp: Configuration by configurations.creating
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
@@ -122,6 +122,47 @@ val assembleClasses by tasks.registering {
 
 tasks.named<Jar>("jar") {
     enabled = false
+}
+
+val chasseSrcRoot = file("Veritechasse/src/main/java")
+val chasseResRoot = file("Veritechasse/src/main/resources")
+val chasseOut = layout.buildDirectory.dir("veritechasse-classes/main")
+
+val chasseYml = file("Veritechasse/src/main/resources/plugin.yml")
+val chasseVersion = if (chasseYml.exists()) {
+    Regex("""(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$""")
+        .find(chasseYml.readText())?.groupValues?.get(1)
+        ?: throw GradleException("no 'version: X.Y.Z' line in Veritechasse plugin.yml")
+} else {
+    pluginVersion
+}
+
+val compileChasse by tasks.registering(JavaCompile::class) {
+    dependsOn(compileMain)
+    javaCompiler.set(jdk17)
+    source = fileTree(chasseSrcRoot)
+    classpath = files(mainOut) + configurations.compileClasspath.get()
+    destinationDirectory.set(chasseOut)
+    options.encoding = "UTF-8"
+    options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+    options.isFork = true
+    onlyIf { chasseSrcRoot.exists() }
+}
+
+tasks.register<org.gradle.jvm.tasks.Jar>("veritechasseJar") {
+    dependsOn(compileChasse)
+    archiveFileName.set("Veritechasse-$chasseVersion.jar")
+    destinationDirectory.set(layout.projectDirectory)
+
+    from(compileChasse.map { it.destinationDirectory })
+    if (chasseResRoot.exists()) {
+        from(chasseResRoot)
+    }
+
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    onlyIf { chasseSrcRoot.exists() }
 }
 
 val shadedJars = listOf(
