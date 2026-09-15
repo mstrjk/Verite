@@ -1,0 +1,43 @@
+package teacommontea.veritechasse.vanilla.Potions;
+
+import teacommontea.veritechasse.vanilla.Protocol;
+
+public final class BadOmen {
+
+    public static final String KEY = "bad_omen";
+    public static final int VANILLA_MAX_AMPLIFIER = 4;
+    public static final boolean BENEFICIAL = false;
+    public static final boolean NEUTRAL = true;
+    public static final boolean INSTANTANEOUS = false;
+
+    public static final boolean APPLIES_EVERY_TICK = true;
+
+    public static final int RAID_OMEN_DURATION_TICKS = 600;
+
+    private BadOmen() {
+    }
+
+    public static boolean convertsToRaidOmen(Protocol protocol) {
+        return protocol.atLeast(1, 20, 6);
+    }
+
+    public static boolean triggersRaidDirectly(Protocol protocol) {
+        return !convertsToRaidOmen(protocol);
+    }
+
+    public static boolean canTrigger(boolean spectator, boolean peaceful, boolean inVillage) {
+        return !spectator && !peaceful && inVillage;
+    }
+
+    public static int raidOmenAmplifier(int amplifier) {
+        return amplifier;
+    }
+
+    public static int raidOmenDurationTicks() {
+        return RAID_OMEN_DURATION_TICKS;
+    }
+
+    public static boolean exceedsVanillaMax(int amplifier) {
+        return amplifier > VANILLA_MAX_AMPLIFIER;
+    }
+}
