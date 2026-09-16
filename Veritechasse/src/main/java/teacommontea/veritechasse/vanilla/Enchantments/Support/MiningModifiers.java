@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.AquaAffinity;
-import teacommontea.veritechasse.vanilla.Enchantments.Efficiency;
-import teacommontea.veritechasse.vanilla.Enchantments.SilkTouch;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.AquaAffinity;
+import teacommontea.veritechasse.Vanilla.Enchantments.Efficiency;
+import teacommontea.veritechasse.Vanilla.Enchantments.SilkTouch;
 
 public final class MiningModifiers {
 

@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.Tools.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Support;
 
-import teacommontea.veritechasse.vanilla.Tools.Tags.NeedsDiamondTool;
-import teacommontea.veritechasse.vanilla.Tools.Tags.NeedsIronTool;
-import teacommontea.veritechasse.vanilla.Tools.Tags.NeedsStoneTool;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.NeedsDiamondTool;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.NeedsIronTool;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.NeedsStoneTool;
 
 public final class CorrectForDrops {
 

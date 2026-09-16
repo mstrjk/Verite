@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.reality;
+package teacommontea.veritechasse.Reality;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.Tools.Utility;
+package teacommontea.veritechasse.Vanilla.Tools.Utility;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.LuckOfTheSea;
-import teacommontea.veritechasse.vanilla.Enchantments.Lure;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Utility.Support.BobberCast;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.LuckOfTheSea;
+import teacommontea.veritechasse.Vanilla.Enchantments.Lure;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Utility.Support.BobberCast;
 
 public final class FishingRod {
 

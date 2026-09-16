@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets;
 
 import java.util.Locale;
 

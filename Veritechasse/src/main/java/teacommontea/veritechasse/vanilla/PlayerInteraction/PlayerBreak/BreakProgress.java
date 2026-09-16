@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class BreakProgress {
 

@@ -1,18 +1,18 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.Vanilla.Potions.Support;
 
 import org.bukkit.entity.EntityType;
 
-import teacommontea.veritechasse.vanilla.Potions.Absorption;
-import teacommontea.veritechasse.vanilla.Potions.Hunger;
-import teacommontea.veritechasse.vanilla.Potions.InstantDamage;
-import teacommontea.veritechasse.vanilla.Potions.InstantHealth;
-import teacommontea.veritechasse.vanilla.Potions.Levitation;
-import teacommontea.veritechasse.vanilla.Potions.Poison;
-import teacommontea.veritechasse.vanilla.Potions.Regeneration;
-import teacommontea.veritechasse.vanilla.Potions.Saturation;
-import teacommontea.veritechasse.vanilla.Potions.Wither;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Absorption;
+import teacommontea.veritechasse.Vanilla.Potions.Hunger;
+import teacommontea.veritechasse.Vanilla.Potions.InstantDamage;
+import teacommontea.veritechasse.Vanilla.Potions.InstantHealth;
+import teacommontea.veritechasse.Vanilla.Potions.Levitation;
+import teacommontea.veritechasse.Vanilla.Potions.Poison;
+import teacommontea.veritechasse.Vanilla.Potions.Regeneration;
+import teacommontea.veritechasse.Vanilla.Potions.Saturation;
+import teacommontea.veritechasse.Vanilla.Potions.Wither;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class HealthResolver {
 

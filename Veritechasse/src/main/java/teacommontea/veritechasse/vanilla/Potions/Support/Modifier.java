@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.Vanilla.Potions.Support;
 
 public final class Modifier {
 

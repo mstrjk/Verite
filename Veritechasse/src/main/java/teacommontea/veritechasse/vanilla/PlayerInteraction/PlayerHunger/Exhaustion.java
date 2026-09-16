@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger;
 
 public final class Exhaustion {
 

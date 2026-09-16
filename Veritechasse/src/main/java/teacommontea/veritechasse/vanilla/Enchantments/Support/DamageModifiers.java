@@ -1,15 +1,15 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.BaneOfArthropods;
-import teacommontea.veritechasse.vanilla.Enchantments.Impaling;
-import teacommontea.veritechasse.vanilla.Enchantments.Power;
-import teacommontea.veritechasse.vanilla.Enchantments.Sharpness;
-import teacommontea.veritechasse.vanilla.Enchantments.Smite;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.SensitiveToImpaling;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.BaneOfArthropods;
+import teacommontea.veritechasse.Vanilla.Enchantments.Impaling;
+import teacommontea.veritechasse.Vanilla.Enchantments.Power;
+import teacommontea.veritechasse.Vanilla.Enchantments.Sharpness;
+import teacommontea.veritechasse.Vanilla.Enchantments.Smite;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.SensitiveToImpaling;
 
 public final class DamageModifiers {
 

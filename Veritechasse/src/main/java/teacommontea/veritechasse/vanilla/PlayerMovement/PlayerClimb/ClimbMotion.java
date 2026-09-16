@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerClimb;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerClimb;
 
-import teacommontea.veritechasse.vanilla.Potions.Levitation;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Levitation;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ClimbMotion {
 

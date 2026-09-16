@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.Vanilla.Potions.Support;
 
 import java.util.Locale;
 import java.util.Map;

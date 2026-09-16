@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Potions.Tags;
+package teacommontea.veritechasse.Vanilla.Potions.Tags;
 
 import org.bukkit.entity.EntityType;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.Types.EntityTag;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.Types.EntityTag;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
 
 public final class InvertedHealingAndHarm {
 

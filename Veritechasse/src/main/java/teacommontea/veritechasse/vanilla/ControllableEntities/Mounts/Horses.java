@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Support.ControlGate;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
 
 public final class Horses {
 

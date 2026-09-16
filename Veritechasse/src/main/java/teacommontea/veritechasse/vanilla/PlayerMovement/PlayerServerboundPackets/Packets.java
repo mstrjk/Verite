@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class Packets {
 

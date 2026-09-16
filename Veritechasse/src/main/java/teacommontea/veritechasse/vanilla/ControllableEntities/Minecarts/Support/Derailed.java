@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts.Support;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BubbleColumn;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.ExplosionKnockback;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.GroundFriction;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BubbleColumn;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.ExplosionKnockback;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.GroundFriction;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Derailed {
 

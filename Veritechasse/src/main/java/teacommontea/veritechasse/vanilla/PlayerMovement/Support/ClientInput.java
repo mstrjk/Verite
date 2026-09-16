@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.Support;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.Support;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ClientInput {
 

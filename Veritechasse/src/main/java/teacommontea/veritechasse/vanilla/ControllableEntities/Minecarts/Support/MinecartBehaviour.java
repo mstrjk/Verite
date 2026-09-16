@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public enum MinecartBehaviour {
 

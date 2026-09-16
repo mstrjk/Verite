@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Tools.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Support;
 
-import teacommontea.veritechasse.vanilla.Tools.Tags.MineableAxe;
-import teacommontea.veritechasse.vanilla.Tools.Tags.MineableHoe;
-import teacommontea.veritechasse.vanilla.Tools.Tags.MineablePickaxe;
-import teacommontea.veritechasse.vanilla.Tools.Tags.MineableShovel;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.MineableAxe;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.MineableHoe;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.MineablePickaxe;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.MineableShovel;
 
 public enum ToolKind {
 

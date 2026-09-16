@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class BlockKnowledge {
 

@@ -1,19 +1,19 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Support;
 
 import java.util.Locale;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Camel;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.HappyGhast;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Horses;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Llamas;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Nautilus;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Pig;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Strider;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BlockMovementFactors;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectResolver;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Camel;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.HappyGhast;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Horses;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Llamas;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Nautilus;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Pig;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Strider;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BlockMovementFactors;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectResolver;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class MountEffects {
 

@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Fortune;
-import teacommontea.veritechasse.vanilla.Enchantments.Looting;
-import teacommontea.veritechasse.vanilla.Enchantments.Lunge;
-import teacommontea.veritechasse.vanilla.Enchantments.SweepingEdge;
-import teacommontea.veritechasse.vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Fortune;
+import teacommontea.veritechasse.Vanilla.Enchantments.Looting;
+import teacommontea.veritechasse.Vanilla.Enchantments.Lunge;
+import teacommontea.veritechasse.Vanilla.Enchantments.SweepingEdge;
+import teacommontea.veritechasse.Vanilla.Era;
 
 public final class LootModifiers {
 

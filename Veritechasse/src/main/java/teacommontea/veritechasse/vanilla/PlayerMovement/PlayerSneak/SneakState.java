@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak;
 
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets.SneakSource;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets.SneakSource;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class SneakState {
 

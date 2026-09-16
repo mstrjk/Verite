@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerTeleport;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerTeleport;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class TeleportReality {
 
@@ -22,7 +22,7 @@ public final class TeleportReality {
         return awaitingTeleportAck(awaitingTeleportId);
     }
 
-    public static boolean rotationStillApplies(Integer awaitingTeleportId) {
+    public static boolean rotationAppliesWhileAwaitingTeleport() {
         return true;
     }
 
@@ -84,12 +84,16 @@ public final class TeleportReality {
         return TeleportRange.withinChorusSpread(toX - fromX, toY - fromY, toZ - fromZ);
     }
 
-    public static double horizontalBaselineAfter(String cause, double currentHorizontal) {
-        return TeleportEffects.horizontalAfter(cause, currentHorizontal);
+    public static double horizontalBaselineAfter(
+            String cause, double currentHorizontal, int packedRelatives, Protocol protocol) {
+        return TeleportEffects.horizontalAfter(
+            cause, currentHorizontal, packedRelatives, protocol);
     }
 
-    public static double verticalBaselineAfter(String cause, double currentVertical) {
-        return TeleportEffects.verticalAfter(cause, currentVertical);
+    public static double verticalBaselineAfter(
+            String cause, double currentVertical, int packedRelatives, Protocol protocol) {
+        return TeleportEffects.verticalAfter(
+            cause, currentVertical, packedRelatives, protocol);
     }
 
     public static double fallDistanceAfter(String cause, double currentFallDistance) {

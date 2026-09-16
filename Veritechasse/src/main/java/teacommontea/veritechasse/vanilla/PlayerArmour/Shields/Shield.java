@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Shields;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Shields;
 
 import java.util.Locale;
 import java.util.Set;
@@ -6,17 +6,17 @@ import java.util.Set;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Mending;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.DurabilityModifiers;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.Exclusivity;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.RangedModifiers;
-import teacommontea.veritechasse.vanilla.Enchantments.Unbreaking;
-import teacommontea.veritechasse.vanilla.Enchantments.VanishingCurse;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Shields.Support.BlocksAttacks;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Shields.Support.ShieldDisable;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Mending;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.DurabilityModifiers;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.Exclusivity;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.RangedModifiers;
+import teacommontea.veritechasse.Vanilla.Enchantments.Unbreaking;
+import teacommontea.veritechasse.Vanilla.Enchantments.VanishingCurse;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Shields.Support.BlocksAttacks;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Shields.Support.ShieldDisable;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Shield {
 

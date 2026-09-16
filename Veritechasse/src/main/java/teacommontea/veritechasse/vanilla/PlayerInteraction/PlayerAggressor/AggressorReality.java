@@ -1,15 +1,15 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerAggressor;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerAggressor;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.Exhaustion;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Swords.Support.AttackPipeline;
-import teacommontea.veritechasse.vanilla.Tools.Swords.Support.AttackStrength;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.Exhaustion;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Swords.Support.AttackPipeline;
+import teacommontea.veritechasse.Vanilla.Tools.Swords.Support.AttackStrength;
 
 public final class AggressorReality {
 

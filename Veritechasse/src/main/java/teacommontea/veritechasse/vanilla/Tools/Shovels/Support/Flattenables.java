@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Shovels.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Shovels.Support;
 
 import java.util.Locale;
 import java.util.Set;

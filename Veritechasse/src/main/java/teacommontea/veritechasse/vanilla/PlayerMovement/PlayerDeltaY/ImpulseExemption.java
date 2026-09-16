@@ -1,15 +1,19 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerDeltaY;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ImpulseExemption {
 
     public static final String KEY = "impulse_exemption";
 
-    public static final int PROTOCOL_MAJOR = 26;
-    public static final int PROTOCOL_MINOR = 1;
+    public static final int PROTOCOL_MAJOR = 1;
+    public static final int PROTOCOL_MINOR = 21;
     public static final int PROTOCOL_PATCH = 0;
+
+    public static final int MOVEMENT_GATE_MAJOR = 1;
+    public static final int MOVEMENT_GATE_MINOR = 21;
+    public static final int MOVEMENT_GATE_PATCH = 11;
 
     public static final int GRACE_TICKS = 40;
 
@@ -23,6 +27,15 @@ public final class ImpulseExemption {
 
     public static boolean exists(Protocol protocol) {
         return protocol.atLeast(PROTOCOL_MAJOR, PROTOCOL_MINOR, PROTOCOL_PATCH);
+    }
+
+    public static boolean exemptsMovementGate(Protocol protocol) {
+        return protocol.atLeast(
+            MOVEMENT_GATE_MAJOR, MOVEMENT_GATE_MINOR, MOVEMENT_GATE_PATCH);
+    }
+
+    public static boolean movementGateForgiven(int graceRemaining, Protocol protocol) {
+        return exemptsMovementGate(protocol) && inGracePeriod(graceRemaining);
     }
 
     public static boolean grantedByExplosion(String explosionSource, Protocol protocol) {

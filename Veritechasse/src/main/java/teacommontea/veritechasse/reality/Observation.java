@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.reality;
+package teacommontea.veritechasse.Reality;
 
 public final class Observation {
 

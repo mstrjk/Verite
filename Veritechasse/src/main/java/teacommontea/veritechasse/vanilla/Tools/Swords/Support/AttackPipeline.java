@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.Tools.Swords.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Swords.Support;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.DamageModifiers;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.KnockbackModifiers;
-import teacommontea.veritechasse.vanilla.Potions.Support.CriticalAttack;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.DamageModifiers;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.KnockbackModifiers;
+import teacommontea.veritechasse.Vanilla.Potions.Support.CriticalAttack;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class AttackPipeline {
 

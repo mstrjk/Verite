@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Support;
 
 import java.util.Locale;
 import java.util.Map;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class Materials {
 

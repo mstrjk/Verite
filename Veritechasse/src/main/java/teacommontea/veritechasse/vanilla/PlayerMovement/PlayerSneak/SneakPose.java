@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak;
 
 import java.util.Locale;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class SneakPose {
 
@@ -39,6 +39,15 @@ public final class SneakPose {
     public static final int EXPLICIT_EYE_HEIGHT_PROTOCOL_PATCH = 5;
 
     private SneakPose() {
+    }
+
+    public static boolean outranksShiftKey(String pose) {
+        String key = normalise(pose);
+        return SLEEPING.equals(key)
+            || SWIMMING.equals(key)
+            || FALL_FLYING.equals(key)
+            || SPIN_ATTACK.equals(key)
+            || DYING.equals(key);
     }
 
     public static String normalise(String pose) {

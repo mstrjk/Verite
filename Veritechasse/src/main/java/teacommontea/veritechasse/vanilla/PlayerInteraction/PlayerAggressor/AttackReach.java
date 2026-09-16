@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerAggressor;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerAggressor;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class AttackReach {
 

@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.Tools.Utility;
+package teacommontea.veritechasse.Vanilla.Tools.Utility;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Utility.Support.Steering;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Utility.Support.Steering;
 
 public final class WarpedFungusOnAStick {
 

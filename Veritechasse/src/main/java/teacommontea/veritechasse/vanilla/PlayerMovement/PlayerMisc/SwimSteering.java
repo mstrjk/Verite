@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerMisc;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerMisc;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class SwimSteering {
 

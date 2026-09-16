@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class TntMinecart {
 

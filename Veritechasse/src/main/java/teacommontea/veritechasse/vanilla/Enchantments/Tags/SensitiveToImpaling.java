@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Tags;
+package teacommontea.veritechasse.Vanilla.Enchantments.Tags;
 
 import org.bukkit.entity.EntityType;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.Types.EntityTag;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.Types.EntityTag;
 
 public final class SensitiveToImpaling {
 

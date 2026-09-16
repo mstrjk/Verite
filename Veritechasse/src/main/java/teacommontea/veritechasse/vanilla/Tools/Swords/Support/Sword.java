@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.Tools.Swords.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Swords.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.Durability;
-import teacommontea.veritechasse.vanilla.Tools.Support.Material;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
-import teacommontea.veritechasse.vanilla.Tools.Tags.SwordEfficient;
-import teacommontea.veritechasse.vanilla.Tools.Tags.SwordInstantlyMines;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Durability;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Material;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.SwordEfficient;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.SwordInstantlyMines;
 
 public final class Sword {
 

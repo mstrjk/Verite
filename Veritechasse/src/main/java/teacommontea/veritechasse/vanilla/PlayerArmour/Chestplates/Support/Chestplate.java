@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Chestplates.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Chestplates.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Support.ProtectionModifiers;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.ArmourType;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.Material;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.ProtectionModifiers;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.ArmourType;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.Material;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Chestplate {
 

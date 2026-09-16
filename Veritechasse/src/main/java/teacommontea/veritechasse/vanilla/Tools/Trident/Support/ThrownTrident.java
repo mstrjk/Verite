@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.Tools.Trident.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Trident.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Enchantments.Loyalty;
-import teacommontea.veritechasse.vanilla.Tools.Trident.Trident;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Loyalty;
+import teacommontea.veritechasse.Vanilla.Tools.Trident.Trident;
 
 public final class ThrownTrident {
 

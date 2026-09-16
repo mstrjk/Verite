@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla;
+package teacommontea.veritechasse.Vanilla;
 
 import org.bukkit.Bukkit;
 

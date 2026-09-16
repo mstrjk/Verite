@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Support;
 
 import java.util.Locale;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.PlayerArmour.Tags.FreezeHurtsExtraTypes;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Tags.FreezeImmuneWearables;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Tags.FreezeHurtsExtraTypes;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Tags.FreezeImmuneWearables;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Freezing {
 

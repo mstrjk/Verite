@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Potions;
+package teacommontea.veritechasse.Vanilla.Potions;
 
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
-import teacommontea.veritechasse.vanilla.Potions.Tags.BypassesEffects;
-import teacommontea.veritechasse.vanilla.Potions.Tags.BypassesResistance;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.Potions.Tags.BypassesEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Tags.BypassesResistance;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Resistance {
 

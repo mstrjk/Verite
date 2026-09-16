@@ -1,16 +1,16 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BlockEjection;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BlockMovementFactors;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.CollisionPush;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.ExplosionKnockback;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.FluidCurrent;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.Knockback;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.PistonPush;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.StuckInBlock;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BlockEjection;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BlockMovementFactors;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.CollisionPush;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.ExplosionKnockback;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.FluidCurrent;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.Knockback;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.PistonPush;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.StuckInBlock;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ExternalXZ {
 

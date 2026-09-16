@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Tags;
+package teacommontea.veritechasse.Vanilla.Enchantments.Tags;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.Types.EntityTag;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.Types.EntityTag;
 
 public final class Undead {
 

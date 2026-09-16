@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.Potions;
+package teacommontea.veritechasse.Vanilla.Potions;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Hunger {
 

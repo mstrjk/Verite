@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerDeltaY;
 
-import teacommontea.veritechasse.vanilla.Potions.SlowFalling;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.Attributes;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.SlowFalling;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.Attributes;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Gravity {
 
@@ -50,6 +50,49 @@ public final class Gravity {
 
     public static boolean falling(double deltaY) {
         return deltaY <= 0.0D;
+    }
+
+    public static boolean deltaMustDecreaseAirborne(
+            boolean levitating, boolean gliding, boolean flying, boolean inFluid) {
+        return !levitating && !gliding && !flying && !inFluid;
+    }
+
+    public static double maximumNextDeltaY(
+            double currentDeltaY, ActiveEffects effects, float verticalDrag, Protocol protocol) {
+        double afterGravity = currentDeltaY - effective(currentDeltaY, effects, protocol);
+        return afterGravity * (double) verticalDrag;
+    }
+
+    public static boolean riseIsSustained(double previousDeltaY, double currentDeltaY) {
+        if (previousDeltaY <= 0.0D || currentDeltaY <= 0.0D) {
+            return false;
+        }
+        return currentDeltaY >= previousDeltaY;
+    }
+
+    public static boolean contradictsGravity(
+            double previousDeltaY,
+            double currentDeltaY,
+            ActiveEffects effects,
+            float verticalDrag,
+            boolean levitating,
+            boolean gliding,
+            boolean flying,
+            boolean inFluid,
+            boolean supported,
+            Protocol protocol) {
+        if (!deltaMustDecreaseAirborne(levitating, gliding, flying, inFluid)) {
+            return false;
+        }
+        if (supported) {
+            return false;
+        }
+        if (currentDeltaY <= 0.0D) {
+            return false;
+        }
+        double permitted = maximumNextDeltaY(
+            previousDeltaY, effects, verticalDrag, protocol);
+        return currentDeltaY > permitted;
     }
 
     public static double effective(double baseGravity, double deltaY, boolean slowFalling, Protocol protocol) {

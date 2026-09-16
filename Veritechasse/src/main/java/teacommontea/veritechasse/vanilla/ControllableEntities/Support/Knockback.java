@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Support;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Knockback {
 

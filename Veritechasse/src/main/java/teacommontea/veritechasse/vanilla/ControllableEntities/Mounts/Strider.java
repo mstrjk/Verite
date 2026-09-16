@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Mounts;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.ControlGate;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Support.ControlGate;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Mounts.Support.MovementEnvelope;
 
 public final class Strider {
 

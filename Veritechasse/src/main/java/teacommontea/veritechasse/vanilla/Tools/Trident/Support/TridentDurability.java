@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.Tools.Trident.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Trident.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class TridentDurability {
 

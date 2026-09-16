@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerMisc;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerMisc;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class MiscReality {
 

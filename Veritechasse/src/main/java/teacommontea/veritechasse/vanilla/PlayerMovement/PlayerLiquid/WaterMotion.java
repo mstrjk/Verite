@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerLiquid;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerLiquid;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.DepthStrider;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Potions.DolphinsGrace;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.DepthStrider;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Potions.DolphinsGrace;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class WaterMotion {
 

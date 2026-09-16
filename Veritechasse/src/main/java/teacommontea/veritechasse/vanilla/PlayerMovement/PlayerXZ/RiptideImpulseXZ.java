@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Riptide;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Riptide;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class RiptideImpulseXZ {
 

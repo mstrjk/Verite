@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerCrawl;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerCrawl;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak.SneakPose;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak.SneakReality;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak.SneakSpeed;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak.SneakPose;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak.SneakReality;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak.SneakSpeed;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class CrawlReality {
 

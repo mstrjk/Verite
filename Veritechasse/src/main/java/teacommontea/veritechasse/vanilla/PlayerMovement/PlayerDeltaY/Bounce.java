@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerDeltaY;
 
 import java.util.Locale;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Bounce {
 

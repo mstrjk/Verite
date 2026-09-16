@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Tools.Spears;
+package teacommontea.veritechasse.Vanilla.Tools.Spears;
 
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Spears.Support.KineticCondition;
-import teacommontea.veritechasse.vanilla.Tools.Spears.Support.Spear;
-import teacommontea.veritechasse.vanilla.Tools.Support.Material;
-import teacommontea.veritechasse.vanilla.Tools.Support.Materials;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Spears.Support.KineticCondition;
+import teacommontea.veritechasse.Vanilla.Tools.Spears.Support.Spear;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Material;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Materials;
 
 public final class CopperSpear {
 

@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.Tools.Swords.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Swords.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Support.LootModifiers;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.LootModifiers;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class SweepAttack {
 

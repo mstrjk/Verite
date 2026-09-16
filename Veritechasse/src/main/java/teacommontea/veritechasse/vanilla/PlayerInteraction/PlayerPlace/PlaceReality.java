@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerPlace;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerPlace;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockKnowledge;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockReach;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockKnowledge;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockReach;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class PlaceReality {
 
@@ -40,17 +40,8 @@ public final class PlaceReality {
         return !BlockFace.hitLocationIsWithinBlock(hitX, hitY, hitZ, blockX, blockY, blockZ);
     }
 
-    public static boolean faceDoesNotMatchHit(
-            double hitX,
-            double hitY,
-            double hitZ,
-            int blockX,
-            int blockY,
-            int blockZ,
-            String face,
-            double tolerance) {
-        return !BlockFace.hitLocationMatchesFace(
-            hitX, hitY, hitZ, blockX, blockY, blockZ, face, tolerance);
+    public static boolean serverValidatesFacePlane() {
+        return false;
     }
 
     public static boolean placingIntoOccupiedSpace(

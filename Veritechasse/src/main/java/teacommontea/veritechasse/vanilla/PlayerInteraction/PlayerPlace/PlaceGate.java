@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerPlace;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerPlace;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockKnowledge;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockReach;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockKnowledge;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockReach;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class PlaceGate {
 

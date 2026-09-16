@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerLiquid;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerLiquid;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class LavaMotion {
 

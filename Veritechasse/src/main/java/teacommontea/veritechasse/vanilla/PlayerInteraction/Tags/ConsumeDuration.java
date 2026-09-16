@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.Tags;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags;
 
 import java.util.Locale;
 import java.util.Map;

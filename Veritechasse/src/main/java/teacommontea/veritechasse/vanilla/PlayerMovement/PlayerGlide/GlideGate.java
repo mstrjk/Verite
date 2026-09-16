@@ -1,8 +1,8 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerGlide;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerGlide;
 
-import teacommontea.veritechasse.vanilla.Potions.Levitation;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Potions.Levitation;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class GlideGate {
 

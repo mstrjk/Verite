@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.DestroySpeed;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.DestroySpeed;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
 
 public final class BreakReality {
 

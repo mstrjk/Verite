@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Tools.Swords;
+package teacommontea.veritechasse.Vanilla.Tools.Swords;
 
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.Material;
-import teacommontea.veritechasse.vanilla.Tools.Support.Materials;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
-import teacommontea.veritechasse.vanilla.Tools.Swords.Support.Sword;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Material;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Materials;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Tools.Swords.Support.Sword;
 
 public final class IronSword {
 

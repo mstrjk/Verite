@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Support;
 
 public final class MiningTier {
 

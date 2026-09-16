@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BlockMovementFactors;
-import teacommontea.veritechasse.vanilla.Enchantments.SoulSpeed;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.ArmourModifiers;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.SoulSpeedBlocks;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BlockMovementFactors;
+import teacommontea.veritechasse.Vanilla.Enchantments.SoulSpeed;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.ArmourModifiers;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.SoulSpeedBlocks;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class MovementEfficiency {
 

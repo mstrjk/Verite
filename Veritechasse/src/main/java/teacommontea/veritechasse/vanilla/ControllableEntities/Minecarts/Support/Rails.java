@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts.Support;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Rails {
 

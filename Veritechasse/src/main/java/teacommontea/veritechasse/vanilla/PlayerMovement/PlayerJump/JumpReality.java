@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerJump;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerJump;
 
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ.SprintJump;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ.SprintJump;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class JumpReality {
 

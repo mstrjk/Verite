@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Trident;
+package teacommontea.veritechasse.Vanilla.Tools.Trident;
 
 import java.util.Set;
 
@@ -7,24 +7,24 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Channeling;
-import teacommontea.veritechasse.vanilla.Enchantments.Impaling;
-import teacommontea.veritechasse.vanilla.Enchantments.Loyalty;
-import teacommontea.veritechasse.vanilla.Enchantments.Mending;
-import teacommontea.veritechasse.vanilla.Enchantments.Riptide;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.DurabilityModifiers;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.Exclusivity;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.PostAttackEffects;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.SensitiveToImpaling;
-import teacommontea.veritechasse.vanilla.Enchantments.Unbreaking;
-import teacommontea.veritechasse.vanilla.Enchantments.VanishingCurse;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
-import teacommontea.veritechasse.vanilla.Tools.Trident.Support.TridentDurability;
-import teacommontea.veritechasse.vanilla.Tools.Trident.Support.TridentState;
-import teacommontea.veritechasse.vanilla.Tools.Trident.Support.TridentUse;
+import teacommontea.veritechasse.Vanilla.Enchantments.Channeling;
+import teacommontea.veritechasse.Vanilla.Enchantments.Impaling;
+import teacommontea.veritechasse.Vanilla.Enchantments.Loyalty;
+import teacommontea.veritechasse.Vanilla.Enchantments.Mending;
+import teacommontea.veritechasse.Vanilla.Enchantments.Riptide;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.DurabilityModifiers;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.Exclusivity;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.PostAttackEffects;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.SensitiveToImpaling;
+import teacommontea.veritechasse.Vanilla.Enchantments.Unbreaking;
+import teacommontea.veritechasse.Vanilla.Enchantments.VanishingCurse;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.Tools.Trident.Support.TridentDurability;
+import teacommontea.veritechasse.Vanilla.Tools.Trident.Support.TridentState;
+import teacommontea.veritechasse.Vanilla.Tools.Trident.Support.TridentUse;
 
 public final class Trident {
 

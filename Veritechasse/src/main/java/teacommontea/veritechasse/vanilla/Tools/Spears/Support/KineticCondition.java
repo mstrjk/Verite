@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Spears.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Spears.Support;
 
 public final class KineticCondition {
 

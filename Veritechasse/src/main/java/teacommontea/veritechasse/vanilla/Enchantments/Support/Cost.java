@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Maths.LevelValue;
+import teacommontea.veritechasse.Vanilla.Enchantments.Maths.LevelValue;
 
 public final class Cost {
 

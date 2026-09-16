@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerCrawl;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerCrawl;
 
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak.SneakPose;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak.SneakPose;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class CrawlState {
 

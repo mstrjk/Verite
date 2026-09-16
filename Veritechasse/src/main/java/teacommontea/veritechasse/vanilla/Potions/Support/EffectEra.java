@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.Vanilla.Potions.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public enum EffectEra {
 

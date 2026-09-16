@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Potions;
+package teacommontea.veritechasse.Vanilla.Potions;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class Nausea {
 

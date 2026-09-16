@@ -4,13 +4,13 @@ import java.util.Set;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import teacommontea.veritechasse.reality.InteractionMonitor;
-import teacommontea.veritechasse.reality.MovementProbe;
-import teacommontea.veritechasse.reality.RealityMonitor;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.Catalogue;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.Registry;
+import teacommontea.veritechasse.Reality.InteractionMonitor;
+import teacommontea.veritechasse.Reality.MovementProbe;
+import teacommontea.veritechasse.Reality.RealityMonitor;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.Catalogue;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.Registry;
 
 public final class ChassePlugin extends JavaPlugin {
 

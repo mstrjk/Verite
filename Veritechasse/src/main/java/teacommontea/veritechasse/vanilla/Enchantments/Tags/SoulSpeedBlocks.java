@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Tags;
+package teacommontea.veritechasse.Vanilla.Enchantments.Tags;
 
 import java.util.Locale;
 import java.util.Set;

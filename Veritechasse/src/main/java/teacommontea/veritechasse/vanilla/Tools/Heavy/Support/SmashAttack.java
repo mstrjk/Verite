@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Tools.Heavy.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Heavy.Support;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class SmashAttack {
 

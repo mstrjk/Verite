@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Tools.Axes.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Axes.Support;
 
 import java.util.Locale;
 import java.util.Map;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class Strippables {
 

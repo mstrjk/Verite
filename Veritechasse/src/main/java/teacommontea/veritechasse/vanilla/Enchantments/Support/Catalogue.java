@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,7 +12,7 @@ import java.util.jar.JarFile;
 
 public final class Catalogue {
 
-    private static final String PACKAGE = "teacommontea.veritechasse.vanilla.Enchantments";
+    private static final String PACKAGE = "teacommontea.veritechasse.Vanilla.Enchantments";
     private static final String PACKAGE_PATH = PACKAGE.replace('.', '/');
 
     private static Set<String> cached;

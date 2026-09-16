@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.Potions;
+package teacommontea.veritechasse.Vanilla.Potions;
 
-import teacommontea.veritechasse.vanilla.Potions.Support.AttributePipeline;
-import teacommontea.veritechasse.vanilla.Potions.Support.Attributes;
-import teacommontea.veritechasse.vanilla.Potions.Support.Modifier;
-import teacommontea.veritechasse.vanilla.Potions.Support.Operation;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Support.AttributePipeline;
+import teacommontea.veritechasse.Vanilla.Potions.Support.Attributes;
+import teacommontea.veritechasse.Vanilla.Potions.Support.Modifier;
+import teacommontea.veritechasse.Vanilla.Potions.Support.Operation;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class JumpBoost {
 

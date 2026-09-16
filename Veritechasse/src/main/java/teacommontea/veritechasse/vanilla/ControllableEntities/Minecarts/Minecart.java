@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts.Support.MinecartBehaviour;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts.Support.MinecartSpeed;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Minecarts.Support.Rails;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts.Support.MinecartBehaviour;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts.Support.MinecartSpeed;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Minecarts.Support.Rails;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Minecart {
 

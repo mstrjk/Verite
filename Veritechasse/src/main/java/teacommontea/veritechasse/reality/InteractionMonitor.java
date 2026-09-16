@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.reality;
+package teacommontea.veritechasse.Reality;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +26,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockReach;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.FoodValues;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockReach;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.FoodValues;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class InteractionMonitor implements Listener {
 
@@ -448,7 +448,7 @@ public final class InteractionMonitor implements Listener {
             return null;
         }
         String name = face.name().toLowerCase(Locale.ROOT);
-        return teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerPlace.BlockFace
+        return teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerPlace.BlockFace
             .isFace(name) ? name : null;
     }
 

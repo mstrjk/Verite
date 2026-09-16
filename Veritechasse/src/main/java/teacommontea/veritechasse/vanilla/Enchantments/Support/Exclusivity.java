@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import java.util.List;
 import java.util.Locale;
@@ -7,13 +7,13 @@ import java.util.Set;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetArmor;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetBoots;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetBow;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetCrossbow;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetDamage;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetMining;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.ExclusiveSetRiptide;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetArmor;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetBoots;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetBow;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetCrossbow;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetDamage;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetMining;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.ExclusiveSetRiptide;
 
 public final class Exclusivity {
 

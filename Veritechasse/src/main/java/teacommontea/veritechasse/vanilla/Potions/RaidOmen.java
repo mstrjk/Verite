@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Potions;
+package teacommontea.veritechasse.Vanilla.Potions;
 
 public final class RaidOmen {
 

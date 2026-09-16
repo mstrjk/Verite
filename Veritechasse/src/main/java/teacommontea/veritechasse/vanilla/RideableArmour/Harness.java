@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.RideableArmour;
+package teacommontea.veritechasse.Vanilla.RideableArmour;
 
 import java.util.Locale;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.RideableArmour.Tags.CanEquipHarness;
-import teacommontea.veritechasse.vanilla.RideableArmour.Tags.HarnessColours;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.RideableArmour.Tags.CanEquipHarness;
+import teacommontea.veritechasse.Vanilla.RideableArmour.Tags.HarnessColours;
 
 public final class Harness {
 

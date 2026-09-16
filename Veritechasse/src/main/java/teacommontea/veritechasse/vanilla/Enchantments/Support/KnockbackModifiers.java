@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Knockback;
-import teacommontea.veritechasse.vanilla.Enchantments.Punch;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Knockback;
+import teacommontea.veritechasse.Vanilla.Enchantments.Punch;
 
 public final class KnockbackModifiers {
 

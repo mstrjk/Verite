@@ -1,7 +1,8 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerTeleport;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerTeleport;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Lifecycle.ServerLifecycle.ServerExternalEvents.RelativeFlags;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class TeleportEffects {
 
@@ -51,20 +52,30 @@ public final class TeleportEffects {
             || TeleportCauses.CONSUMABLE_EFFECT.equals(key);
     }
 
-    public static boolean clearsMomentum(String cause) {
-        return false;
+    public static boolean clearsMomentum(String cause, int packedRelatives, Protocol protocol) {
+        return !RelativeFlags.preservesMomentumX(packedRelatives, protocol)
+            && !RelativeFlags.preservesMomentumY(packedRelatives, protocol)
+            && !RelativeFlags.preservesMomentumZ(packedRelatives, protocol);
     }
 
-    public static boolean preservesMomentum(String cause) {
-        return !clearsMomentum(cause);
+    public static boolean clearsMomentumOnAbsoluteTeleport(Protocol protocol) {
+        return RelativeFlags.absoluteTeleportZeroesMomentum(protocol);
     }
 
-    public static double horizontalAfter(String cause, double currentHorizontal) {
-        return clearsMomentum(cause) ? CLEARED_MOMENTUM : currentHorizontal;
+    public static boolean preservesMomentum(String cause, int packedRelatives, Protocol protocol) {
+        return !clearsMomentum(cause, packedRelatives, protocol);
     }
 
-    public static double verticalAfter(String cause, double currentVertical) {
-        return clearsMomentum(cause) ? CLEARED_MOMENTUM : currentVertical;
+    public static double horizontalAfter(
+            String cause, double currentHorizontal, int packedRelatives, Protocol protocol) {
+        return clearsMomentum(cause, packedRelatives, protocol)
+            ? CLEARED_MOMENTUM : currentHorizontal;
+    }
+
+    public static double verticalAfter(
+            String cause, double currentVertical, int packedRelatives, Protocol protocol) {
+        return clearsMomentum(cause, packedRelatives, protocol)
+            ? CLEARED_MOMENTUM : currentVertical;
     }
 
     public static boolean dealsDamage(String cause) {

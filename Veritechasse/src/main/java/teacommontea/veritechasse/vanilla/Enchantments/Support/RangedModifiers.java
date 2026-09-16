@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Infinity;
-import teacommontea.veritechasse.vanilla.Enchantments.Multishot;
-import teacommontea.veritechasse.vanilla.Enchantments.Piercing;
-import teacommontea.veritechasse.vanilla.Enchantments.QuickCharge;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Infinity;
+import teacommontea.veritechasse.Vanilla.Enchantments.Multishot;
+import teacommontea.veritechasse.Vanilla.Enchantments.Piercing;
+import teacommontea.veritechasse.Vanilla.Enchantments.QuickCharge;
 
 public final class RangedModifiers {
 

@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Boots;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Boots;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Boots.Support.Boots;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.Material;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.Materials;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Boots.Support.Boots;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.Material;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.Materials;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class NetheriteBoots {
 

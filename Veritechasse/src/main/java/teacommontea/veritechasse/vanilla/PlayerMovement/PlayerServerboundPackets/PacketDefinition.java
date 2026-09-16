@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets;
 
 import java.util.List;
 import java.util.Locale;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class PacketDefinition {
 

@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Support;
 
 import java.util.Locale;
 
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Weaving;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Weaving;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class StuckInBlock {
 

@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.Tags;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Potions.BadOmen;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Potions.BadOmen;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class FoodEffects {
 

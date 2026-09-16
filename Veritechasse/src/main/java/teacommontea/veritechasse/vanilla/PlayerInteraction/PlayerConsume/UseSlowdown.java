@@ -1,18 +1,18 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.Spears;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ.GroundSpeed;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Shields.Shield;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Tools.Ranged.Bow;
-import teacommontea.veritechasse.vanilla.Tools.Ranged.Crossbow;
-import teacommontea.veritechasse.vanilla.Tools.Spears.Support.Spear;
-import teacommontea.veritechasse.vanilla.Tools.Trident.Trident;
-import teacommontea.veritechasse.vanilla.Tools.Utility.Brush;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.Spears;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ.GroundSpeed;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Shields.Shield;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Tools.Ranged.Bow;
+import teacommontea.veritechasse.Vanilla.Tools.Ranged.Crossbow;
+import teacommontea.veritechasse.Vanilla.Tools.Spears.Support.Spear;
+import teacommontea.veritechasse.Vanilla.Tools.Trident.Trident;
+import teacommontea.veritechasse.Vanilla.Tools.Utility.Brush;
 
 public final class UseSlowdown {
 

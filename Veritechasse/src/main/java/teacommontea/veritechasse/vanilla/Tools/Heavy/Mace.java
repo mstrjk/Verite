@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.Tools.Heavy;
+package teacommontea.veritechasse.Vanilla.Tools.Heavy;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Density;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Heavy.Support.SmashAttack;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Density;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Heavy.Support.SmashAttack;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
 
 public final class Mace {
 

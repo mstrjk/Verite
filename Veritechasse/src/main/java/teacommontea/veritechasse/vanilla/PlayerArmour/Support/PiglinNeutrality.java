@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Support;
 
 import java.util.Locale;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.PlayerArmour.Tags.PiglinSafeArmor;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Tags.PiglinSafeArmor;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class PiglinNeutrality {
 

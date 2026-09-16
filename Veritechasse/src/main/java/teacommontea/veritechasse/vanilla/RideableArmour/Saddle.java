@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.RideableArmour;
+package teacommontea.veritechasse.Vanilla.RideableArmour;
 
 import java.util.Locale;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.RideableArmour.Tags.CanEquipSaddle;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.RideableArmour.Tags.CanEquipSaddle;
 
 public final class Saddle {
 

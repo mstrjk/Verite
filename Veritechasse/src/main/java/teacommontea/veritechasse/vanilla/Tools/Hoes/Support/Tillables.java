@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Hoes.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Hoes.Support;
 
 import java.util.Locale;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Trident.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Trident.Support;
 
 public final class TridentState {
 

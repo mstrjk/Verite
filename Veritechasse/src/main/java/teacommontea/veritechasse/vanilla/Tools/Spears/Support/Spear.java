@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Tools.Spears.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Spears.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.Material;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Material;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
 
 public final class Spear {
 

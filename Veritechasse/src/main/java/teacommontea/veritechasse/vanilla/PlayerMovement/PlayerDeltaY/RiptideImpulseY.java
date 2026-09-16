@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerDeltaY;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Riptide;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Riptide;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class RiptideImpulseY {
 

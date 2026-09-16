@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Tags;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Tags;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class PiglinSafeArmor {
 

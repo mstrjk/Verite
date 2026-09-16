@@ -1,15 +1,15 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.ConsumeDuration;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.FoodEffects;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.FoodValues;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.ConsumeDuration;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.FoodEffects;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.FoodValues;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ConsumeReality {
 

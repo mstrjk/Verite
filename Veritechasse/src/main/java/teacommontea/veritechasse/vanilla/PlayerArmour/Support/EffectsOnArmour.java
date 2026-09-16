@@ -1,17 +1,17 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Helmets.TurtleHelmet;
-import teacommontea.veritechasse.vanilla.Potions.ConduitPower;
-import teacommontea.veritechasse.vanilla.Potions.FireResistance;
-import teacommontea.veritechasse.vanilla.Potions.Resistance;
-import teacommontea.veritechasse.vanilla.Potions.SlowFalling;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
-import teacommontea.veritechasse.vanilla.Potions.WaterBreathing;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Helmets.TurtleHelmet;
+import teacommontea.veritechasse.Vanilla.Potions.ConduitPower;
+import teacommontea.veritechasse.Vanilla.Potions.FireResistance;
+import teacommontea.veritechasse.Vanilla.Potions.Resistance;
+import teacommontea.veritechasse.Vanilla.Potions.SlowFalling;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.Potions.WaterBreathing;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class EffectsOnArmour {
 

@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Tools.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public enum ToolEra {
 

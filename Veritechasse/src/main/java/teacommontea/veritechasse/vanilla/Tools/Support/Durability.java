@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Tools.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.DurabilityModifiers;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.DurabilityModifiers;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Durability {
 

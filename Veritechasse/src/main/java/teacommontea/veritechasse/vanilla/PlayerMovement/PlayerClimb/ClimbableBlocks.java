@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerClimb;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerClimb;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class ClimbableBlocks {
 

@@ -1,14 +1,14 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets.SneakSource;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ.GroundSpeed;
-import teacommontea.veritechasse.vanilla.PlayerMovement.Support.MoveInput;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets.SneakSource;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ.GroundSpeed;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.Support.MoveInput;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class SneakReality {
 
@@ -59,10 +59,21 @@ public final class SneakReality {
     }
 
     public static boolean poseContradictsShiftKey(String resolvedPose, boolean shiftKeyDown) {
+        if (SneakPose.outranksShiftKey(resolvedPose)) {
+            return false;
+        }
         if (SneakPose.forcedIntoCrouch(resolvedPose, shiftKeyDown)) {
             return false;
         }
         return shiftKeyDown && !SneakPose.isCrouching(resolvedPose);
+    }
+
+    public static boolean poseContradictsShiftKey(
+            String resolvedPose, boolean shiftKeyDown, boolean flying) {
+        if (flying) {
+            return false;
+        }
+        return poseContradictsShiftKey(resolvedPose, shiftKeyDown);
     }
 
     public static boolean poseIsImpossible(

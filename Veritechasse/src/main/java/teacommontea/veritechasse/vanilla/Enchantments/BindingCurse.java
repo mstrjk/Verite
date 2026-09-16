@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.Enchantments;
+package teacommontea.veritechasse.Vanilla.Enchantments;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Maths.LinearValue;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.Cost;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.Registry;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.EnchantableEquippable;
+import teacommontea.veritechasse.Vanilla.Enchantments.Maths.LinearValue;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.Cost;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.Registry;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.EnchantableEquippable;
 
 public final class BindingCurse {
 

@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Leggings;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Leggings;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Leggings.Support.Leggings;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.Material;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.Materials;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Leggings.Support.Leggings;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.Material;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.Materials;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class IronLeggings {
 

@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.Tools.Utility.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Utility.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class Steering {
 

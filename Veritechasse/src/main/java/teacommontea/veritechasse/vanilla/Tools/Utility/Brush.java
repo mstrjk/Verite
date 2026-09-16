@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Tools.Utility;
+package teacommontea.veritechasse.Vanilla.Tools.Utility;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Brush {
 

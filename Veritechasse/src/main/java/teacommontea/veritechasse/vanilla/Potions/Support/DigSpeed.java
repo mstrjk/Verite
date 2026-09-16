@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.Vanilla.Potions.Support;
 
-import teacommontea.veritechasse.vanilla.Potions.Haste;
-import teacommontea.veritechasse.vanilla.Potions.MiningFatigue;
+import teacommontea.veritechasse.Vanilla.Potions.Haste;
+import teacommontea.veritechasse.Vanilla.Potions.MiningFatigue;
 
 public final class DigSpeed {
 

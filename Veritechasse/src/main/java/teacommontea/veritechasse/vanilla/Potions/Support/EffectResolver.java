@@ -1,18 +1,18 @@
-package teacommontea.veritechasse.vanilla.Potions.Support;
+package teacommontea.veritechasse.Vanilla.Potions.Support;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import teacommontea.veritechasse.vanilla.Potions.Haste;
-import teacommontea.veritechasse.vanilla.Potions.HealthBoost;
-import teacommontea.veritechasse.vanilla.Potions.JumpBoost;
-import teacommontea.veritechasse.vanilla.Potions.MiningFatigue;
-import teacommontea.veritechasse.vanilla.Potions.Resistance;
-import teacommontea.veritechasse.vanilla.Potions.Slowness;
-import teacommontea.veritechasse.vanilla.Potions.Speed;
-import teacommontea.veritechasse.vanilla.Potions.Strength;
-import teacommontea.veritechasse.vanilla.Potions.Weakness;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Potions.Haste;
+import teacommontea.veritechasse.Vanilla.Potions.HealthBoost;
+import teacommontea.veritechasse.Vanilla.Potions.JumpBoost;
+import teacommontea.veritechasse.Vanilla.Potions.MiningFatigue;
+import teacommontea.veritechasse.Vanilla.Potions.Resistance;
+import teacommontea.veritechasse.Vanilla.Potions.Slowness;
+import teacommontea.veritechasse.Vanilla.Potions.Speed;
+import teacommontea.veritechasse.Vanilla.Potions.Strength;
+import teacommontea.veritechasse.Vanilla.Potions.Weakness;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class EffectResolver {
 

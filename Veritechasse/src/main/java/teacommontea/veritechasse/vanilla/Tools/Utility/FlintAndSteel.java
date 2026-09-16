@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Tools.Utility;
+package teacommontea.veritechasse.Vanilla.Tools.Utility;
 
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
-import teacommontea.veritechasse.vanilla.Tools.Tags.CandleCakes;
-import teacommontea.veritechasse.vanilla.Tools.Tags.Candles;
-import teacommontea.veritechasse.vanilla.Tools.Tags.Campfires;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.CandleCakes;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.Candles;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.Campfires;
 
 public final class FlintAndSteel {
 

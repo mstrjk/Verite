@@ -1,14 +1,14 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.BlastProtection;
-import teacommontea.veritechasse.vanilla.Enchantments.Breach;
-import teacommontea.veritechasse.vanilla.Enchantments.FeatherFalling;
-import teacommontea.veritechasse.vanilla.Enchantments.FireProtection;
-import teacommontea.veritechasse.vanilla.Enchantments.ProjectileProtection;
-import teacommontea.veritechasse.vanilla.Enchantments.Protection;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.BlastProtection;
+import teacommontea.veritechasse.Vanilla.Enchantments.Breach;
+import teacommontea.veritechasse.Vanilla.Enchantments.FeatherFalling;
+import teacommontea.veritechasse.Vanilla.Enchantments.FireProtection;
+import teacommontea.veritechasse.Vanilla.Enchantments.ProjectileProtection;
+import teacommontea.veritechasse.Vanilla.Enchantments.Protection;
 
 public final class ProtectionModifiers {
 

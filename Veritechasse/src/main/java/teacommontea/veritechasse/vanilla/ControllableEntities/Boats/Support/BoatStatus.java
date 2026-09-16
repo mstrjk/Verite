@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Boats.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Boats.Support;
 
 import java.util.Locale;
 

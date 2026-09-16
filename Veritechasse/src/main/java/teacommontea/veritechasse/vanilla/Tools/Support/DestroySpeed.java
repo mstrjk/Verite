@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.Tools.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.MiningModifiers;
-import teacommontea.veritechasse.vanilla.Potions.Support.DigSpeed;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.MiningModifiers;
+import teacommontea.veritechasse.Vanilla.Potions.Support.DigSpeed;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class DestroySpeed {
 

@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerLiquid;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerLiquid;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class FluidState {
 

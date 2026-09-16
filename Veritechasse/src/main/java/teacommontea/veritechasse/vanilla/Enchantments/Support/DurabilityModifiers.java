@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.Mending;
-import teacommontea.veritechasse.vanilla.Enchantments.Unbreaking;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Mending;
+import teacommontea.veritechasse.Vanilla.Enchantments.Unbreaking;
 
 public final class DurabilityModifiers {
 

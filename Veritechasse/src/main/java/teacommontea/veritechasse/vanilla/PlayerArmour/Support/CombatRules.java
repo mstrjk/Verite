@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Support.ProtectionModifiers;
-import teacommontea.veritechasse.vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.ProtectionModifiers;
+import teacommontea.veritechasse.Vanilla.Era;
 
 public final class CombatRules {
 

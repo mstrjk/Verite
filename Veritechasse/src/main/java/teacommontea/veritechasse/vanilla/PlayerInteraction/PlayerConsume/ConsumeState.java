@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.ConsumeDuration;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.ConsumeDuration;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class ConsumeState {
 

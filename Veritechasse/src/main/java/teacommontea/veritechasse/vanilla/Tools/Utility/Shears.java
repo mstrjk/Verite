@@ -1,11 +1,11 @@
-package teacommontea.veritechasse.vanilla.Tools.Utility;
+package teacommontea.veritechasse.Vanilla.Tools.Utility;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
-import teacommontea.veritechasse.vanilla.Tools.Tags.ShearsExtremeBreakingSpeed;
-import teacommontea.veritechasse.vanilla.Tools.Tags.ShearsMajorBreakingSpeed;
-import teacommontea.veritechasse.vanilla.Tools.Tags.ShearsMinorBreakingSpeed;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.ShearsExtremeBreakingSpeed;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.ShearsMajorBreakingSpeed;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.ShearsMinorBreakingSpeed;
 
 public final class Shears {
 

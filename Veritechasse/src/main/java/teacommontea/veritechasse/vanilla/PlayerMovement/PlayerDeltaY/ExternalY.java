@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerDeltaY;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BlockEjection;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BubbleColumn;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.ExplosionKnockback;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.Knockback;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.PistonPush;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.StuckInBlock;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BlockEjection;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.BubbleColumn;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.ExplosionKnockback;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.Knockback;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.PistonPush;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.StuckInBlock;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ExternalY {
 

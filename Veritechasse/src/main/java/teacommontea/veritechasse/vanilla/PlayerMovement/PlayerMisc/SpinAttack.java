@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerMisc;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerMisc;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Riptide;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.RiptideImpulseY;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ.RiptideImpulseXZ;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Enchantments.Riptide;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerDeltaY.RiptideImpulseY;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ.RiptideImpulseXZ;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class SpinAttack {
 

@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Swords.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Swords.Support;
 
 public final class AttackStrength {
 

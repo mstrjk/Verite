@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.Potions;
+package teacommontea.veritechasse.Vanilla.Potions;
 
-import teacommontea.veritechasse.vanilla.Potions.Support.TickInterval;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Support.TickInterval;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Wither {
 

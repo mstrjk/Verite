@@ -1,14 +1,14 @@
-package teacommontea.veritechasse.vanilla.Tools.Pickaxes.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Pickaxes.Support;
 
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.CorrectForDrops;
-import teacommontea.veritechasse.vanilla.Tools.Support.DestroySpeed;
-import teacommontea.veritechasse.vanilla.Tools.Support.Durability;
-import teacommontea.veritechasse.vanilla.Tools.Support.Material;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolKind;
-import teacommontea.veritechasse.vanilla.Tools.Tags.MineablePickaxe;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.CorrectForDrops;
+import teacommontea.veritechasse.Vanilla.Tools.Support.DestroySpeed;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Durability;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Material;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolKind;
+import teacommontea.veritechasse.Vanilla.Tools.Tags.MineablePickaxe;
 
 public final class Pickaxe {
 

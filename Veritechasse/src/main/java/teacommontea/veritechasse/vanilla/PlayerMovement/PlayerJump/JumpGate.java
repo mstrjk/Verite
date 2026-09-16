@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerJump;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerJump;
 
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerLiquid.FluidState;
-import teacommontea.veritechasse.vanilla.PlayerMovement.Support.GroundState;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerLiquid.FluidState;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.Support.GroundState;
 
 public final class JumpGate {
 

@@ -1,14 +1,14 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerXZ;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerXZ;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.GroundFriction;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectResolver;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.GroundFriction;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectResolver;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
 
 public final class GroundSpeed {
 

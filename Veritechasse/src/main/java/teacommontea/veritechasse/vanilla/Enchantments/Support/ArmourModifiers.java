@@ -1,15 +1,15 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.BindingCurse;
-import teacommontea.veritechasse.vanilla.Enchantments.DepthStrider;
-import teacommontea.veritechasse.vanilla.Enchantments.FrostWalker;
-import teacommontea.veritechasse.vanilla.Enchantments.Respiration;
-import teacommontea.veritechasse.vanilla.Enchantments.SoulSpeed;
-import teacommontea.veritechasse.vanilla.Enchantments.SwiftSneak;
-import teacommontea.veritechasse.vanilla.Enchantments.Thorns;
-import teacommontea.veritechasse.vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.BindingCurse;
+import teacommontea.veritechasse.Vanilla.Enchantments.DepthStrider;
+import teacommontea.veritechasse.Vanilla.Enchantments.FrostWalker;
+import teacommontea.veritechasse.Vanilla.Enchantments.Respiration;
+import teacommontea.veritechasse.Vanilla.Enchantments.SoulSpeed;
+import teacommontea.veritechasse.Vanilla.Enchantments.SwiftSneak;
+import teacommontea.veritechasse.Vanilla.Enchantments.Thorns;
+import teacommontea.veritechasse.Vanilla.Era;
 
 public final class ArmourModifiers {
 

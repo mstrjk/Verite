@@ -1,14 +1,14 @@
-package teacommontea.veritechasse.vanilla.RideableArmour;
+package teacommontea.veritechasse.Vanilla.RideableArmour;
 
 import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.CombatRules;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.RideableArmour.Tags.CanWearHorseArmour;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.CombatRules;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.RideableArmour.Tags.CanWearHorseArmour;
 
 public final class HorseArmour {
 

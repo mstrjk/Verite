@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerSneak;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerSneak;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.SwiftSneak;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
+import teacommontea.veritechasse.Vanilla.Enchantments.SwiftSneak;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Support.PlayerBase;
 
 public final class SneakSpeed {
 

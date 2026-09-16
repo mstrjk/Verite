@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger;
 
-import teacommontea.veritechasse.vanilla.Potions.Hunger;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Potions.Hunger;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class HungerReality {
 

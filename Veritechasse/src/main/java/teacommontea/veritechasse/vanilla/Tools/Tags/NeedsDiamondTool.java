@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Tools.Tags;
+package teacommontea.veritechasse.Vanilla.Tools.Tags;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
 
 public final class NeedsDiamondTool {
 

@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.Spears;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.ConsumeDuration;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Tools.Spears.Support.Spear;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.Spears;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.ConsumeDuration;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Tools.Spears.Support.Spear;
 
 public final class UseAnimations {
 

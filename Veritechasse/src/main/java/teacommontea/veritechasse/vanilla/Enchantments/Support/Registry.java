@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import java.util.Map;
 import java.util.Set;

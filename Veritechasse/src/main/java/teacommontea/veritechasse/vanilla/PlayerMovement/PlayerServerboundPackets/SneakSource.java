@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets;
+package teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets;
 
-import teacommontea.veritechasse.vanilla.PlayerMovement.Support.ClientInput;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.Support.ClientInput;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class SneakSource {
 

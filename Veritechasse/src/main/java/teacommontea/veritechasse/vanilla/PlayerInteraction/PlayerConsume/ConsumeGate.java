@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.ConsumeDuration;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.FoodValues;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.ConsumeDuration;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.FoodValues;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class ConsumeGate {
 

@@ -1,15 +1,15 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Support;
+package teacommontea.veritechasse.Vanilla.Enchantments.Support;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Enchantments.BaneOfArthropods;
-import teacommontea.veritechasse.vanilla.Enchantments.Channeling;
-import teacommontea.veritechasse.vanilla.Enchantments.FireAspect;
-import teacommontea.veritechasse.vanilla.Enchantments.Flame;
-import teacommontea.veritechasse.vanilla.Enchantments.Tags.SensitiveToBaneOfArthropods;
-import teacommontea.veritechasse.vanilla.Enchantments.WindBurst;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Enchantments.BaneOfArthropods;
+import teacommontea.veritechasse.Vanilla.Enchantments.Channeling;
+import teacommontea.veritechasse.Vanilla.Enchantments.FireAspect;
+import teacommontea.veritechasse.Vanilla.Enchantments.Flame;
+import teacommontea.veritechasse.Vanilla.Enchantments.Tags.SensitiveToBaneOfArthropods;
+import teacommontea.veritechasse.Vanilla.Enchantments.WindBurst;
 
 public final class PostAttackEffects {
 

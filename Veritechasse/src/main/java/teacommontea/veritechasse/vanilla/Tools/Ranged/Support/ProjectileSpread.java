@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Tools.Ranged.Support;
+package teacommontea.veritechasse.Vanilla.Tools.Ranged.Support;
 
 public final class ProjectileSpread {
 

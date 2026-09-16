@@ -1,7 +1,7 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Shields.Support;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Shields.Support;
 
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class ShieldDisable {
 

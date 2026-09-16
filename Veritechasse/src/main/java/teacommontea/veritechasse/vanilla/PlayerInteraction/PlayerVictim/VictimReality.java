@@ -1,16 +1,16 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerVictim;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerVictim;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.Knockback;
-import teacommontea.veritechasse.vanilla.Enchantments.Support.ProtectionModifiers;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Support.CombatRules;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectResolver;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.Knockback;
+import teacommontea.veritechasse.Vanilla.Enchantments.Support.ProtectionModifiers;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Support.CombatRules;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectResolver;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class VictimReality {
 

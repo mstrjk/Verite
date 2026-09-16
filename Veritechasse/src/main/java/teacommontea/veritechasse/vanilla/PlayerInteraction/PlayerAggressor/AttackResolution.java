@@ -1,16 +1,16 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerAggressor;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerAggressor;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.Potions.Blindness;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.CriticalAttack;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Tools.Swords.Support.AttackPipeline;
-import teacommontea.veritechasse.vanilla.Tools.Swords.Support.AttackStrength;
-import teacommontea.veritechasse.vanilla.Tools.Swords.Support.SweepAttack;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.Potions.Blindness;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.CriticalAttack;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Tools.Swords.Support.AttackPipeline;
+import teacommontea.veritechasse.Vanilla.Tools.Swords.Support.AttackStrength;
+import teacommontea.veritechasse.Vanilla.Tools.Swords.Support.SweepAttack;
 
 public final class AttackResolution {
 

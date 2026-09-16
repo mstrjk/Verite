@@ -1,10 +1,10 @@
-package teacommontea.veritechasse.vanilla.Tools.Axes;
+package teacommontea.veritechasse.Vanilla.Tools.Axes;
 
-import teacommontea.veritechasse.vanilla.Reality;
-import teacommontea.veritechasse.vanilla.Tools.Axes.Support.Axe;
-import teacommontea.veritechasse.vanilla.Tools.Support.Material;
-import teacommontea.veritechasse.vanilla.Tools.Support.Materials;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Tools.Axes.Support.Axe;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Material;
+import teacommontea.veritechasse.Vanilla.Tools.Support.Materials;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
 
 public final class StoneAxe {
 

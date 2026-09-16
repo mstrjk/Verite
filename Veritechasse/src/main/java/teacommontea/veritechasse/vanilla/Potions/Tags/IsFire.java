@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.Potions.Tags;
+package teacommontea.veritechasse.Vanilla.Potions.Tags;
 
 import java.util.Locale;
 import java.util.Set;
 
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
 
 public final class IsFire {
 

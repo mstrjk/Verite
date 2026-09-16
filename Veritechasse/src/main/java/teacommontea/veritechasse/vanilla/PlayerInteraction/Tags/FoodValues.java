@@ -1,9 +1,9 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.Tags;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags;
 
 import java.util.Locale;
 import java.util.Map;
 
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.FoodConstants;
 
 public final class FoodValues {
 

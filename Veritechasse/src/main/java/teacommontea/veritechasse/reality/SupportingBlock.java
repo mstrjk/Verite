@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.reality;
+package teacommontea.veritechasse.Reality;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -6,7 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 
-import teacommontea.veritechasse.vanilla.PlayerMovement.Support.GroundState;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.Support.GroundState;
 
 public final class SupportingBlock {
 
@@ -59,7 +59,7 @@ public final class SupportingBlock {
     }
 
     private static boolean supports(Block block, BoundingBox probe) {
-        if (block.isEmpty() || block.isPassable()) {
+        if (block.isEmpty()) {
             return false;
         }
         for (BoundingBox part : block.getCollisionShape().getBoundingBoxes()) {

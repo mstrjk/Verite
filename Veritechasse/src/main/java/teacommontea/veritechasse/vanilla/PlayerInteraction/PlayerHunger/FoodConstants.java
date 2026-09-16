@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger;
 
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class FoodConstants {
 

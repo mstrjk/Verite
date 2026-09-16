@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.Enchantments.Maths;
+package teacommontea.veritechasse.Vanilla.Enchantments.Maths;
 
 public interface LevelValue {
 

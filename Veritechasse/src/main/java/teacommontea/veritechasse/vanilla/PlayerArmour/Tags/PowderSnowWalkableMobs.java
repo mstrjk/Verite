@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.PlayerArmour.Tags;
+package teacommontea.veritechasse.Vanilla.PlayerArmour.Tags;
 
 import java.util.Locale;
 import java.util.Set;

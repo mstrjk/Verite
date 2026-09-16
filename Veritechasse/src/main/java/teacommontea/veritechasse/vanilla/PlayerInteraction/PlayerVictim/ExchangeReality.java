@@ -1,13 +1,13 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerVictim;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerVictim;
 
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Enchantments.Thorns;
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerArmour.Shields.Support.BlocksAttacks;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
-import teacommontea.veritechasse.vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Enchantments.Thorns;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerArmour.Shields.Support.BlocksAttacks;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class ExchangeReality {
 

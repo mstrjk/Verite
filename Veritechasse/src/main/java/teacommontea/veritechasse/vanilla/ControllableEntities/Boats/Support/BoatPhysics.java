@@ -1,6 +1,6 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Boats.Support;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Boats.Support;
 
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class BoatPhysics {
 

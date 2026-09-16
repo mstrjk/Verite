@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.reality;
+package teacommontea.veritechasse.Reality;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,33 +7,34 @@ import java.util.Locale;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import teacommontea.veritechasse.vanilla.Era;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockKnowledge;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BlockReach;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BreakProgress;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerAggressor.AggressorReality;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerAggressor.AttackReach;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerAggressor.AttackResolution;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.BreakReality;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume.ConsumeGate;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume.ConsumeReality;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerConsume.ConsumeState;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerVictim.ExchangeReality;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerVictim.HurtWindow;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerVictim.VictimReality;
-import teacommontea.veritechasse.vanilla.Potions.Support.EffectEra;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.HungerReality;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerHunger.HungerTick;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerPlace.BlockFace;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerPlace.PlaceReality;
-import teacommontea.veritechasse.vanilla.PlayerInteraction.Tags.FoodValues;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets.BlockHitPacket;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets.InteractionPackets;
-import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerServerboundPackets.UseItemPacket;
-import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
-import teacommontea.veritechasse.vanilla.Protocol;
-import teacommontea.veritechasse.vanilla.Tools.Support.DestroySpeed;
-import teacommontea.veritechasse.vanilla.Tools.Support.ToolEra;
+import teacommontea.veritechasse.Vanilla.Era;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockKnowledge;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BlockReach;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BreakProgress;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerAggressor.AggressorReality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerAggressor.AttackReach;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerAggressor.AttackResolution;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak.BreakReality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume.ConsumeGate;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume.ConsumeReality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerConsume.ConsumeState;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerVictim.ExchangeReality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerVictim.HurtWindow;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerVictim.VictimReality;
+import teacommontea.veritechasse.Vanilla.Potions.Support.EffectEra;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.HungerReality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerHunger.HungerTick;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerPlace.BlockFace;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerPlace.PlaceReality;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerPlace.ReplaceableBlocks;
+import teacommontea.veritechasse.Vanilla.PlayerInteraction.Tags.FoodValues;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets.BlockHitPacket;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets.InteractionPackets;
+import teacommontea.veritechasse.Vanilla.PlayerMovement.PlayerServerboundPackets.UseItemPacket;
+import teacommontea.veritechasse.Vanilla.Potions.Support.ActiveEffects;
+import teacommontea.veritechasse.Vanilla.Protocol;
+import teacommontea.veritechasse.Vanilla.Tools.Support.DestroySpeed;
+import teacommontea.veritechasse.Vanilla.Tools.Support.ToolEra;
 
 public final class InteractionCheck {
 
@@ -177,7 +178,8 @@ public final class InteractionCheck {
                 "placed at " + placedX + "," + placedY + "," + placedZ
                     + " where building is not permitted"));
         }
-        if (PlaceReality.placingIntoOccupiedSpace(replacedBlockName, true)) {
+        boolean replaceable = ReplaceableBlocks.contains(replacedBlockName, this.protocol);
+        if (PlaceReality.placingIntoOccupiedSpace(replacedBlockName, replaceable)) {
             observations.add(Observation.suspect("place-occupied",
                 "placed into " + replacedBlockName));
         }
@@ -222,11 +224,6 @@ public final class InteractionCheck {
                 "hit " + format(hitX) + "," + format(hitY) + "," + format(hitZ)
                     + " is outside " + format(PlaceReality.hitLocationFrom().bound())
                     + " of block centre"));
-        }
-        if (face != null && PlaceReality.faceDoesNotMatchHit(
-                hitX, hitY, hitZ, blockX, blockY, blockZ, face, HIT_FACE_TOLERANCE)) {
-            observations.add(Observation.suspect("place-hit-face",
-                "hit location does not lie on the claimed " + face + " face"));
         }
         if (!InteractionPackets.sequenceIsWellFormed(sequence)) {
             observations.add(Observation.suspect("place-sequence-malformed",
@@ -334,7 +331,6 @@ public final class InteractionCheck {
         return observations;
     }
 
-    public static final double HIT_FACE_TOLERANCE = 1.0E-4D;
 
     public List<Observation> evaluateConsumeStart(
             String itemName,

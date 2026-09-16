@@ -1,12 +1,12 @@
-package teacommontea.veritechasse.vanilla.ControllableEntities.Boats;
+package teacommontea.veritechasse.Vanilla.ControllableEntities.Boats;
 
-import teacommontea.veritechasse.vanilla.ControllableEntities.Boats.Support.BoatControl;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Boats.Support.BoatPhysics;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Boats.Support.BoatStatus;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Boats.Tags.BoatEntities;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.ExplosionKnockback;
-import teacommontea.veritechasse.vanilla.ControllableEntities.Support.GroundFriction;
-import teacommontea.veritechasse.vanilla.Reality;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Boats.Support.BoatControl;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Boats.Support.BoatPhysics;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Boats.Support.BoatStatus;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Boats.Tags.BoatEntities;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.ExplosionKnockback;
+import teacommontea.veritechasse.Vanilla.ControllableEntities.Support.GroundFriction;
+import teacommontea.veritechasse.Vanilla.Reality;
 
 public final class Boat {
 

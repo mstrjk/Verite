@@ -1,4 +1,4 @@
-package teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak;
+package teacommontea.veritechasse.Vanilla.PlayerInteraction.PlayerBreak;
 
 public final class LookGeometry {
 
