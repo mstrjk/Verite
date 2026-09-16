@@ -123,6 +123,23 @@ public final class FallDamage {
         return damage(distance, damageModifierOf(landedOn), effects, multiplier, protocol) > 0;
     }
 
+    public static boolean expectsDamageOn(
+            String landedOn,
+            double fallDistance,
+            boolean mayFly,
+            ActiveEffects effects,
+            boolean ignoringImpulse,
+            double impulseImpactPosY,
+            double landingY,
+            Protocol protocol) {
+        double effective = ImpulseExemption.effectiveFallDistance(
+            fallDistance, ignoringImpulse, impulseImpactPosY, landingY);
+        if (effective <= 0.0D) {
+            return false;
+        }
+        return expectsDamageOn(landedOn, effective, mayFly, effects, protocol);
+    }
+
     public static double minimumDamagingDistance(ActiveEffects effects, Protocol protocol) {
         double safe = attributesApply(protocol)
             ? safeFallDistance(effects, protocol)

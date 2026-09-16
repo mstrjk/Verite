@@ -19,6 +19,34 @@ public final class EffectResolver {
     private EffectResolver() {
     }
 
+    public static final double SPRINT_BONUS = 0.30000001192092896D;
+
+    public static double movementSpeed(double baseSpeed, ActiveEffects effects, boolean sprinting) {
+        List<Modifier> modifiers = new ArrayList<>();
+
+        int speed = effects == null ? ActiveEffects.ABSENT : effects.amplifierOf(Speed.KEY);
+        if (speed != ActiveEffects.ABSENT) {
+            modifiers.add(Speed.modifier(speed));
+        }
+
+        int slowness = effects == null ? ActiveEffects.ABSENT : effects.amplifierOf(Slowness.KEY);
+        if (slowness != ActiveEffects.ABSENT) {
+            modifiers.add(Slowness.modifier(slowness));
+        }
+
+        if (sprinting) {
+            modifiers.add(new Modifier(SPRINT_BONUS, Operation.ADD_MULTIPLIED_TOTAL));
+        }
+
+        if (modifiers.isEmpty()) {
+            return baseSpeed;
+        }
+
+        Ranged attribute = new Ranged(
+            baseSpeed, Attributes.MOVEMENT_SPEED.min(), Attributes.MOVEMENT_SPEED.max());
+        return AttributePipeline.resolve(attribute, modifiers);
+    }
+
     public static double movementSpeed(double baseSpeed, ActiveEffects effects) {
         List<Modifier> modifiers = new ArrayList<>();
 

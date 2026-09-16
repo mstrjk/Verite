@@ -29,6 +29,19 @@ public final class MiscReality {
         return decayed > steady ? decayed : steady;
     }
 
+    public static double maximumFlightHorizontal(
+            double carriedHorizontal,
+            float flyingSpeed,
+            boolean sprinting,
+            boolean inWater,
+            boolean inLava) {
+        double decayed = CreativeFlight.horizontalAfterTick(
+            carriedHorizontal, flyingSpeed, sprinting, inWater, inLava);
+        double steady = CreativeFlight.horizontalTerminal(
+            flyingSpeed, sprinting, inWater, inLava);
+        return decayed > steady ? decayed : steady;
+    }
+
     public static float flightAcceleration(float flyingSpeed, boolean sprinting) {
         return CreativeFlight.horizontalSpeed(flyingSpeed, sprinting);
     }

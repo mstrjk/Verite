@@ -6,6 +6,7 @@ import teacommontea.veritechasse.vanilla.ControllableEntities.Support.GroundFric
 import teacommontea.veritechasse.vanilla.Era;
 import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
 import teacommontea.veritechasse.vanilla.Potions.Support.EffectResolver;
+import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 import teacommontea.veritechasse.vanilla.Tools.Support.PlayerBase;
 
@@ -72,11 +73,7 @@ public final class GroundSpeed {
         if (base < 0.0D) {
             base = 0.0D;
         }
-        double withEffects = effects == null ? base : EffectResolver.movementSpeed(base, effects);
-        if (!sprinting) {
-            return withEffects;
-        }
-        return withEffects * (1.0D + SPRINT_BONUS);
+        return EffectResolver.movementSpeed(base, effects, sprinting);
     }
 
     public static final float AIRBORNE_SPEED = 0.02F;
@@ -93,12 +90,47 @@ public final class GroundSpeed {
         return sprinting ? AIRBORNE_SPRINT_SPEED : AIRBORNE_SPEED;
     }
 
+    public static final double FRICTION_THRESHOLD_DOUBLE = 0.6D;
+
+    public static final int FRICTION_BRANCH_MAJOR = 26;
+    public static final int FRICTION_BRANCH_MINOR = 2;
+    public static final int FRICTION_BRANCH_PATCH = 0;
+
+    public static boolean speedBranchesOnFriction(Protocol protocol) {
+        return protocol.atLeast(
+            FRICTION_BRANCH_MAJOR, FRICTION_BRANCH_MINOR, FRICTION_BRANCH_PATCH);
+    }
+
+    public static boolean frictionExceedsThreshold(float blockFriction) {
+        return (double) blockFriction > FRICTION_THRESHOLD_DOUBLE;
+    }
+
+    public static float cubedFrictionSpeed(double attributeSpeed, float blockFriction) {
+        double cubed = (double) blockFriction * (double) blockFriction * (double) blockFriction;
+        return (float) (attributeSpeed * ((double) FRICTION_NUMERATOR / cubed));
+    }
+
     public static float frictionInfluencedSpeed(double attributeSpeed, float blockFriction) {
-        if (blockFriction > FRICTION_THRESHOLD) {
-            double cubed = blockFriction * blockFriction * blockFriction;
-            return (float) (attributeSpeed * (FRICTION_NUMERATOR / cubed));
+        if (frictionExceedsThreshold(blockFriction)) {
+            return cubedFrictionSpeed(attributeSpeed, blockFriction);
         }
         return (float) attributeSpeed;
+    }
+
+    public static float frictionInfluencedSpeed(
+            double attributeSpeed,
+            float blockFriction,
+            boolean onGround,
+            boolean sprinting,
+            boolean creativeFlying,
+            Protocol protocol) {
+        if (!onGround) {
+            return airborneSpeed(sprinting, creativeFlying);
+        }
+        if (speedBranchesOnFriction(protocol)) {
+            return frictionInfluencedSpeed(attributeSpeed, blockFriction);
+        }
+        return cubedFrictionSpeed(attributeSpeed, blockFriction);
     }
 
     public static float frictionInfluencedSpeed(
@@ -110,7 +142,7 @@ public final class GroundSpeed {
         if (!onGround) {
             return airborneSpeed(sprinting, creativeFlying);
         }
-        return frictionInfluencedSpeed(attributeSpeed, blockFriction);
+        return cubedFrictionSpeed(attributeSpeed, blockFriction);
     }
 
     public static float frictionInfluencedSpeed(ActiveEffects effects, boolean sprinting, String blockBelow) {
@@ -162,9 +194,8 @@ public final class GroundSpeed {
         double attribute = attributeSpeed(effects, sprinting, boots, onSoulBlock, percentFrozen, era);
         float friction = blockFriction(blockBelow, onGround, DEFAULT_FRICTION_MODIFIER);
         float speed = frictionInfluencedSpeed(attribute, friction, onGround, sprinting, creativeFlying);
-        float speedFactor = onGround
-            ? MovementEfficiency.effectiveSpeedFactor(blockHere, blockBelow, boots)
-            : 1.0F;
+        float speedFactor =
+            MovementEfficiency.effectiveSpeedFactor(blockHere, blockBelow, boots);
         return terminalSpeed(speed * speedFactor, decay);
     }
 

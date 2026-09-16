@@ -136,4 +136,83 @@ public final class MovePlayerPacket {
     public static boolean sendingTooFrequently(int packetsSinceLastTick) {
         return packetsSinceLastTick > VANILLA_PACKETS_PER_TICK_WARNING;
     }
+
+    public static final double MOVED_WRONGLY_THRESHOLD = 0.0625D;
+    public static final double SLEEPING_DISPLACEMENT_THRESHOLD = 1.0D;
+    public static final int MAXIMUM_FLYING_TICKS = 80;
+    public static final double FLOATING_Y_THRESHOLD = -0.03125D;
+
+    public static boolean movedWrongly(
+            double squaredResidual,
+            boolean changingDimension,
+            boolean sleeping,
+            boolean creative,
+            boolean spectator,
+            boolean inPostImpulseGraceTime) {
+        if (changingDimension || sleeping || creative || spectator) {
+            return false;
+        }
+        if (inPostImpulseGraceTime) {
+            return false;
+        }
+        return squaredResidual > MOVED_WRONGLY_THRESHOLD;
+    }
+
+    public static boolean sleepingMovedTooFar(double squaredResidual, boolean sleeping) {
+        return sleeping && squaredResidual > SLEEPING_DISPLACEMENT_THRESHOLD;
+    }
+
+    public static boolean speedCheckApplies(
+            boolean singleplayerOwner,
+            boolean changingDimension,
+            boolean playerMovementCheckRule,
+            boolean elytraMovementCheckRule,
+            boolean fallFlying) {
+        if (singleplayerOwner || changingDimension) {
+            return false;
+        }
+        if (!playerMovementCheckRule) {
+            return false;
+        }
+        return !fallFlying || elytraMovementCheckRule;
+    }
+
+    public static boolean exceedsVanillaSpeedLimit(
+            double squaredDistanceMoved,
+            double squaredDistanceExpected,
+            boolean gliding,
+            int packetsSinceLastTick,
+            boolean singleplayerOwner,
+            boolean changingDimension,
+            boolean playerMovementCheckRule,
+            boolean elytraMovementCheckRule) {
+        if (!speedCheckApplies(singleplayerOwner, changingDimension,
+                playerMovementCheckRule, elytraMovementCheckRule, gliding)) {
+            return false;
+        }
+        return exceedsVanillaSpeedLimit(
+            squaredDistanceMoved, squaredDistanceExpected, gliding, packetsSinceLastTick);
+    }
+
+    public static boolean floatingTooLong(int aboveGroundTickCount) {
+        return aboveGroundTickCount > MAXIMUM_FLYING_TICKS;
+    }
+
+    public static boolean countsAsFloating(
+            double verticalDistance,
+            boolean standsOnSomething,
+            boolean spectator,
+            boolean allowFlight,
+            boolean mayFly,
+            boolean levitating,
+            boolean fallFlying,
+            boolean autoSpinAttack) {
+        if (standsOnSomething || spectator || allowFlight || mayFly) {
+            return false;
+        }
+        if (levitating || fallFlying || autoSpinAttack) {
+            return false;
+        }
+        return verticalDistance >= FLOATING_Y_THRESHOLD;
+    }
 }

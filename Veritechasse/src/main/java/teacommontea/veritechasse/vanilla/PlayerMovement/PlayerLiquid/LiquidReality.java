@@ -70,15 +70,43 @@ public final class LiquidReality {
         return WaterMotion.SWIM_JUMP;
     }
 
+    public static final double FLUID_FALLING_GRAVITY_DIVISOR = 16.0D;
+    public static final double FLUID_FALLING_HOVER_TARGET = -0.003D;
+    public static final double FLUID_FALLING_HOVER_EPSILON = 0.003D;
+    public static final double FLUID_FALLING_HOVER_REFERENCE = 0.005D;
+
+    public static double fluidFallingAdjusted(
+            double componentY,
+            double baseGravity,
+            boolean falling,
+            boolean sprinting) {
+        if (baseGravity == 0.0D || sprinting) {
+            return componentY;
+        }
+        double pulled = componentY - baseGravity / FLUID_FALLING_GRAVITY_DIVISOR;
+        if (falling
+                && Math.abs(componentY - FLUID_FALLING_HOVER_REFERENCE)
+                    >= FLUID_FALLING_HOVER_EPSILON
+                && Math.abs(pulled) < FLUID_FALLING_HOVER_EPSILON) {
+            return FLUID_FALLING_HOVER_TARGET;
+        }
+        return pulled;
+    }
+
     public static double nextWaterVertical(
             double deltaY,
             double baseGravity,
             boolean sprinting) {
+        return nextWaterVertical(deltaY, baseGravity, sprinting, deltaY <= 0.0D);
+    }
+
+    public static double nextWaterVertical(
+            double deltaY,
+            double baseGravity,
+            boolean sprinting,
+            boolean falling) {
         double dragged = WaterMotion.verticalAfter(deltaY);
-        if (sprinting || baseGravity == 0.0D) {
-            return dragged;
-        }
-        return dragged - baseGravity / 16.0D;
+        return fluidFallingAdjusted(dragged, baseGravity, falling, sprinting);
     }
 
     public static double nextLavaVertical(
@@ -86,8 +114,22 @@ public final class LiquidReality {
             ActiveEffects effects,
             boolean shallow,
             Protocol protocol) {
+        return nextLavaVertical(deltaY, effects, shallow, false, deltaY <= 0.0D, protocol);
+    }
+
+    public static double nextLavaVertical(
+            double deltaY,
+            ActiveEffects effects,
+            boolean shallow,
+            boolean sprinting,
+            boolean falling,
+            Protocol protocol) {
         double gravity = Gravity.effective(deltaY, effects, protocol);
-        return LavaMotion.nextVertical(deltaY, gravity, shallow);
+        double dragged = LavaMotion.verticalAfter(deltaY, shallow);
+        if (shallow) {
+            dragged = fluidFallingAdjusted(dragged, gravity, falling, sprinting);
+        }
+        return dragged + LavaMotion.gravityPull(gravity);
     }
 
     public static boolean swimsWithoutSprinting(

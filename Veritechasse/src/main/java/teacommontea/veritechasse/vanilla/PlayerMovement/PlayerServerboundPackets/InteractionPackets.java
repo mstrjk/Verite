@@ -69,6 +69,23 @@ public final class InteractionPackets {
         return useItemCarriesRotation(protocol);
     }
 
+    public static final boolean SERVER_REJECTS_REPLAYED_SEQUENCE = false;
+
+    public static boolean sequenceIsWellFormed(int sequence) {
+        return sequence >= FIRST_SEQUENCE;
+    }
+
+    public static boolean serverRejectsSequence(int sequence) {
+        return !sequenceIsWellFormed(sequence);
+    }
+
+    public static int acknowledgedAfter(int highestAcknowledged, int sequence) {
+        if (!sequenceIsWellFormed(sequence)) {
+            return highestAcknowledged;
+        }
+        return Math.max(sequence, highestAcknowledged);
+    }
+
     public static boolean sequenceIsMonotonic(int previousSequence, int sequence) {
         if (previousSequence == UNACKNOWLEDGED) {
             return sequence >= FIRST_SEQUENCE;
@@ -80,12 +97,12 @@ public final class InteractionPackets {
         return sequence > highestAcknowledged;
     }
 
-    public static boolean sequenceIsWellFormed(int sequence) {
-        return sequence >= FIRST_SEQUENCE;
-    }
-
     public static boolean replaysSequence(int previousSequence, int sequence) {
         return previousSequence != UNACKNOWLEDGED && sequence <= previousSequence;
+    }
+
+    public static boolean replayIsRejectedByServer() {
+        return SERVER_REJECTS_REPLAYED_SEQUENCE;
     }
 
     public static boolean isInteractionPacket(String packetName) {

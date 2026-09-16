@@ -10,6 +10,38 @@ public final class TeleportReality {
     private TeleportReality() {
     }
 
+    public static final int TELEPORT_RESEND_INTERVAL_TICKS = 20;
+
+    public static final boolean SUPPRESSION_IS_UNBOUNDED = true;
+
+    public static boolean awaitingTeleportAck(Integer awaitingTeleportId) {
+        return awaitingTeleportId != null;
+    }
+
+    public static boolean positionInputIsDiscarded(Integer awaitingTeleportId) {
+        return awaitingTeleportAck(awaitingTeleportId);
+    }
+
+    public static boolean rotationStillApplies(Integer awaitingTeleportId) {
+        return true;
+    }
+
+    public static boolean ackMatches(Integer awaitingTeleportId, int acknowledgedId) {
+        return awaitingTeleportId != null && awaitingTeleportId.intValue() == acknowledgedId;
+    }
+
+    public static boolean teleportIsResent(int ticksSinceTeleport) {
+        return ticksSinceTeleport > TELEPORT_RESEND_INTERVAL_TICKS;
+    }
+
+    public static boolean checksAreSuppressed(Integer awaitingTeleportId) {
+        return awaitingTeleportAck(awaitingTeleportId);
+    }
+
+    public static boolean suppressionIsUnbounded() {
+        return SUPPRESSION_IS_UNBOUNDED;
+    }
+
     public static boolean invalidatesPreviousPosition(String cause, Protocol protocol) {
         return TeleportCauses.exists(cause, protocol) && !TeleportCauses.isUnknown(cause);
     }

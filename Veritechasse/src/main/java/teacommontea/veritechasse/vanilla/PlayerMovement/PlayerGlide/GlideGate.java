@@ -32,6 +32,57 @@ public final class GlideGate {
         return !gliderIsComponentDriven(protocol);
     }
 
+    public static final int CLIMBABLE_STOPS_GLIDE_MAJOR = 1;
+    public static final int CLIMBABLE_STOPS_GLIDE_MINOR = 21;
+    public static final int CLIMBABLE_STOPS_GLIDE_PATCH = 5;
+
+    public static boolean climbableStopsGlide(Protocol protocol) {
+        return protocol.atLeast(
+            CLIMBABLE_STOPS_GLIDE_MAJOR,
+            CLIMBABLE_STOPS_GLIDE_MINOR,
+            CLIMBABLE_STOPS_GLIDE_PATCH);
+    }
+
+    public static boolean glidePhysicsApply(
+            boolean fallFlyingFlag,
+            boolean inWater,
+            boolean inLava,
+            boolean onClimbable,
+            Protocol protocol) {
+        if (!fallFlyingFlag) {
+            return false;
+        }
+        if (inWater || inLava) {
+            return false;
+        }
+        return !(onClimbable && climbableStopsGlide(protocol));
+    }
+
+    public static boolean glideStopsOnClimbable(boolean onClimbable, Protocol protocol) {
+        return onClimbable && climbableStopsGlide(protocol);
+    }
+
+    public static boolean canStartGliding(
+            boolean onGround,
+            boolean alreadyGliding,
+            boolean inWater,
+            ActiveEffects effects,
+            boolean hasWorkingGlider,
+            Protocol protocol) {
+        if (alreadyGliding || inWater) {
+            return false;
+        }
+        if (!hasWorkingGlider) {
+            return false;
+        }
+        if (!gliderIsComponentDriven(protocol) && onGround) {
+            return false;
+        }
+        return !Levitation.preventsGliding()
+            || effects == null
+            || effects.amplifierOf(Levitation.KEY) == ActiveEffects.ABSENT;
+    }
+
     public static boolean canGlide(
             boolean onGround,
             boolean passenger,

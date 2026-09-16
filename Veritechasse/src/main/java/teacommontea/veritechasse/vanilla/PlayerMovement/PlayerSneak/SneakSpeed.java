@@ -17,7 +17,7 @@ public final class SneakSpeed {
 
     public static final int ATTRIBUTE_PROTOCOL_MAJOR = 1;
     public static final int ATTRIBUTE_PROTOCOL_MINOR = 21;
-    public static final int ATTRIBUTE_PROTOCOL_PATCH = 2;
+    public static final int ATTRIBUTE_PROTOCOL_PATCH = 0;
 
     private SneakSpeed() {
     }

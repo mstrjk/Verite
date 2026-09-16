@@ -13,6 +13,7 @@ public final class SneakPose {
     public static final String FALL_FLYING = "fall_flying";
     public static final String SPIN_ATTACK = "spin_attack";
     public static final String SLEEPING = "sleeping";
+    public static final String DYING = "dying";
 
     public static final float WIDTH = 0.6F;
 
@@ -20,9 +21,18 @@ public final class SneakPose {
     public static final float CROUCHING_HEIGHT = 1.5F;
     public static final float SWIMMING_HEIGHT = 0.6F;
 
+    public static final float SLEEPING_HEIGHT = 0.2F;
+    public static final float DYING_HEIGHT = 0.2F;
+
     public static final float STANDING_EYE_HEIGHT = 1.62F;
     public static final float CROUCHING_EYE_HEIGHT = 1.27F;
     public static final float SWIMMING_EYE_HEIGHT = 0.4F;
+    public static final float SLEEPING_EYE_HEIGHT = 0.2F;
+    public static final float DYING_EYE_HEIGHT = 1.62F;
+
+    public static final int POSE_ORDER_MAJOR = 1;
+    public static final int POSE_ORDER_MINOR = 21;
+    public static final int POSE_ORDER_PATCH = 5;
 
     public static final int EXPLICIT_EYE_HEIGHT_PROTOCOL_MAJOR = 1;
     public static final int EXPLICIT_EYE_HEIGHT_PROTOCOL_MINOR = 20;
@@ -43,6 +53,12 @@ public final class SneakPose {
         if (SWIMMING.equals(key) || FALL_FLYING.equals(key) || SPIN_ATTACK.equals(key)) {
             return SWIMMING_HEIGHT;
         }
+        if (SLEEPING.equals(key)) {
+            return SLEEPING_HEIGHT;
+        }
+        if (DYING.equals(key)) {
+            return DYING_HEIGHT;
+        }
         return STANDING_HEIGHT;
     }
 
@@ -54,7 +70,17 @@ public final class SneakPose {
         if (SWIMMING.equals(key) || FALL_FLYING.equals(key) || SPIN_ATTACK.equals(key)) {
             return SWIMMING_EYE_HEIGHT;
         }
+        if (SLEEPING.equals(key)) {
+            return SLEEPING_EYE_HEIGHT;
+        }
+        if (DYING.equals(key)) {
+            return DYING_EYE_HEIGHT;
+        }
         return STANDING_EYE_HEIGHT;
+    }
+
+    public static boolean sleepingOutranksGliding(Protocol protocol) {
+        return protocol.atLeast(POSE_ORDER_MAJOR, POSE_ORDER_MINOR, POSE_ORDER_PATCH);
     }
 
     public static String desiredPose(
@@ -72,6 +98,33 @@ public final class SneakPose {
         }
         if (fallFlying) {
             return FALL_FLYING;
+        }
+        if (autoSpinAttack) {
+            return SPIN_ATTACK;
+        }
+        return SneakState.desiresCrouch(shiftKeyDown, flying) ? CROUCHING : STANDING;
+    }
+
+    public static String desiredPose(
+            boolean sleeping,
+            boolean swimming,
+            boolean fallFlying,
+            boolean autoSpinAttack,
+            boolean shiftKeyDown,
+            boolean flying,
+            Protocol protocol) {
+        if (sleepingOutranksGliding(protocol)) {
+            return desiredPose(
+                sleeping, swimming, fallFlying, autoSpinAttack, shiftKeyDown, flying);
+        }
+        if (fallFlying) {
+            return FALL_FLYING;
+        }
+        if (sleeping) {
+            return SLEEPING;
+        }
+        if (swimming) {
+            return SWIMMING;
         }
         if (autoSpinAttack) {
             return SPIN_ATTACK;

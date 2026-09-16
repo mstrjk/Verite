@@ -76,7 +76,17 @@ public final class JumpReality {
     }
 
     public static boolean jumpsPerSecondIsPossible(int jumpsObserved, int ticksElapsed) {
+        return jumpsPerSecondIsPossible(jumpsObserved, ticksElapsed, false);
+    }
+
+    public static boolean jumpsPerSecondIsPossible(
+            int jumpsObserved,
+            int ticksElapsed,
+            boolean inFluid) {
         if (jumpsObserved <= 1) {
+            return true;
+        }
+        if (inFluid) {
             return true;
         }
         int minimumTicks = (jumpsObserved - 1) * JumpGate.COOLDOWN_TICKS;

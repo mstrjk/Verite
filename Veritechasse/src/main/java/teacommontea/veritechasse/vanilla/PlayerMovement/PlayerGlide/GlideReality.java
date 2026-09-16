@@ -85,12 +85,38 @@ public final class GlideReality {
 
     public static double wallImpactDamage(double speedBefore, double speedAfter) {
         double difference = speedBefore - speedAfter;
-        double damage = difference * WALL_DAMAGE_SCALE - WALL_DAMAGE_THRESHOLD;
-        return damage > 0.0D ? damage : 0.0D;
+        float damage = (float) (difference * WALL_DAMAGE_SCALE - WALL_DAMAGE_THRESHOLD);
+        return damage > 0.0F ? (double) damage : 0.0D;
+    }
+
+    public static double wallImpactDamage(
+            double speedBefore,
+            double speedAfter,
+            boolean horizontalCollision) {
+        if (!horizontalCollision) {
+            return 0.0D;
+        }
+        return wallImpactDamage(speedBefore, speedAfter);
     }
 
     public static boolean expectsWallDamage(double speedBefore, double speedAfter) {
         return wallImpactDamage(speedBefore, speedAfter) > 0.0D;
+    }
+
+    public static boolean expectsWallDamage(
+            double speedBefore,
+            double speedAfter,
+            boolean horizontalCollision) {
+        return wallImpactDamage(speedBefore, speedAfter, horizontalCollision) > 0.0D;
+    }
+
+    public static final int FALL_DISTANCE_RULE_MAJOR = 1;
+    public static final int FALL_DISTANCE_RULE_MINOR = 21;
+    public static final int FALL_DISTANCE_RULE_PATCH = 2;
+
+    public static boolean legacyFallDistanceRule(Protocol protocol) {
+        return !protocol.atLeast(
+            FALL_DISTANCE_RULE_MAJOR, FALL_DISTANCE_RULE_MINOR, FALL_DISTANCE_RULE_PATCH);
     }
 
     public static double fallDistanceWhileGliding(double deltaY, double currentFallDistance) {
@@ -98,6 +124,16 @@ public final class GlideReality {
             return GlideMotion.FALL_DISTANCE_WHILE_GLIDING;
         }
         return currentFallDistance;
+    }
+
+    public static double fallDistanceWhileGliding(
+            double deltaY,
+            double currentFallDistance,
+            Protocol protocol) {
+        if (!legacyFallDistanceRule(protocol)) {
+            return currentFallDistance;
+        }
+        return fallDistanceWhileGliding(deltaY, currentFallDistance);
     }
 
     public static Reality horizontalFrom(double currentHorizontal, boolean rocketActive) {

@@ -15,8 +15,10 @@ import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerClimb.ClimbableBlo
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerCrawl.CrawlReality;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerCrawl.CrawlState;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.Bounce;
+import teacommontea.veritechasse.vanilla.ControllableEntities.Support.BubbleColumn;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.ExternalY;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.FallDamage;
+import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.ImpulseExemption;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.VerticalReality;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerDeltaY.VerticalTick;
 import teacommontea.veritechasse.vanilla.PlayerMovement.PlayerGlide.GlideGate;
@@ -170,10 +172,13 @@ public final class RealityCheck {
             boolean flightSprint = current.sprinting() || previous.sprinting();
             double bound = MiscReality.maximumFlightHorizontal(
                 previous.observedHorizontal(),
-                CreativeFlight.DEFAULT_FLYING_SPEED, flightSprint);
+                CreativeFlight.DEFAULT_FLYING_SPEED, flightSprint,
+                current.inWater(), current.inLava());
             compare(observations, "fly-xz", observed, bound,
                 " carried=" + format(previous.observedHorizontal())
-                    + " sprint=" + flightSprint);
+                    + " sprint=" + flightSprint
+                    + " water=" + current.inWater()
+                    + " lava=" + current.inLava());
             return;
         }
         if (current.gliding()) {
@@ -278,18 +283,29 @@ public final class RealityCheck {
             current.blockHere(), current.blockBelow(), current.effects(), this.protocol);
         double bounce = Bounce.maximumRebound(
             carried, current.blockBelow(), true, this.protocol);
-        double velocity = Math.max(Math.max(carried, bounce), jump);
+
+        boolean column = ExternalY.inBubbleColumn(current.blockHere());
+        double columnLift = column
+            ? BubbleColumn.maximumUpward(!current.supported())
+            : 0.0D;
+
+        double velocity = Math.max(Math.max(carried, bounce), Math.max(jump, columnLift));
         double bound = 0.0D;
         for (long step = 0L; step < steps; step++) {
-            velocity = Math.max(
-                VerticalTick.next(velocity, current.effects(), this.protocol), jump);
+            double next = VerticalTick.next(velocity, current.effects(), this.protocol);
+            if (column) {
+                next = Math.max(next, columnLift);
+            }
+            velocity = Math.max(next, jump);
             bound = bound + velocity;
         }
         if (observed > bound + DEFAULT_TOLERANCE) {
             observations.add(Observation.suspect("delta-y",
                 "rose " + format(observed) + " airborne, bound " + format(bound)
                     + " (carried " + format(carried) + ", bounce " + format(bounce)
-                    + ", jump " + format(jump) + ", steps=" + steps + ")"));
+                    + ", jump " + format(jump)
+                    + (column ? ", column " + format(columnLift) : "")
+                    + ", steps=" + steps + ")"));
         }
     }
 
@@ -365,6 +381,13 @@ public final class RealityCheck {
             current.mayFly(), current.effects(), this.protocol);
         boolean observed = current.health() < previous.health();
         if (expected && !observed) {
+            if (ImpulseExemption.exists(this.protocol)) {
+                observations.add(Observation.note("fall",
+                    "landed from " + format(previous.fallDistance())
+                        + " expecting damage, none observed"
+                        + " (a wind charge or mace impulse would exempt this)"));
+                return;
+            }
             observations.add(Observation.note("fall",
                 "landed from " + format(previous.fallDistance())
                     + " expecting damage, none observed"));

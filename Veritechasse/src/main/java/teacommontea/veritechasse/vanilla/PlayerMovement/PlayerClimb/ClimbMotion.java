@@ -1,5 +1,7 @@
 package teacommontea.veritechasse.vanilla.PlayerMovement.PlayerClimb;
 
+import teacommontea.veritechasse.vanilla.Potions.Levitation;
+import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
 import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 
@@ -71,6 +73,37 @@ public final class ClimbMotion {
         return component > CLAMP ? CLAMP : component;
     }
 
+    public static boolean clampApplies(
+            boolean onClimbable,
+            boolean inWater,
+            boolean inLava,
+            boolean fallFlying,
+            ActiveEffects effects) {
+        if (!onClimbable) {
+            return false;
+        }
+        if (inWater || inLava || fallFlying) {
+            return false;
+        }
+        return effects == null
+            || effects.amplifierOf(Levitation.KEY) == ActiveEffects.ABSENT;
+    }
+
+    public static double clampVerticalWhenApplicable(
+            double deltaY,
+            String blockAtFeet,
+            boolean shiftKeyDown,
+            boolean isPlayer,
+            boolean inWater,
+            boolean inLava,
+            boolean fallFlying,
+            ActiveEffects effects) {
+        if (!clampApplies(true, inWater, inLava, fallFlying, effects)) {
+            return deltaY;
+        }
+        return clampVertical(deltaY, blockAtFeet, shiftKeyDown, isPlayer);
+    }
+
     public static double clampVertical(
             double deltaY,
             String blockAtFeet,
@@ -101,6 +134,35 @@ public final class ClimbMotion {
             return deltaY;
         }
         return COLLISION_BOOST;
+    }
+
+    public static double upwardAfterCollisionOnLand(
+            double deltaY,
+            boolean horizontalCollision,
+            boolean jumping,
+            boolean onClimbable,
+            boolean inPowderSnowWithLeatherBoots) {
+        if (!onClimbable && !inPowderSnowWithLeatherBoots) {
+            return deltaY;
+        }
+        if (!horizontalCollision && !jumping) {
+            return deltaY;
+        }
+        return COLLISION_BOOST;
+    }
+
+    public static double upwardAfterCollisionInWater(
+            double deltaY,
+            boolean horizontalCollision,
+            boolean onClimbable) {
+        if (!onClimbable || !horizontalCollision) {
+            return deltaY;
+        }
+        return COLLISION_BOOST;
+    }
+
+    public static boolean waterBranchIgnoresJumping() {
+        return true;
     }
 
     public static double maximumAscent(boolean horizontalCollision, boolean jumping) {

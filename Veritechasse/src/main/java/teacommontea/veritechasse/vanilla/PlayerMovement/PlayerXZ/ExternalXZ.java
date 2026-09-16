@@ -8,6 +8,7 @@ import teacommontea.veritechasse.vanilla.ControllableEntities.Support.FluidCurre
 import teacommontea.veritechasse.vanilla.ControllableEntities.Support.Knockback;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Support.PistonPush;
 import teacommontea.veritechasse.vanilla.ControllableEntities.Support.StuckInBlock;
+import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Potions.Support.ActiveEffects;
 import teacommontea.veritechasse.vanilla.Reality;
 
@@ -129,8 +130,18 @@ public final class ExternalXZ {
     }
 
     public static double stateMultiplier(String blockHere, String blockBelow, ActiveEffects effects) {
+        return stateMultiplier(blockHere, blockBelow, effects,
+            BlockMovementFactors.isWaterOrBubbleColumn(blockHere));
+    }
+
+    public static double stateMultiplier(
+            String blockHere,
+            String blockBelow,
+            ActiveEffects effects,
+            boolean inWaterOrBubble) {
         double stuck = StuckInBlock.horizontalMultiplier(blockHere, effects);
-        double speedFactor = BlockMovementFactors.resolveSpeedFactor(blockHere, blockBelow, false);
+        double speedFactor = BlockMovementFactors.resolveSpeedFactor(
+            blockHere, blockBelow, inWaterOrBubble);
         return stuck * speedFactor;
     }
 
@@ -140,6 +151,37 @@ public final class ExternalXZ {
 
     public static double afterStuckOnly(double horizontal, String blockHere, ActiveEffects effects) {
         return StuckInBlock.horizontalAfter(horizontal, blockHere, effects);
+    }
+
+    public static final double STUCK_ACTIVE_SQUARED_THRESHOLD = 1.0E-7D;
+
+    public static final int PISTON_EXEMPT_MAJOR = 26;
+    public static final int PISTON_EXEMPT_MINOR = 2;
+    public static final int PISTON_EXEMPT_PATCH = 0;
+
+    public static boolean pistonSkipsStuckMultiplier(Protocol protocol) {
+        return protocol.atLeast(
+            PISTON_EXEMPT_MAJOR, PISTON_EXEMPT_MINOR, PISTON_EXEMPT_PATCH);
+    }
+
+    public static boolean stuckMultiplierApplies(String blockHere, ActiveEffects effects) {
+        double multiplier = StuckInBlock.horizontalMultiplier(blockHere, effects);
+        return multiplier * multiplier > STUCK_ACTIVE_SQUARED_THRESHOLD
+            && multiplier < 1.0D;
+    }
+
+    public static double carriedAfterStuck(
+            double horizontal,
+            String blockHere,
+            ActiveEffects effects) {
+        if (stuckMultiplierApplies(blockHere, effects)) {
+            return 0.0D;
+        }
+        return horizontal;
+    }
+
+    public static boolean stuckZeroesCarriedVelocity() {
+        return true;
     }
 
     public static boolean isSlowingBlock(String blockName) {

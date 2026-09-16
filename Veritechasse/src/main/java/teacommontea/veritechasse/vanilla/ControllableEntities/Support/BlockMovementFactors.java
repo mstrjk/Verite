@@ -40,6 +40,21 @@ public final class BlockMovementFactors {
         return found == null ? DEFAULT_JUMP_FACTOR : found.floatValue();
     }
 
+    public static final String WATER = "water";
+    public static final String BUBBLE_COLUMN = "bubble_column";
+
+    public static boolean isWaterOrBubbleColumn(String blockName) {
+        if (blockName == null) {
+            return false;
+        }
+        String key = blockName.toLowerCase(java.util.Locale.ROOT);
+        return WATER.equals(key) || BUBBLE_COLUMN.equals(key);
+    }
+
+    public static float resolveSpeedFactor(String blockHere, String blockBelow) {
+        return resolveSpeedFactor(blockHere, blockBelow, isWaterOrBubbleColumn(blockHere));
+    }
+
     public static float resolveSpeedFactor(String blockHere, String blockBelow, boolean inWaterOrBubble) {
         float here = speedFactorOf(blockHere);
         if (inWaterOrBubble) {

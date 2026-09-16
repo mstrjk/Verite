@@ -16,20 +16,47 @@ public final class TeleportEffects {
     private TeleportEffects() {
     }
 
-    public static boolean resetsFallDistance(String cause) {
-        String key = TeleportCauses.normalise(cause);
-        if (TeleportCauses.DISMOUNT.equals(key) || TeleportCauses.EXIT_BED.equals(key)) {
-            return false;
-        }
-        return !TeleportCauses.isUnknown(key);
+    public static final int NETHER_PORTAL_DEFAULT_DELAY_TICKS = 80;
+    public static final int NETHER_PORTAL_CREATIVE_DELAY_TICKS = 1;
+
+    public static final int CHORUS_FRUIT_COOLDOWN_TICKS = 20;
+
+    public static final int END_GATEWAY_ENTITY_COOLDOWN_TICKS = 10;
+
+    public static int portalTransitionDelayTicks(boolean creative) {
+        return creative
+            ? NETHER_PORTAL_CREATIVE_DELAY_TICKS
+            : NETHER_PORTAL_DEFAULT_DELAY_TICKS;
     }
 
-    public static boolean clearsMomentum(String cause) {
+    public static boolean portalDwellIsSufficient(int ticksInPortal, boolean creative) {
+        return ticksInPortal >= portalTransitionDelayTicks(creative);
+    }
+
+    public static int itemCooldownTicksFor(String cause) {
+        String key = TeleportCauses.normalise(cause);
+        if (TeleportCauses.CHORUS_FRUIT.equals(key)
+                || TeleportCauses.CONSUMABLE_EFFECT.equals(key)) {
+            return CHORUS_FRUIT_COOLDOWN_TICKS;
+        }
+        return 0;
+    }
+
+    public static boolean resetsFallDistance(String cause) {
         String key = TeleportCauses.normalise(cause);
         if (TeleportCauses.ENDER_PEARL.equals(key)) {
             return true;
         }
-        return TeleportCauses.isExternal(key);
+        return TeleportCauses.CHORUS_FRUIT.equals(key)
+            || TeleportCauses.CONSUMABLE_EFFECT.equals(key);
+    }
+
+    public static boolean clearsMomentum(String cause) {
+        return false;
+    }
+
+    public static boolean preservesMomentum(String cause) {
+        return !clearsMomentum(cause);
     }
 
     public static double horizontalAfter(String cause, double currentHorizontal) {

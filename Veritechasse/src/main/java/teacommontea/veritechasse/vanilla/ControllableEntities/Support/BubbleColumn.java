@@ -1,8 +1,14 @@
 package teacommontea.veritechasse.vanilla.ControllableEntities.Support;
 
+import java.util.Locale;
+
 import teacommontea.veritechasse.vanilla.Reality;
 
 public final class BubbleColumn {
+
+    public static final String KEY = "bubble_column";
+    public static final String SOUL_SAND = "soul_sand";
+    public static final String MAGMA_BLOCK = "magma_block";
 
     public static final double ABOVE_UPWARD_STEP = 0.1D;
     public static final double ABOVE_UPWARD_CAP = 1.8D;
@@ -19,6 +25,54 @@ public final class BubbleColumn {
     public static final boolean RESETS_FALL_DISTANCE_INSIDE = true;
 
     private BubbleColumn() {
+    }
+
+    private static String normalise(String blockName) {
+        return blockName == null ? null : blockName.toLowerCase(Locale.ROOT);
+    }
+
+    public static boolean dragsDown(String blockBeneathColumn) {
+        return MAGMA_BLOCK.equals(normalise(blockBeneathColumn));
+    }
+
+    public static boolean pushesUp(String blockBeneathColumn) {
+        return SOUL_SAND.equals(normalise(blockBeneathColumn));
+    }
+
+    public static boolean formsColumn(String blockBeneathColumn) {
+        return dragsDown(blockBeneathColumn) || pushesUp(blockBeneathColumn);
+    }
+
+    public static boolean isColumn(String blockHere) {
+        return KEY.equals(normalise(blockHere));
+    }
+
+    public static boolean resetsFallDistance(boolean above) {
+        return above ? false : RESETS_FALL_DISTANCE_INSIDE;
+    }
+
+    public static double verticalAfter(
+            double verticalMovement,
+            String blockBeneathColumn,
+            boolean above) {
+        boolean dragDown = dragsDown(blockBeneathColumn);
+        return above
+            ? verticalAfterAbove(verticalMovement, dragDown)
+            : verticalAfterInside(verticalMovement, dragDown);
+    }
+
+    public static double maximumDownward(String blockBeneathColumn, boolean above) {
+        if (!dragsDown(blockBeneathColumn)) {
+            return 0.0D;
+        }
+        return maximumDownward(above);
+    }
+
+    public static double maximumUpward(String blockBeneathColumn, boolean above) {
+        if (!pushesUp(blockBeneathColumn)) {
+            return 0.0D;
+        }
+        return maximumUpward(above);
     }
 
     public static double verticalAfterAbove(double verticalMovement, boolean dragDown) {

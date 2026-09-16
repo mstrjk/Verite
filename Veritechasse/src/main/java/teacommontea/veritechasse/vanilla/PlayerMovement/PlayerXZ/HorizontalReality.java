@@ -32,6 +32,23 @@ public final class HorizontalReality {
             currentHorizontal, effects, sprinting, blockBelow, blockHere, inputLength, true, false);
     }
 
+    public static double nextTickSpeedEitherGround(
+            double currentHorizontal,
+            ActiveEffects effects,
+            boolean sprinting,
+            String blockBelow,
+            String blockHere,
+            double inputLength,
+            boolean creativeFlying) {
+        double grounded = nextTickSpeed(
+            currentHorizontal, effects, sprinting, blockBelow, blockHere,
+            inputLength, true, creativeFlying);
+        double airborne = nextTickSpeed(
+            currentHorizontal, effects, sprinting, blockBelow, blockHere,
+            inputLength, false, creativeFlying);
+        return grounded > airborne ? grounded : airborne;
+    }
+
     public static double nextTickSpeed(
             double currentHorizontal,
             ActiveEffects effects,
@@ -96,8 +113,9 @@ public final class HorizontalReality {
             boolean insideSolidBlock,
             boolean entityCrowded,
             Era era) {
-        double walking = nextTickSpeed(
-            currentHorizontal, effects, sprinting, blockBelow, blockHere, MoveInput.LEGAL_LENGTH_CARDINAL);
+        double walking = nextTickSpeedEitherGround(
+            currentHorizontal, effects, sprinting, blockBelow, blockHere,
+            MoveInput.LEGAL_LENGTH_CARDINAL, false);
 
         double external = ExternalXZ.additiveImpulse(
             explosionSource, explosionDistance, explosionExposure,

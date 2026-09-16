@@ -228,17 +228,14 @@ public final class InteractionCheck {
             observations.add(Observation.suspect("place-hit-face",
                 "hit location does not lie on the claimed " + face + " face"));
         }
-        if (PlaceReality.sequenceIsOutOfOrder(previousSequence, sequence)) {
-            observations.add(Observation.suspect("place-sequence",
-                "sequence " + sequence + " after " + previousSequence));
-        }
-        if (InteractionPackets.replaysSequence(previousSequence, sequence)) {
-            observations.add(Observation.suspect("place-sequence-replay",
-                "replayed sequence " + sequence));
-        }
         if (!InteractionPackets.sequenceIsWellFormed(sequence)) {
             observations.add(Observation.suspect("place-sequence-malformed",
-                "negative sequence " + sequence));
+                "negative sequence " + sequence
+                    + " which the server rejects outright"));
+        } else if (PlaceReality.sequenceIsOutOfOrder(previousSequence, sequence)) {
+            observations.add(Observation.note("place-sequence",
+                "sequence " + sequence + " after " + previousSequence
+                    + " (the server absorbs this with Math.max, it does not reject)"));
         }
         if (!BlockHitPacket.serverAcceptsHit(
                 hitX, hitY, hitZ, blockX, blockY, blockZ)) {
@@ -254,7 +251,8 @@ public final class InteractionCheck {
         } else if (!BlockHitPacket.relativesAreWithinBlock(
                 relativeX, relativeY, relativeZ)) {
             observations.add(Observation.note("place-hit-outside",
-                "hit lies outside the clicked block volume"));
+                "hit lies outside the clicked block volume"
+                    + " (vanilla still accepts this, its bound is from block centre)"));
         }
         return observations;
     }

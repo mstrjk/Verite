@@ -4,6 +4,8 @@ import org.bukkit.inventory.ItemStack;
 
 import teacommontea.veritechasse.vanilla.Enchantments.Riptide;
 import teacommontea.veritechasse.vanilla.Era;
+import teacommontea.veritechasse.vanilla.PlayerInteraction.PlayerBreak.LookGeometry;
+import teacommontea.veritechasse.vanilla.Protocol;
 import teacommontea.veritechasse.vanilla.Reality;
 
 public final class RiptideImpulseXZ {
@@ -17,11 +19,34 @@ public final class RiptideImpulseXZ {
     private RiptideImpulseXZ() {
     }
 
+    public static final int PASSENGER_GATE_MAJOR = 26;
+    public static final int PASSENGER_GATE_MINOR = 1;
+    public static final int PASSENGER_GATE_PATCH = 0;
+
+    public static boolean passengerBlocksLaunch(Protocol protocol) {
+        return protocol.atLeast(
+            PASSENGER_GATE_MAJOR, PASSENGER_GATE_MINOR, PASSENGER_GATE_PATCH);
+    }
+
     public static boolean canLaunch(int riptideLevel, boolean inWaterOrRain, boolean passenger) {
         if (riptideLevel <= 0) {
             return false;
         }
         if (passenger) {
+            return false;
+        }
+        return inWaterOrRain;
+    }
+
+    public static boolean canLaunch(
+            int riptideLevel,
+            boolean inWaterOrRain,
+            boolean passenger,
+            Protocol protocol) {
+        if (riptideLevel <= 0) {
+            return false;
+        }
+        if (passenger && passengerBlocksLaunch(protocol)) {
             return false;
         }
         return inWaterOrRain;
@@ -34,12 +59,38 @@ public final class RiptideImpulseXZ {
         return canLaunch(Riptide.levelOn(trident), inWaterOrRain, passenger);
     }
 
+    public static float lookX(float yawDegrees, float pitchDegrees) {
+        float yaw = yawDegrees * LookGeometry.DEGREES_TO_RADIANS;
+        float pitch = pitchDegrees * LookGeometry.DEGREES_TO_RADIANS;
+        return -LookGeometry.sin((double) yaw) * LookGeometry.cos((double) pitch);
+    }
+
+    public static float lookY(float pitchDegrees) {
+        float pitch = pitchDegrees * LookGeometry.DEGREES_TO_RADIANS;
+        return -LookGeometry.sin((double) pitch);
+    }
+
+    public static float lookZ(float yawDegrees, float pitchDegrees) {
+        float yaw = yawDegrees * LookGeometry.DEGREES_TO_RADIANS;
+        float pitch = pitchDegrees * LookGeometry.DEGREES_TO_RADIANS;
+        return LookGeometry.cos((double) yaw) * LookGeometry.cos((double) pitch);
+    }
+
+    public static float lookLength(float yawDegrees, float pitchDegrees) {
+        float xd = lookX(yawDegrees, pitchDegrees);
+        float yd = lookY(pitchDegrees);
+        float zd = lookZ(yawDegrees, pitchDegrees);
+        return (float) Math.sqrt((double) (xd * xd + yd * yd + zd * zd));
+    }
+
     public static double horizontalComponent(float yawDegrees, float pitchDegrees) {
-        double yaw = Math.toRadians(yawDegrees);
-        double pitch = Math.toRadians(pitchDegrees);
-        double xd = -Math.sin(yaw) * Math.cos(pitch);
-        double zd = Math.cos(yaw) * Math.cos(pitch);
-        return Math.sqrt(xd * xd + zd * zd);
+        float dist = lookLength(yawDegrees, pitchDegrees);
+        if (dist <= 0.0F) {
+            return 0.0D;
+        }
+        float xd = lookX(yawDegrees, pitchDegrees) / dist;
+        float zd = lookZ(yawDegrees, pitchDegrees) / dist;
+        return Math.sqrt((double) (xd * xd + zd * zd));
     }
 
     public static double horizontalImpulse(float strength, float pitchDegrees) {

@@ -38,7 +38,34 @@ public final class ClimbableBlocks {
         CAVE_VINES,
         CAVE_VINES_PLANT);
 
+    public static final String CAN_GLIDE_THROUGH_TAG = "can_glide_through";
+
+    public static final int GLIDE_THROUGH_MAJOR = 1;
+    public static final int GLIDE_THROUGH_MINOR = 21;
+    public static final int GLIDE_THROUGH_PATCH = 11;
+
+    public static final Set<String> CAN_GLIDE_THROUGH = Set.of(
+        "vine",
+        "twisting_vines",
+        "twisting_vines_plant",
+        "weeping_vines",
+        "weeping_vines_plant",
+        "cave_vines",
+        "cave_vines_plant");
+
     private ClimbableBlocks() {
+    }
+
+    public static boolean glideThroughTagExists(Protocol protocol) {
+        return protocol.atLeast(
+            GLIDE_THROUGH_MAJOR, GLIDE_THROUGH_MINOR, GLIDE_THROUGH_PATCH);
+    }
+
+    public static boolean allowsGlideThrough(String blockName, Protocol protocol) {
+        if (blockName == null || !glideThroughTagExists(protocol)) {
+            return false;
+        }
+        return CAN_GLIDE_THROUGH.contains(blockName.toLowerCase(Locale.ROOT));
     }
 
     public static String normalise(String blockName) {

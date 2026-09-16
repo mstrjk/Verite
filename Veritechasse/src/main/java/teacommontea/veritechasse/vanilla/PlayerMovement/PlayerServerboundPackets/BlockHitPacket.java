@@ -6,9 +6,9 @@ public final class BlockHitPacket {
 
     public static final String KEY = "block_hit_result";
 
-    public static final int WORLD_BORDER_FLAG_MAJOR = 26;
-    public static final int WORLD_BORDER_FLAG_MINOR = 2;
-    public static final int WORLD_BORDER_FLAG_PATCH = 0;
+    public static final int WORLD_BORDER_FLAG_MAJOR = 1;
+    public static final int WORLD_BORDER_FLAG_MINOR = 21;
+    public static final int WORLD_BORDER_FLAG_PATCH = 2;
 
     public static final float RELATIVE_MINIMUM = 0.0F;
     public static final float RELATIVE_MAXIMUM = 1.0F;

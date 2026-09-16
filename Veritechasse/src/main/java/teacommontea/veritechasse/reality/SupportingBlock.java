@@ -12,7 +12,9 @@ public final class SupportingBlock {
 
     public static final double HORIZONTAL_INSET = 1.0E-3D;
 
-    public static final double PROBE_DEPTH = GroundState.SUPPORT_SEARCH_DEPTH;
+    public static final double VANILLA_PROBE_DEPTH = GroundState.SUPPORT_SEARCH_DEPTH;
+
+    public static final double PROBE_DEPTH = 1.0E-3D;
 
     private SupportingBlock() {
     }

@@ -22,6 +22,14 @@ public final class JumpPower {
     public static final int ATTRIBUTE_PROTOCOL_MINOR = 20;
     public static final int ATTRIBUTE_PROTOCOL_PATCH = 5;
 
+    public static final int MAXIMUM_PROTOCOL_MAJOR = 1;
+    public static final int MAXIMUM_PROTOCOL_MINOR = 21;
+    public static final int MAXIMUM_PROTOCOL_PATCH = 2;
+
+    public static final int BOOST_INSIDE_POWER_MAJOR = 1;
+    public static final int BOOST_INSIDE_POWER_MINOR = 20;
+    public static final int BOOST_INSIDE_POWER_PATCH = 0;
+
     private JumpPower() {
     }
 
@@ -37,7 +45,17 @@ public final class JumpPower {
     }
 
     public static boolean usesMaximumNotSet(Protocol protocol) {
-        return attributeDriven(protocol);
+        return protocol.atLeast(
+            MAXIMUM_PROTOCOL_MAJOR,
+            MAXIMUM_PROTOCOL_MINOR,
+            MAXIMUM_PROTOCOL_PATCH);
+    }
+
+    public static boolean boostAppliedInsideJumpPower(Protocol protocol) {
+        return protocol.atLeast(
+            BOOST_INSIDE_POWER_MAJOR,
+            BOOST_INSIDE_POWER_MINOR,
+            BOOST_INSIDE_POWER_PATCH);
     }
 
     public static float clampAttribute(double value) {

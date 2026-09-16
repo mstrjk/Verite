@@ -71,6 +71,25 @@ public final class ExternalY {
             : BubbleColumn.verticalAfterInside(deltaY, drags);
     }
 
+    public static double bubbleColumn(
+            double deltaY,
+            String blockHere,
+            String blockBeneathColumn,
+            boolean above) {
+        if (!BubbleColumn.isColumn(blockHere)) {
+            return deltaY;
+        }
+        return BubbleColumn.verticalAfter(deltaY, blockBeneathColumn, above);
+    }
+
+    public static boolean inBubbleColumn(String blockHere) {
+        return BubbleColumn.isColumn(blockHere);
+    }
+
+    public static boolean bubbleColumnResetsFallDistance(String blockHere, boolean above) {
+        return BubbleColumn.isColumn(blockHere) && BubbleColumn.resetsFallDistance(above);
+    }
+
     public static double knockback(double deltaY, double power, boolean onGround) {
         return Knockback.verticalAfter(deltaY, power, onGround);
     }

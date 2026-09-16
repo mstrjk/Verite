@@ -31,6 +31,42 @@ public final class RocketBoost {
         return componentAfter(lookZ, currentZ);
     }
 
+    public static final int TICKS_PER_FLIGHT_DURATION = 10;
+    public static final int LIFETIME_RANDOM_A = 6;
+    public static final int LIFETIME_RANDOM_B = 7;
+
+    public static final int MINIMUM_FLIGHT_DURATION = 1;
+    public static final int MAXIMUM_FLIGHT_DURATION = 3;
+
+    public static int minimumLifetime(int flightDuration) {
+        return TICKS_PER_FLIGHT_DURATION * flightDuration;
+    }
+
+    public static int maximumLifetime(int flightDuration) {
+        return TICKS_PER_FLIGHT_DURATION * flightDuration
+            + (LIFETIME_RANDOM_A - 1) + (LIFETIME_RANDOM_B - 1);
+    }
+
+    public static boolean lifetimeIsPossible(int observedTicks, int flightDuration) {
+        return observedTicks >= minimumLifetime(flightDuration)
+            && observedTicks <= maximumLifetime(flightDuration);
+    }
+
+    public static boolean stillBoosting(int life, int lifetime) {
+        return life <= lifetime;
+    }
+
+    public static double maximumSpeedAfter(double currentSpeed, int concurrentRockets) {
+        if (concurrentRockets <= 0) {
+            return currentSpeed;
+        }
+        double speed = currentSpeed;
+        for (int rocket = 0; rocket < concurrentRockets; rocket++) {
+            speed = maximumSpeedAfter(speed);
+        }
+        return speed;
+    }
+
     public static boolean applies(boolean fallFlying) {
         return fallFlying;
     }

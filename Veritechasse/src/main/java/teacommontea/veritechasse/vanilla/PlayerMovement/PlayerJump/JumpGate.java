@@ -7,9 +7,12 @@ public final class JumpGate {
 
     public static final int COOLDOWN_TICKS = 10;
 
-    public static final double LIQUID_JUMP_IMPULSE = 0.04D;
+    public static final float LIQUID_JUMP_IMPULSE_SOURCE = 0.04F;
+    public static final double LIQUID_JUMP_IMPULSE = LIQUID_JUMP_IMPULSE_SOURCE;
+    public static final float SINK_IMPULSE_SOURCE = -0.04F;
+    public static final double SINK_IMPULSE = SINK_IMPULSE_SOURCE;
 
-    public static final boolean COOLDOWN_RESETS_ON_RELEASE = true;
+    public static final boolean COOLDOWN_RESETS_WHEN_NOT_ATTEMPTING_FLUID_JUMP = true;
 
     private JumpGate() {
     }
@@ -22,11 +25,32 @@ public final class JumpGate {
         return COOLDOWN_TICKS;
     }
 
-    public static int cooldownAfterTick(int noJumpDelay, boolean jumpHeld) {
-        if (!jumpHeld) {
+    public static int decrementCooldown(int noJumpDelay) {
+        return noJumpDelay > 0 ? noJumpDelay - 1 : 0;
+    }
+
+    public static boolean cooldownIsReset(boolean jumpHeld, boolean affectedByFluids) {
+        return !(jumpHeld && affectedByFluids);
+    }
+
+    public static int cooldownAfterTick(
+            int noJumpDelay,
+            boolean jumpHeld,
+            boolean affectedByFluids,
+            boolean groundJumpFired) {
+        int decremented = decrementCooldown(noJumpDelay);
+        if (cooldownIsReset(jumpHeld, affectedByFluids)) {
             return 0;
         }
-        return noJumpDelay > 0 ? noJumpDelay - 1 : 0;
+        return groundJumpFired ? COOLDOWN_TICKS : decremented;
+    }
+
+    public static int cooldownAfterTick(int noJumpDelay, boolean jumpHeld) {
+        return cooldownAfterTick(noJumpDelay, jumpHeld, true, false);
+    }
+
+    public static boolean liquidJumpHasCooldown() {
+        return false;
     }
 
     public static boolean inWaterWithDepth(boolean inWater, double fluidHeight) {
