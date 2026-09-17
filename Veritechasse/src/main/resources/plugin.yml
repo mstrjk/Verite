@@ -1,8 +1,0 @@
-name: Veritechasse
-version: 1.0.0
-main: teacommontea.veritechasse.ChassePlugin
-api-version: '1.19'
-folia-supported: true
-author: teacommontea
-description: "Movement and interaction integrity checks built on extracted vanilla physics. Optional extension for Verite."
-depend: [Verite]
