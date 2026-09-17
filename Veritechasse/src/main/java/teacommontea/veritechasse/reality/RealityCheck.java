@@ -23,6 +23,12 @@ public final class RealityCheck {
 
     private final Map<UUID, PlayerState> states = new HashMap<>();
 
+    private List<String> lastTrace = List.of();
+
+    public List<String> lastTrace() {
+        return this.lastTrace;
+    }
+
     public RealityCheck(Protocol protocol) {
         this.protocol = protocol;
         this.era = Era.enchantments(protocol);
@@ -53,26 +59,21 @@ public final class RealityCheck {
         stateOf(id).authoriseImpulse(horizontal, vertical, tick);
     }
 
-    public List<Observation> evaluate(PlayerSnapshot previous, PlayerSnapshot current) {
-        List<Observation> observations = new ArrayList<>();
+    public List<Violation> evaluate(PlayerSnapshot previous, PlayerSnapshot current) {
+        List<Violation> violations = new ArrayList<>();
         if (previous == null) {
-            return observations;
-        }
-        if (current.changedWorld(previous)) {
-            observations.add(Observation.note("world", "changed world, baseline reset"));
-            return observations;
+            return violations;
         }
 
         long tickGap = current.tick() - previous.tick();
         if (tickGap < 0L) {
-            return observations;
+            return violations;
         }
-        if (tickGap > MAXIMUM_EVALUATED_GAP) {
+        if (current.changedWorld(previous) || tickGap > MAXIMUM_EVALUATED_GAP) {
             current.recordObservedHorizontal(0.0D);
             current.recordObservedVertical(0.0D);
-            observations.add(Observation.note("gap",
-                tickGap + " ticks since last movement, baseline reset"));
-            return observations;
+            stateOf(current.id()).reset();
+            return violations;
         }
 
         current.recordObservedHorizontal(current.horizontalDistanceTo(previous));
@@ -83,11 +84,12 @@ public final class RealityCheck {
             previous, current, state, this.protocol, this.era);
 
         for (Check check : CheckRegistry.all()) {
-            check.evaluate(context, observations);
+            check.evaluate(context, violations);
         }
 
+        this.lastTrace = context.overSinkable() ? context.traceLines() : List.of();
         state.decayImpulse(current.tick(), GroundSpeed.AIR_DRAG);
-        return observations;
+        return violations;
     }
 
     public String describeCapabilities() {

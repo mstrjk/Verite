@@ -44,6 +44,10 @@ public final class PlayerSnapshot {
     private final boolean flying;
     private final boolean mayFly;
 
+    private final boolean passenger;
+    private final String vehicleType;
+    private final boolean riptiding;
+
     private final boolean inWater;
     private final boolean inLava;
     private final boolean shallowLava;
@@ -99,6 +103,9 @@ public final class PlayerSnapshot {
         this.gliding = builder.gliding;
         this.flying = builder.flying;
         this.mayFly = builder.mayFly;
+        this.passenger = builder.passenger;
+        this.vehicleType = builder.vehicleType;
+        this.riptiding = builder.riptiding;
         this.inWater = builder.inWater;
         this.inLava = builder.inLava;
         this.shallowLava = builder.shallowLava;
@@ -146,6 +153,9 @@ public final class PlayerSnapshot {
         builder.gliding = player.isGliding();
         builder.flying = player.isFlying();
         builder.mayFly = player.getAllowFlight();
+        builder.passenger = player.isInsideVehicle();
+        builder.vehicleType = vehicleTypeOf(player);
+        builder.riptiding = player.isRiptiding();
         builder.inWater = isInWater(player);
         builder.inLava = isInLava(player);
         builder.shallowLava = isShallowLava(player);
@@ -174,6 +184,14 @@ public final class PlayerSnapshot {
         builder.tick = tick;
         builder.packetIndex = packetIndex;
         return new PlayerSnapshot(builder);
+    }
+
+    private static String vehicleTypeOf(Player player) {
+        Entity vehicle = player.getVehicle();
+        if (vehicle == null) {
+            return "";
+        }
+        return vehicle.getType().name().toLowerCase(Locale.ROOT);
     }
 
     private static boolean isInLava(Player player) {
@@ -408,6 +426,18 @@ public final class PlayerSnapshot {
         return this.mayFly;
     }
 
+    public boolean passenger() {
+        return this.passenger;
+    }
+
+    public String vehicleType() {
+        return this.vehicleType;
+    }
+
+    public boolean riptiding() {
+        return this.riptiding;
+    }
+
     public boolean inWater() {
         return this.inWater;
     }
@@ -624,6 +654,9 @@ public final class PlayerSnapshot {
         private boolean gliding;
         private boolean flying;
         private boolean mayFly;
+        private boolean passenger;
+        private String vehicleType;
+        private boolean riptiding;
         private boolean inWater;
         private boolean inLava;
         private boolean shallowLava;

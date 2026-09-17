@@ -54,20 +54,25 @@ public final class WaterVertical {
         return deltaY - effectiveGravity(baseGravity);
     }
 
+    public static double withImpulse(double deltaY, boolean jumpHeld, boolean sneakHeld) {
+        double carried = deltaY;
+        if (jumpHeld) {
+            carried = carried + (double) SWIM_UP_IMPULSE;
+        }
+        if (sneakHeld) {
+            carried = carried + (double) SWIM_DOWN_IMPULSE;
+        }
+        return carried;
+    }
+
     public static double next(
             double deltaY,
             double baseGravity,
             boolean jumpHeld,
             boolean sneakHeld,
             boolean sprinting) {
-        double dragged = afterDrag(deltaY);
-        if (jumpHeld) {
-            dragged = dragged + (double) SWIM_UP_IMPULSE;
-        }
-        if (sneakHeld) {
-            dragged = dragged + (double) SWIM_DOWN_IMPULSE;
-        }
         boolean falling = deltaY <= 0.0D;
+        double dragged = withImpulse(afterDrag(deltaY), jumpHeld, sneakHeld);
         return afterGravity(dragged, baseGravity, falling, sprinting);
     }
 
@@ -82,6 +87,21 @@ public final class WaterVertical {
     public static double terminalRise(double baseGravity) {
         double impulse = (double) SWIM_UP_IMPULSE - effectiveGravity(baseGravity);
         return impulse / (1.0D - (double) VERTICAL_DRAG);
+    }
+
+    public static final int SINK_TICK_LIMIT = 200;
+
+    public static int ticksBeforeDescentIsVisible(
+            double epsilon, double baseGravity, boolean sprinting) {
+        double descended = 0.0D;
+        double carried = 0.0D;
+        int ticks = 0;
+        while (descended < epsilon && ticks < SINK_TICK_LIMIT) {
+            ticks = ticks + 1;
+            carried = next(carried, baseGravity, false, false, sprinting);
+            descended = descended - carried;
+        }
+        return ticks;
     }
 
     public static boolean permitsRise(

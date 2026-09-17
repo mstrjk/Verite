@@ -53,6 +53,21 @@ public final class LavaMotion {
         return (double) acceleration * drag / (1.0D - drag);
     }
 
+    public static final int SINK_TICK_LIMIT = 200;
+
+    public static int ticksBeforeDescentIsVisible(
+            double epsilon, double baseGravity, boolean shallow) {
+        double descended = 0.0D;
+        double carried = 0.0D;
+        int ticks = 0;
+        while (descended < epsilon && ticks < SINK_TICK_LIMIT) {
+            ticks = ticks + 1;
+            carried = nextVertical(carried, baseGravity, shallow);
+            descended = descended - carried;
+        }
+        return ticks;
+    }
+
     public static boolean isShallow(double lavaHeight, double jumpThreshold) {
         return lavaHeight <= jumpThreshold;
     }

@@ -41,6 +41,34 @@ public final class LiquidReality {
         return observedHorizontal <= bound + TOLERANCE;
     }
 
+    public static double waterHorizontalAfterTick(
+            double carriedHorizontal,
+            ActiveEffects effects,
+            ItemStack boots,
+            boolean sprinting,
+            boolean onGround,
+            Era era) {
+        float efficiency = WaterMotion.efficiencyFrom(boots, era);
+        float slowDown = WaterMotion.slowDown(sprinting, efficiency, onGround, effects);
+        double attribute = GroundSpeed.attributeSpeed(effects, sprinting);
+        float acceleration = WaterMotion.acceleration(attribute, efficiency, onGround);
+        return WaterMotion.horizontalAfter(
+            carriedHorizontal + (double) acceleration, slowDown);
+    }
+
+    public static double maximumWaterSpeed(
+            double carriedHorizontal,
+            ActiveEffects effects,
+            ItemStack boots,
+            boolean sprinting,
+            boolean onGround,
+            Era era) {
+        double decayed = waterHorizontalAfterTick(
+            carriedHorizontal, effects, boots, sprinting, onGround, era);
+        double steady = maximumWaterSpeed(effects, boots, sprinting, onGround, era);
+        return decayed > steady ? decayed : steady;
+    }
+
     public static double maximumWaterSpeedWithCurrent(
             ActiveEffects effects,
             ItemStack boots,
@@ -51,9 +79,34 @@ public final class LiquidReality {
             + FluidCurrent.waterImpulse(1.0D);
     }
 
+    public static double maximumWaterSpeedWithCurrent(
+            double carriedHorizontal,
+            ActiveEffects effects,
+            ItemStack boots,
+            boolean sprinting,
+            boolean onGround,
+            Era era) {
+        return maximumWaterSpeed(
+                carriedHorizontal, effects, boots, sprinting, onGround, era)
+            + FluidCurrent.waterImpulse(1.0D);
+    }
+
     public static double maximumLavaSpeed(boolean shallow, boolean ultraWarmDimension) {
         return LavaMotion.terminalSpeed(LavaMotion.SPEED, shallow)
             + FluidCurrent.lavaImpulse(1.0D, ultraWarmDimension);
+    }
+
+    public static double lavaHorizontalAfterTick(
+            double carriedHorizontal, boolean shallow) {
+        return LavaMotion.horizontalAfter(
+            carriedHorizontal + (double) LavaMotion.SPEED, shallow);
+    }
+
+    public static double maximumLavaSpeed(
+            double carriedHorizontal, boolean shallow, boolean ultraWarmDimension) {
+        double decayed = lavaHorizontalAfterTick(carriedHorizontal, shallow);
+        double steady = maximumLavaSpeed(shallow, ultraWarmDimension);
+        return decayed > steady ? decayed : steady;
     }
 
     public static boolean permitsLavaSpeed(
@@ -61,6 +114,56 @@ public final class LiquidReality {
             boolean shallow,
             boolean ultraWarmDimension) {
         return observedHorizontal <= maximumLavaSpeed(shallow, ultraWarmDimension) + TOLERANCE;
+    }
+
+    public static final double MAXIMUM_CARRIED_ENTRY = 1.0D;
+
+    public static final int SETTLE_TICK_LIMIT = 200;
+
+    public static int ticksToSettleInWater(
+            double carriedHorizontal,
+            ActiveEffects effects,
+            ItemStack boots,
+            boolean sprinting,
+            boolean onGround,
+            Era era) {
+        double steady = maximumWaterSpeedWithCurrent(
+            effects, boots, sprinting, onGround, era);
+        double carried = carriedHorizontal;
+        int ticks = 0;
+        while (carried > steady && ticks < SETTLE_TICK_LIMIT) {
+            carried = waterHorizontalAfterTick(
+                carried, effects, boots, sprinting, onGround, era);
+            ticks = ticks + 1;
+        }
+        return ticks;
+    }
+
+    public static int ticksToSettleInWater(
+            ActiveEffects effects,
+            ItemStack boots,
+            boolean sprinting,
+            boolean onGround,
+            Era era) {
+        return ticksToSettleInWater(
+            MAXIMUM_CARRIED_ENTRY, effects, boots, sprinting, onGround, era);
+    }
+
+    public static int ticksToSettleInLava(
+            double carriedHorizontal, boolean shallow, boolean ultraWarmDimension) {
+        double steady = maximumLavaSpeed(shallow, ultraWarmDimension);
+        double carried = carriedHorizontal;
+        int ticks = 0;
+        while (carried > steady && ticks < SETTLE_TICK_LIMIT) {
+            carried = lavaHorizontalAfterTick(carried, shallow);
+            ticks = ticks + 1;
+        }
+        return ticks;
+    }
+
+    public static int ticksToSettleInLava(boolean shallow, boolean ultraWarmDimension) {
+        return ticksToSettleInLava(
+            MAXIMUM_CARRIED_ENTRY, shallow, ultraWarmDimension);
     }
 
     public static double maximumAscent(boolean inWater, boolean jumping) {

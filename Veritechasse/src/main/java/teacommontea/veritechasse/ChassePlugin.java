@@ -14,6 +14,8 @@ import teacommontea.veritechasse.Vanilla.Enchantments.Support.Registry;
 
 public final class ChassePlugin extends JavaPlugin {
 
+    public static final String VERBOSE_KEY = "verbose";
+
     private Protocol protocol;
     private RealityMonitor monitor;
     private InteractionMonitor interactions;
@@ -26,11 +28,16 @@ public final class ChassePlugin extends JavaPlugin {
 
         verifyRegistry();
 
+        saveDefaultConfig();
+        boolean verbose = getConfig().getBoolean(VERBOSE_KEY, false);
+
         this.monitor = new RealityMonitor(this, this.protocol);
+        this.monitor.setVerbose(verbose);
         getServer().getPluginManager().registerEvents(this.monitor, this);
         this.monitor.start();
 
         this.interactions = new InteractionMonitor(this, this.protocol);
+        this.interactions.setVerbose(verbose);
         getServer().getPluginManager().registerEvents(this.interactions, this);
         this.monitor.attachInteractions(this.interactions);
     }

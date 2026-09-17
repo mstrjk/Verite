@@ -46,7 +46,7 @@ public final class InteractionMonitor implements Listener {
     private final Map<UUID, Long> blockingSince = new HashMap<>();
     private final Map<String, Integer> suspectCounts = new HashMap<>();
 
-    private boolean verbose = true;
+    private boolean verbose;
     private long tick;
 
     public InteractionMonitor(JavaPlugin plugin, Protocol protocol) {

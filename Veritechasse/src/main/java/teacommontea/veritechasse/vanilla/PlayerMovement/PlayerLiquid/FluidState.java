@@ -4,6 +4,10 @@ import teacommontea.veritechasse.Vanilla.Protocol;
 
 public final class FluidState {
 
+    public static boolean swimmingImpliesSprinting(boolean swimming, boolean sprinting) {
+        return swimming || sprinting;
+    }
+
     public static final String WATER = "water";
     public static final String LAVA = "lava";
 

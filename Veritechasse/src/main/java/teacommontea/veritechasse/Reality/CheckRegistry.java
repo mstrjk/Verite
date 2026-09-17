@@ -60,9 +60,10 @@ public final class CheckRegistry {
         return Collections.unmodifiableList(checks);
     }
 
-    private static Check instantiate(String simpleName) {
+    private static Check instantiate(String relativeName) {
         try {
-            Class<?> type = Class.forName(PACKAGE + "." + simpleName);
+            Class<?> type = Class.forName(
+                PACKAGE + "." + relativeName.replace('/', '.'));
             if (!Check.class.isAssignableFrom(type) || type.isInterface()) {
                 return null;
             }
@@ -115,7 +116,7 @@ public final class CheckRegistry {
                 if (!name.startsWith(PACKAGE_PATH) || !name.endsWith(CLASS_SUFFIX)) {
                     continue;
                 }
-                addSimpleName(name.substring(PACKAGE_PATH.length() + 1), names);
+                addRelativeName(name.substring(PACKAGE_PATH.length() + 1), names);
             }
         } catch (IOException failure) {
             return;
@@ -132,20 +133,21 @@ public final class CheckRegistry {
         if (!Files.isDirectory(directory)) {
             return;
         }
-        try (Stream<Path> entries = Files.list(directory)) {
+        try (Stream<Path> entries = Files.walk(directory)) {
             entries.forEach(entry -> {
-                String name = entry.getFileName().toString();
-                if (name.endsWith(CLASS_SUFFIX)) {
-                    addSimpleName(name, names);
+                if (!entry.getFileName().toString().endsWith(CLASS_SUFFIX)) {
+                    return;
                 }
+                String relative = directory.relativize(entry).toString().replace('\\', '/');
+                addRelativeName(relative, names);
             });
         } catch (IOException failure) {
             return;
         }
     }
 
-    private static void addSimpleName(String entryName, TreeSet<String> names) {
-        if (entryName.indexOf('/') >= 0 || entryName.indexOf('$') >= 0) {
+    private static void addRelativeName(String entryName, TreeSet<String> names) {
+        if (entryName.indexOf('$') >= 0) {
             return;
         }
         names.add(entryName.substring(0, entryName.length() - CLASS_SUFFIX.length()));

@@ -47,6 +47,7 @@ public final class RealityMonitor implements Listener {
     private final Map<String, Integer> discardCounts = new HashMap<>();
     private final java.util.Set<UUID> gateBlocked = new java.util.HashSet<>();
     private final Map<UUID, Long> lastBadPacketLog = new HashMap<>();
+    private final Map<UUID, Double> violationLevels = new HashMap<>();
 
     public static final long BAD_PACKET_LOG_INTERVAL = 100L;
 
@@ -62,7 +63,7 @@ public final class RealityMonitor implements Listener {
 
     private BukkitTask task;
     private long tick;
-    private boolean verbose = true;
+    private boolean verbose;
     private InteractionMonitor interactions;
 
     public RealityMonitor(JavaPlugin plugin, Protocol protocol) {
@@ -74,8 +75,8 @@ public final class RealityMonitor implements Listener {
     public void start() {
         this.logger.info("Reality monitor starting.");
         this.logger.info("  capabilities: " + this.check.describeCapabilities());
-        this.logger.info("  logging every tick, context every "
-            + CONTEXT_LOG_INTERVAL_TICKS + " ticks");
+        this.logger.info("  verbose diagnostics "
+            + (this.verbose ? "ON" : "OFF"));
         this.task = Bukkit.getScheduler().runTaskTimer(
             this.plugin, this::sample, TICK_PERIOD, TICK_PERIOD);
     }
@@ -89,8 +90,12 @@ public final class RealityMonitor implements Listener {
     }
 
     public void setVerbose(boolean verbose) {
+        boolean changed = this.verbose != verbose;
         this.verbose = verbose;
-        this.logger.info("Reality monitor verbose logging " + (verbose ? "ON" : "OFF"));
+        if (changed) {
+            this.logger.info("Reality monitor verbose logging "
+                + (verbose ? "ON" : "OFF"));
+        }
     }
 
     public boolean verbose() {
@@ -187,9 +192,11 @@ public final class RealityMonitor implements Listener {
         double ratio = TimerReality.observedRateRatio(
             packets, elapsedMillis, tickrate, this.check.protocol());
         count(TimerReality.KEY);
-        this.logger.warning("[" + player.getName() + "] SUSPECT " + TimerReality.KEY
-            + ": " + packets + " move packets in " + elapsedMillis + "ms at "
-            + tickrate + "tps, ratio " + ratio);
+        if (this.verbose) {
+            this.logger.info("[" + player.getName() + "] " + TimerReality.KEY
+                + ": " + packets + " move packets in " + elapsedMillis + "ms at "
+                + tickrate + "tps, ratio " + ratio);
+        }
     }
 
     public static final double TIMER_TOLERANCE = 0.3D;
@@ -244,7 +251,9 @@ public final class RealityMonitor implements Listener {
         this.previous.put(id, current);
 
         if (last == null) {
-            this.logger.info("[" + player.getName() + "] baseline established");
+            if (this.verbose) {
+                this.logger.info("[" + player.getName() + "] baseline established");
+            }
             return;
         }
         if (isSuppressed(id)) {
@@ -254,10 +263,11 @@ public final class RealityMonitor implements Listener {
             return;
         }
 
-        List<Observation> observations = this.check.evaluate(last, current);
-        for (Observation observation : observations) {
-            report(player, observation);
+        List<Violation> violations = this.check.evaluate(last, current);
+        for (Violation violation : violations) {
+            report(player, violation);
         }
+        traceDropouts(player, id);
     }
 
     private void evaluateGates() {
@@ -315,7 +325,7 @@ public final class RealityMonitor implements Listener {
             Long last = this.lastBadPacketLog.get(id);
             if (last == null || this.tick - last.longValue() >= BAD_PACKET_LOG_INTERVAL) {
                 this.lastBadPacketLog.put(id, Long.valueOf(this.tick));
-                this.logger.warning("[" + player.getName() + "] SUSPECT arrival: "
+                this.logger.info("[" + player.getName() + "] arrival: "
                     + packets + " packets this tick after " + silentTicks
                     + " silent ticks");
             }
@@ -390,24 +400,50 @@ public final class RealityMonitor implements Listener {
         return true;
     }
 
-    private void report(Player player, Observation observation) {
-        if (observation.isContext()) {
-            if (this.verbose && this.tick % CONTEXT_LOG_INTERVAL_TICKS == 0) {
-                this.logger.info("[" + player.getName() + "] " + observation.detail());
-            }
-            return;
-        }
-        if (observation.isNote()) {
-            if (this.verbose) {
-                this.logger.info("[" + player.getName() + "] note "
-                    + observation.label() + ": " + observation.detail());
-            }
-            return;
-        }
+    public static final long TRACE_INTERVAL_TICKS = 20L;
 
-        count(observation.label());
-        this.logger.warning("[" + player.getName() + "] SUSPECT "
-            + observation.label() + ": " + observation.detail());
+    private final Map<UUID, Long> lastTraceTick = new HashMap<>();
+
+    private void traceDropouts(Player player, UUID id) {
+        List<String> lines = this.check.lastTrace();
+        if (lines.isEmpty()) {
+            return;
+        }
+        Long last = this.lastTraceTick.get(id);
+        if (last != null && this.tick - last.longValue() < TRACE_INTERVAL_TICKS) {
+            return;
+        }
+        this.lastTraceTick.put(id, Long.valueOf(this.tick));
+        this.logger.warning("[" + player.getName() + "] DROPOUT over sinkable surface:");
+        for (String line : lines) {
+            this.logger.warning("    " + line);
+        }
+    }
+
+    private void report(Player player, Violation violation) {
+        UUID id = player.getUniqueId();
+        double total = accrue(id, violation.weight());
+        count(violation.key());
+        this.logger.warning("[" + player.getName() + "] " + violation.title()
+            + " +" + format(violation.weight())
+            + " (" + violation.origin() + ", vl " + format(total) + "): "
+            + violation.detail());
+    }
+
+    private double accrue(UUID id, double weight) {
+        Double existing = this.violationLevels.get(id);
+        double total = existing == null ? weight : existing.doubleValue() + weight;
+        this.violationLevels.put(id, Double.valueOf(total));
+        return total;
+    }
+
+    public double violationLevel(UUID id) {
+        Double existing = this.violationLevels.get(id);
+        return existing == null ? 0.0D : existing.doubleValue();
+    }
+
+    private static String format(double value) {
+        return String.format(java.util.Locale.ROOT, "%.2f", Double.valueOf(value));
     }
 
     private void count(String label) {
@@ -424,7 +460,7 @@ public final class RealityMonitor implements Listener {
                     "  " + entry.getKey() + ": " + entry.getValue()));
         }
         if (this.suspectCounts.isEmpty()) {
-            this.logger.info("Reality monitor: no suspect observations recorded.");
+            this.logger.info("Reality monitor: no violations recorded.");
             return;
         }
         this.logger.info("Reality monitor totals (highest first):");
