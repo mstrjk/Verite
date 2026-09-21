@@ -1,5 +1,5 @@
 name: Verite
-version: 1.2.7
+version: 1.2.8
 main: teacommontea.VeritePlugin
 api-version: '1.19'
 folia-supported: true

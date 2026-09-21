@@ -24,6 +24,16 @@ public final class EveRoute {
 
     public static void configure(EveSettings s) {
         settings = s;
+        EveDebug.reset();
+        EveDebug.enable();
+    }
+
+    public static String benchReport() {
+        return EveDebug.report();
+    }
+
+    public static void benchReset() {
+        EveDebug.reset();
     }
 
     public static void enableStore(EveStore s) {
@@ -38,6 +48,18 @@ public final class EveRoute {
     }
 
     public static EveEntry.Result route(String message) {
+        long benchStart = System.nanoTime();
+        long s = EveDebug.start();
+        EveEntry.Result benchResult = routeTimed(message);
+        EveDebug.end("ROUTE TOTAL", s);
+        long benchNanos = System.nanoTime() - benchStart;
+        java.util.logging.Logger.getLogger("Minecraft").info(
+                String.format("[EVEBENCH] %8.3f ms  %-9s len=%-4d %s",
+                        benchNanos / 1_000_000.0, benchResult, message.length(), message));
+        return benchResult;
+    }
+
+    private static EveEntry.Result routeTimed(String message) {
         if (message == null || message.isEmpty() || EveBoards.eve() == null) {
             return EveEntry.Result.CLEAN;
         }
@@ -52,22 +74,34 @@ public final class EveRoute {
             return EveEntry.Result.BLOCK;
         }
 
-        if (EveGate.spamBlocks(message)) {
+        s = EveDebug.start();
+        boolean spam = EveGate.spamBlocks(message);
+        EveDebug.end("spamBlocks", s);
+        if (spam) {
             return EveEntry.Result.BLOCK;
         }
 
-        if (EveGate.unreadableBlocks(message)) {
+        s = EveDebug.start();
+        boolean unreadable = EveGate.unreadableBlocks(message);
+        EveDebug.end("unreadableBlocks", s);
+        if (unreadable) {
             return EveEntry.Result.BLOCK;
         }
 
+        s = EveDebug.start();
         SymbolBoard symbols = EveBoards.symbols();
-        if (symbols != null && symbols.hits(message)) {
+        boolean symbolHit = symbols != null && symbols.hits(message);
+        EveDebug.end("symbolBoard.hits", s);
+        if (symbolHit) {
             return EveEntry.Result.BLOCK;
         }
 
         boolean scanAll = true;
 
+        s = EveDebug.start();
         String rawVeto = EveText.foldAccents(message.toLowerCase());
+        EveDebug.end("foldAccents(rawVeto)", s);
+
         s = EveDebug.start();
         List<String> cands = candidates(message);
         EveDebug.end("candidates(gen)", s);

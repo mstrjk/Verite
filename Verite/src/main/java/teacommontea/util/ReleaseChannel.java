@@ -245,8 +245,14 @@ public final class ReleaseChannel {
         return -1;
     }
 
+    public static final String ASSET_TAG_PREFIX = "verite-";
+
     public static ReleaseChannel resolve(String releasesJson, String buildVersion, TextReader reader) {
         for (String release : sliceReleases(releasesJson)) {
+            String tagName = stringField(release, "tag_name");
+            if (tagName == null || !tagName.startsWith(ASSET_TAG_PREFIX)) {
+                continue;
+            }
             Map<String, Asset> assets = parseAssets(release);
             Asset props = assets.get("default.properties");
             if (props == null || props.url() == null) {
@@ -263,8 +269,7 @@ public final class ReleaseChannel {
                 continue;
             }
             if (compareVersions(min, buildVersion) <= 0) {
-                String tag = stringField(release, "tag_name");
-                return new ReleaseChannel(tag, assets);
+                return new ReleaseChannel(tagName, assets);
             }
         }
         return null;

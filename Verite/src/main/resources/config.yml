@@ -107,8 +107,9 @@ chat.filter:
     # Emojis are not blocked.
     keep.chat.readable: false
 
-    # Leverage Verité's tokenizer to detect and block possible spam messages and advertisements. 
-    # This feature has a 84.78% accuracy rate and commonly underestimates spam in certain contexts.
+    # Leverage Verité's tokenizer to detect and block possible spam messages and advertisements.
+    # Scores a message by how far its vocabulary leans promotional rather than conversational.
+    # This is a heuristic and commonly underestimates spam in certain contexts.
     block.possible.spam: false
 
     # Block repeating messages. This feature is designed to prevent users from spamming

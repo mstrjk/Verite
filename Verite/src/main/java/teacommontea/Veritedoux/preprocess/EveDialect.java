@@ -2,11 +2,9 @@ package teacommontea.veritedoux.preprocess;
 
 import org.bukkit.plugin.Plugin;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import teacommontea.veritedoux.util.EveVlex9;
 
 public final class EveDialect {
 
@@ -22,11 +20,11 @@ public final class EveDialect {
     private static double confidenceFloor = 0.30;
 
     private final String[] dialects;
-    private final EveVlex9 reader;
+    private final String row;
 
-    private EveDialect(String[] dialects, EveVlex9 reader) {
+    private EveDialect(String[] dialects, String row) {
         this.dialects = dialects;
-        this.reader = reader;
+        this.row = row;
     }
 
     public static void configure(double floor) {
@@ -34,50 +32,36 @@ public final class EveDialect {
     }
 
     public static void clear() {
-        for (EveDialect d : REGISTRY.values()) {
-            if (d.reader != null) {
-                try {
-                    d.reader.close();
-                } catch (Exception ignored) {
-                }
-            }
-        }
         REGISTRY.clear();
     }
 
     public static boolean load(Plugin plugin, String language) {
         String code = LANG_CODE.get(language);
         if (code == null) return false;
-        java.io.File vlexFile = new java.io.File(plugin.getDataFolder(),
-                "filter/.tokenizers/" + code + "_dialect.vlex9");
-        if (!vlexFile.isFile()) return false;
         String[] dialects = DIALECTS.get(code);
         if (dialects == null) return false;
-        try {
-            EveVlex9.configureNativeDir(new java.io.File(plugin.getDataFolder(), "filter/.native"));
-            EveVlex9 reader = new EveVlex9(vlexFile.toPath());
-            EveDialect d = new EveDialect(dialects, reader);
-            REGISTRY.put(language, d);
-            plugin.getLogger().info("EVE dialect (" + language + "): opened over "
-                    + dialects.length + " dialects (on-disk).");
-            return true;
-        } catch (Exception e) {
-            plugin.getLogger().warning("EVE dialect (" + language + "): load failed: "
-                    + e.getMessage());
-            return false;
+        if (!EveLexicon.ready()) return false;
+        String row = "dialect_" + code;
+        boolean present = false;
+        for (String name : EveLexicon.languages()) {
+            if (name.equals(row)) { present = true; break; }
         }
+        if (!present) return false;
+        REGISTRY.put(language, new EveDialect(dialects, row));
+        plugin.getLogger().info("EVE dialect (" + language + "): " + dialects.length
+                + " dialects from " + row + ".");
+        return true;
     }
 
     public static boolean ready(String language) {
         EveDialect d = REGISTRY.get(language);
-        return d != null && d.reader != null && d.dialects.length > 0;
+        return d != null && d.dialects.length > 0;
     }
 
     private float[] rates(String word) {
         try {
-            EveVlex9.LookupResult res = reader.lookup(word.getBytes(StandardCharsets.UTF_8));
-            if (res == null || res.rows.length == 0) return null;
-            int[] regs = res.rows[0].registers();
+            int[] regs = EveLexicon.registersIn(row, word);
+            if (regs == null) return null;
             float[] out = null;
             for (int slot = 0; slot < 4; slot++) {
                 int di = regs[slot * 2];

@@ -137,6 +137,35 @@ dependencies {
     shadedJars.forEach { shadeConfig(it) }
 }
 
+tasks.register("bumpVersion") {
+    description = "Increments the patch version in plugin.yml. Pass -Pto=X.Y.Z to set it explicitly."
+    group = "build"
+    doLast {
+        val ymlFile = file("Verite/src/main/resources/plugin.yml")
+        val text = ymlFile.readText()
+        val re = Regex("""(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$""")
+        val hit = re.find(text) ?: throw GradleException("no 'version: X.Y.Z' line in plugin.yml")
+        val current = hit.groupValues[1]
+
+        val explicit = project.findProperty("to") as String?
+        val next = if (explicit != null) {
+            if (!Regex("""^[0-9]+\.[0-9]+\.[0-9]+$""").matches(explicit)) {
+                throw GradleException("-Pto must be X.Y.Z, got: $explicit")
+            }
+            explicit
+        } else {
+            val parts = current.split(".")
+            "${parts[0]}.${parts[1]}.${parts[2].toInt() + 1}"
+        }
+
+        if (next == current) {
+            throw GradleException("version is already $current")
+        }
+        ymlFile.writeText(text.replaceRange(hit.groups[1]!!.range, next))
+        println("plugin.yml version: $current -> $next")
+    }
+}
+
 tasks.register<org.gradle.jvm.tasks.Jar>("veriteJar") {
     dependsOn(assembleClasses)
     archiveFileName.set("Verite-$version.jar")

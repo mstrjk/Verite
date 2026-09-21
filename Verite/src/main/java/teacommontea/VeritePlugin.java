@@ -310,7 +310,7 @@ public final class VeritePlugin extends JavaPlugin
     private boolean vanishGear()     { return gear("vanish.enabled", true); }
 
     private static final String RELEASE_API_LIST =
-            "https://api.github.com/repos/mstrjk/Verite_Public/releases?per_page=100";
+            "https://api.github.com/repos/mstrjk/Verite/releases?per_page=100";
     private static final String FILTER_ASSET = "filter.zip";
     private static final String NATIVE_ASSET = "default.native.zip";
     private static final String TOKENIZER_ASSET = "default.tokenizers.zip";
@@ -782,6 +782,35 @@ public final class VeritePlugin extends JavaPlugin
             case "reload" -> {
                 reloadAll();
                 msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Reloaded " + Colours.BRAND + "Verité" + Colours.BRAND_ACCENT_SECONDARY + ": chat filter, moderation, vanish, and config.");
+            }
+            case "bench" -> {
+                if (args.length > 1 && args[1].equalsIgnoreCase("reset")) {
+                    teacommontea.veritedoux.process.EveRoute.benchReset();
+                    msg(sender, "bench counters reset");
+                    return true;
+                }
+                for (String line : teacommontea.veritedoux.process.EveRoute.benchReport().split("\n")) {
+                    msg(sender, line);
+                    getLogger().info("[EVEBENCH] " + line);
+                }
+            }
+            case "roundtrip" -> {
+                String sentence = args.length > 1
+                        ? String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length))
+                        : null;
+                teacommontea.veritedoux.testing.SegBench.roundTrip(sentence, line -> {
+                    msg(sender, line);
+                    getLogger().info("[ROUNDTRIP] " + line);
+                });
+            }
+            case "segbench" -> {
+                String sentence = args.length > 1
+                        ? String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length))
+                        : null;
+                teacommontea.veritedoux.testing.SegBench.run(sentence, line -> {
+                    msg(sender, line);
+                    getLogger().info("[SEGBENCH] " + line);
+                });
             }
             case "count" -> {
                 if (!douxLoaded) { msg(sender, Colours.WARNING + "The chat filter is unavailable."); return true; }

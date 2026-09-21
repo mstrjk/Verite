@@ -38,6 +38,26 @@ public final class EveLexicon {
         return langs.clone();
     }
 
+    public static int[] registersIn(String language, String word) {
+        EveVlex9 r = reader;
+        if (r == null || language == null || word == null) return null;
+        int id = -1;
+        for (int i = 0; i < langs.length; i++) {
+            if (langs[i].equals(language)) { id = i; break; }
+        }
+        if (id < 0) return null;
+        try {
+            EveVlex9.LookupResult res = r.lookup(word.getBytes(StandardCharsets.UTF_8));
+            if (res == null) return null;
+            for (EveVlex9.Row row : res.rows) {
+                if (row.languageId() == id) return row.registers();
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public static Map<String, Double> position(String word) {
         Object cached;
@@ -153,7 +173,12 @@ public final class EveLexicon {
             reader = r;
             langs = r.languageNames();
             TOTALS = r.languageTotals();
-            plugin.getLogger().info("EVE lexicon: opened " + langs.length + " langs (on-disk).");
+            int dialectRows = 0;
+            for (String name : langs) {
+                if (name.startsWith("dialect_")) dialectRows++;
+            }
+            plugin.getLogger().info("EVE lexicon: opened " + (langs.length - dialectRows)
+                    + " langs + " + dialectRows + " dialect sets (on-disk).");
         } catch (Exception e) {
             plugin.getLogger().warning("EVE lexicon: open failed: " + e.getMessage());
             closeReader();

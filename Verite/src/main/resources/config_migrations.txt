@@ -1,0 +1,56 @@
+# RENAME, MOVE, DELETE, MIGRATE, DROP, DROP PARENT and DROP H2 COLUMN
+# The manifest is applied bottom to top: the last line runs first, the first line runs last.
+
+# 20th September 2026
+DELETE filter/.tokenizers/es_dialect.vlex9
+DELETE filter/.tokenizers/fr_dialect.vlex9
+DELETE filter/.tokenizers/pt_dialect.vlex9
+DELETE filter/.tokenizers/tokenizer_ad.vlex9
+
+# 1st September 2026
+DROP chat.filter.advanced.language.context.weight FROM config.yml
+DROP chat.filter.advanced.language.smoothing.passes FROM config.yml
+
+# 27th August 2026
+DELETE filter/.tokenizers/confusables.evefold
+
+# 26th August 2026
+DELETE filter/.tokenizers/confusables.txt
+DROP PARENT anticheat FROM config.yml
+
+# 13th August 2026
+DROP PARENT chat.filter.gemstones FROM config.yml
+DROP chat.filter.advanced.improve.model FROM config.yml
+DROP chat.filter.advanced.improve.threshold FROM config.yml
+DELETE filter/.models
+DROP H2 COLUMN gemstones
+DROP H2 COLUMN improve
+
+# 2nd August 2026
+MOVE \config\sieve ..\sieve
+MOVE .tokenizers/ filter/
+MOVE .models/ filter/
+MOVE .native/ filter/
+RENAME DIR sieve/ filter/
+RENAME DIR tokenizers/ .tokenizers/
+RENAME DIR models/ .models/
+RENAME DIR native/ .native/
+DELETE flags.log IF H2 EXISTS
+DELETE improve.jsonl IF H2 EXISTS
+DELETE sauver.bin IF H2 EXISTS
+DELETE vanish.bin IF H2 EXISTS
+DELETE gemstones.bin IF H2 EXISTS
+DELETE stones.bin
+MIGRATE flags.log COLUMN flags OF verite.h2
+MIGRATE improve.jsonl COLUMN improve OF verite.h2
+MIGRATE sauver.bin COLUMN sauver OF verite.h2
+MIGRATE gemstones.bin COLUMN gemstones OF verite.h2
+MIGRATE vanish.bin COLUMN vanish OF verite.h2
+DELETE config/
+MOVE \config\config.yml ..\config.yml
+
+# A long time ago
+DROP prefix FROM config.yml
+DROP change_config_on_update FROM config.yml
+DROP PARENT components FROM config.yml
+DROP docs_exist_yet FROM config.yml

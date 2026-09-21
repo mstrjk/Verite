@@ -51,14 +51,30 @@ public final class EveDebug {
     }
 
     public static String report() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%-28s %12s %10s %12s%n", "stage", "total_us", "calls", "us/call"));
+        java.util.List<Map.Entry<String, long[]>> rows;
         synchronized (STAGES) {
-            for (Map.Entry<String, long[]> e : STAGES.entrySet()) {
-                long totalUs = e.getValue()[0] / 1000;
-                long calls = e.getValue()[1];
-                double per = calls > 0 ? (double) totalUs / calls : 0;
-                sb.append(String.format("%-28s %12d %10d %12.1f%n", e.getKey(), totalUs, calls, per));
+            rows = new java.util.ArrayList<>(STAGES.entrySet());
+        }
+        rows.sort((a, b) -> Long.compare(b.getValue()[0], a.getValue()[0]));
+
+        long grand = 0;
+        for (Map.Entry<String, long[]> e : rows) grand = Math.max(grand, e.getValue()[0]);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%-28s %11s %9s %10s %7s%n",
+                "stage (slowest first)", "total_ms", "calls", "us/call", "share"));
+        for (Map.Entry<String, long[]> e : rows) {
+            long totalNs = e.getValue()[0];
+            long calls = e.getValue()[1];
+            double totalMs = totalNs / 1_000_000.0;
+            double perUs = calls > 0 ? (totalNs / 1000.0) / calls : 0;
+            double share = grand > 0 ? (100.0 * totalNs / grand) : 0;
+            if (totalNs == 0) {
+                sb.append(String.format("%-28s %11s %9d %10s %7s%n",
+                        e.getKey(), "-", calls, "-", "-"));
+            } else {
+                sb.append(String.format("%-28s %11.2f %9d %10.1f %6.1f%%%n",
+                        e.getKey(), totalMs, calls, perUs, share));
             }
         }
         return sb.toString();
