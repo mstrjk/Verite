@@ -266,8 +266,61 @@ public final class SauverListeners implements Listener {
             return;
         }
         String head = Colours.BRAND_ACCENT_SECONDARY + joining.getName()
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "joined using " + Colours.BRAND + prettyBrand(brand) + Colours.BRAND_ACCENT_SECONDARY + ".";
+                + " " + Colours.BRAND_ACCENT_SECONDARY + "joined using "
+                + "<hover:show_text:'" + clientDetails(joining, brand) + "'>"
+                + Colours.BRAND + prettyBrand(brand) + "</hover>"
+                + Colours.BRAND_ACCENT_SECONDARY + ".";
         sauver.messages().notify("veritesauver.notify.client_join", head);
+    }
+
+    private String clientDetails(Player p, String brand) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Colours.BRAND_ACCENT_SECONDARY).append("Client: ")
+                .append(Colours.BRAND).append(prettyBrand(brand));
+
+        int protocol = protocolOf(p);
+        if (protocol > 0) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Protocol: ")
+                    .append(Colours.BRAND).append(protocol);
+        }
+        String version = minecraftVersionOf(p);
+        if (version != null && !version.isBlank()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Version: ")
+                    .append(Colours.BRAND).append(version);
+        }
+        String referrer = virtualHostOf(p);
+        if (referrer != null && !referrer.isBlank()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Connected via: ")
+                    .append(Colours.BRAND).append(referrer);
+        }
+        sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Locale: ")
+                .append(Colours.BRAND).append(localeOf(p));
+        return sb.toString().replace("'", "");
+    }
+
+    private static String minecraftVersionOf(Player p) {
+        try {
+            Object v = Player.class.getMethod("getClientVersion").invoke(p);
+            return v == null ? null : String.valueOf(v);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    private static String localeOf(Player p) {
+        try {
+            Object l = Player.class.getMethod("locale").invoke(p);
+            if (l != null) {
+                return String.valueOf(l);
+            }
+        } catch (Throwable ignored) {
+        }
+        try {
+            Object l = Player.class.getMethod("getLocale").invoke(p);
+            return l == null ? "unknown" : String.valueOf(l);
+        } catch (Throwable t) {
+            return "unknown";
+        }
     }
 
     private static String prettyBrand(String brand) {
