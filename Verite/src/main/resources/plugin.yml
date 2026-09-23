@@ -12,12 +12,12 @@ libraries:
 
 commands:
   verite:
-    description: "Verite admin: status, reload, count <player>."
+    description: "Verité admin: status, reload, count <player>."
     usage: "/<command> [status|reload|count <player>]"
     aliases: [vt]
 
   veriteflag:
-    description: "Read and edit Verite config flags in-game."
+    description: "Read and edit Verité config flags in-game."
     usage: "/<command> <flag> [value]"
     permission: veritedoux.flag
 

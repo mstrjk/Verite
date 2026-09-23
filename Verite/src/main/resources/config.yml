@@ -7,6 +7,10 @@ general:
   # Does not bypass tokenizer updates.
   auto.update.config: true
 
+  # Where /verite dashboard sends you. Only change this if you host the
+  # dashboard yourself.
+  dashboard.url: "https://verite.gg"
+
 # ---- Shared database ----
 database:
 

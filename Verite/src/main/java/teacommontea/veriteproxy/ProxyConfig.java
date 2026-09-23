@@ -47,7 +47,7 @@ public final class ProxyConfig {
             p.setProperty("moderation.ban.alts", "false");
             p.setProperty("moderation.enforce.mute.commands", "true");
             try (OutputStream out = new FileOutputStream(file)) {
-                p.store(out, "Verite proxy: read-only shared punishment enforcement.");
+                p.store(out, "Verité proxy: read-only shared punishment enforcement.");
             } catch (Exception ignored) {
             }
         }

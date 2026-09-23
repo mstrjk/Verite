@@ -113,7 +113,7 @@ public final class PunishDialog {
             Throwable cause = t instanceof java.lang.reflect.InvocationTargetException ite && ite.getCause() != null
                     ? ite.getCause() : t;
             sauver.plugin().getLogger().log(java.util.logging.Level.WARNING,
-                    "[Veritesauver] punishment dialog failed to open; falling back to chat prompt", cause);
+                    "[Veritésauver] punishment dialog failed to open; falling back to chat prompt", cause);
             return false;
         }
     }
@@ -177,7 +177,7 @@ public final class PunishDialog {
             Throwable cause = t instanceof java.lang.reflect.InvocationTargetException ite && ite.getCause() != null
                     ? ite.getCause() : t;
             sauver.plugin().getLogger().log(java.util.logging.Level.WARNING,
-                    "[Veritesauver] punishment dialog response handling failed", cause);
+                    "[Veritésauver] punishment dialog response handling failed", cause);
             sauver.messages().err(staff, Colours.WARNING + "That punishment could not be applied.");
         }
     }

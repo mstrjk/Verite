@@ -8,7 +8,7 @@ public final class VeriteLogger extends Logger {
 
     private static final String PREFIX =
             ConsoleColours.paint(ConsoleColours.BRAND_ACCENT, "[")
-            + ConsoleColours.paint(ConsoleColours.BRAND, "Verite")
+            + ConsoleColours.paint(ConsoleColours.BRAND, "Verité")
             + ConsoleColours.paint(ConsoleColours.BRAND_ACCENT, "]")
             + " ";
 

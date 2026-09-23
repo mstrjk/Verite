@@ -104,7 +104,7 @@ public final class VeritePlugin extends JavaPlugin
         try {
             teacommontea.util.VeriteH2.open(databaseMode());
         } catch (Throwable t) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Verite's H2 database could not be opened. Disabling Verite. "
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Verité's H2 database could not be opened. Disabling Verité. "
                     + "Consider reporting this error.") + teacommontea.util.Trace.of(t));
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -124,26 +124,28 @@ public final class VeritePlugin extends JavaPlugin
         resolveChannel();
 
         if (!ensureFilter()) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate filter boards. Disabling Verite. "
-                    + "Verite will retry the download on next start."));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate filter boards. Disabling Verité. "
+                    + "Verité will retry the download on next start."));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         if (!ensureNative()) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate native library. Disabling Verite. "
-                    + "Verite will retry the download on next start."));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate native library. Disabling Verité. "
+                    + "Verité will retry the download on next start."));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         teacommontea.veritedoux.util.Eve.configureNativeDir(new File(filterDir(), ".native"));
 
         if (!ensureTokenizers()) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate tokenisers. Disabling Verite. "
-                    + "Verite will retry the download on next start."));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate tokenisers. Disabling Verité. "
+                    + "Verité will retry the download on next start."));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        teacommontea.dashboard.Dashboard.load(this);
 
         teacommontea.util.SelfHeal.validate(this);
         teacommontea.util.SelfHeal.healSettings(this);
@@ -216,7 +218,7 @@ public final class VeritePlugin extends JavaPlugin
             this.vanish = teacommontea.veritevoiler.Vanish.enable(this);
             this.vanishLoaded = true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Veritevoiler (Vanish) failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad("Veritévoiler (Vanish) failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(e));
             this.vanish = null;
             this.vanishLoaded = false;
         }
@@ -224,6 +226,7 @@ public final class VeritePlugin extends JavaPlugin
 
     @Override
     public void onDisable() {
+        teacommontea.dashboard.Dashboard.shutdown();
         if (metrics != null) {
             metrics.shutdown();
             metrics = null;
@@ -792,7 +795,7 @@ public final class VeritePlugin extends JavaPlugin
             getServer().getPluginManager().registerEvents(captcha.detailedListener(), this);
             this.sauverLoaded = true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Veritesauver (Moderation) failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad("Veritésauver (Moderation) failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(e));
             this.sauverLoaded = false;
         }
     }
@@ -842,6 +845,19 @@ public final class VeritePlugin extends JavaPlugin
                 reloadAll();
                 msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Reloaded " + Colours.BRAND + "Verité" + Colours.BRAND_ACCENT_SECONDARY + ": chat filter, moderation, vanish, and config.");
             }
+            case "dashboard" -> {
+                if (args.length > 1 && args[1].equalsIgnoreCase("trust")) {
+                    if (args.length < 3) {
+                        msg(sender, Colours.WARNING + "Usage: /verite dashboard trust <code>");
+                    } else {
+                        teacommontea.dashboard.Dashboard.trust(sender, args[2]);
+                    }
+                } else if (args.length > 1 && args[1].equalsIgnoreCase("close")) {
+                    teacommontea.dashboard.Dashboard.close(sender);
+                } else {
+                    teacommontea.dashboard.Dashboard.open(this, sender);
+                }
+            }
             case "count" -> {
                 if (!douxLoaded) { msg(sender, Colours.WARNING + "The chat filter is unavailable."); return true; }
                 if (args.length < 2) { msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Usage" + Colours.BRAND_ACCENT_SECONDARY + ": " + Colours.BRAND_ACCENT_SECONDARY + "/verite count " + Colours.BRAND_ACCENT_SECONDARY + "<" + Colours.BRAND_ACCENT_SECONDARY + "player" + Colours.BRAND_ACCENT_SECONDARY + ">"); return true; }
@@ -849,7 +865,7 @@ public final class VeritePlugin extends JavaPlugin
                 msg(sender, Colours.BRAND_ACCENT_SECONDARY + args[1] + " " + Colours.BRAND_ACCENT_SECONDARY + "has " + Colours.WARNING
                         + teacommontea.veritedoux.EveEntry.count(t.getUniqueId()) + " " + Colours.BRAND_ACCENT_SECONDARY + "flags.");
             }
-            default -> msg(sender, Colours.BRAND_ACCENT_SECONDARY + "/verite " + Colours.BRAND_ACCENT_SECONDARY + "status " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "reload " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "count " + Colours.BRAND_ACCENT_SECONDARY + "<" + Colours.BRAND_ACCENT_SECONDARY + "player" + Colours.BRAND_ACCENT_SECONDARY + ">");
+            default -> msg(sender, Colours.BRAND_ACCENT_SECONDARY + "/verite " + Colours.BRAND_ACCENT_SECONDARY + "status " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "reload " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "count " + Colours.BRAND_ACCENT_SECONDARY + "<" + Colours.BRAND_ACCENT_SECONDARY + "player" + Colours.BRAND_ACCENT_SECONDARY + "> " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "dashboard");
         }
         return true;
     }
@@ -860,9 +876,12 @@ public final class VeritePlugin extends JavaPlugin
         String cmd = command.getName().toLowerCase();
         if (cmd.equals("verite")) {
             if (args.length == 1) {
-                return teacommontea.util.Complete.prefix(List.of("status", "reload", "count"), args[0]);
+                return teacommontea.util.Complete.prefix(
+                        List.of("status", "reload", "count", "dashboard"), args[0]);
             } else if (args.length == 2 && args[0].equalsIgnoreCase("count")) {
                 return teacommontea.util.Complete.onlineNames(args[1]);
+            } else if (args.length == 2 && args[0].equalsIgnoreCase("dashboard")) {
+                return teacommontea.util.Complete.prefix(List.of("trust", "close"), args[1]);
             }
             return new ArrayList<>();
         }

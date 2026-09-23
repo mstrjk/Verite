@@ -28,7 +28,7 @@ import java.util.UUID;
         id = "verite",
         name = "Verite",
         version = "1.2.7",
-        description = "Read-only network punishment enforcement for Verite.",
+        description = "Read-only network punishment enforcement for Verité.",
         authors = {"teacommontea"}
 )
 public final class VelocityProxy {
@@ -54,12 +54,12 @@ public final class VelocityProxy {
         try {
             store = ProxyStore.open(config);
         } catch (Exception ex) {
-            logger.error("Verite proxy could not open the shared H2 store; punishment "
+            logger.error("Verité proxy could not open the shared H2 store; punishment "
                     + "enforcement is disabled: " + ex.getMessage());
             return;
         }
         gate = new PunishmentGate(store.dao(), config.banAlts());
-        logger.info("Verite proxy enforcement active (read-only shared store).");
+        logger.info("Verité proxy enforcement active (read-only shared store).");
     }
 
     @Subscribe

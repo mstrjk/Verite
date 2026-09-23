@@ -32,12 +32,12 @@ public final class BungeeProxy extends Plugin implements Listener {
         try {
             store = ProxyStore.open(config);
         } catch (Exception ex) {
-            getLogger().severe(teacommontea.util.ConsoleColours.bad("Verite proxy could not open the shared H2 store. Punishment enforcement is disabled.") + teacommontea.util.Trace.of(ex));
+            getLogger().severe(teacommontea.util.ConsoleColours.bad("Verité proxy could not open the shared H2 store. Punishment enforcement is disabled.") + teacommontea.util.Trace.of(ex));
             return;
         }
         gate = new PunishmentGate(store.dao(), config.banAlts());
         getProxy().getPluginManager().registerListener(this, this);
-        getLogger().info(teacommontea.util.ConsoleColours.ok("Verite proxy enforcement active. The shared store is read-only."));
+        getLogger().info(teacommontea.util.ConsoleColours.ok("Verité proxy enforcement active. The shared store is read-only."));
     }
 
     @Override
