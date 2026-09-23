@@ -35,6 +35,7 @@ chat.filter:
 
   # The notices shown when a message is blocked by the chat filter
   # Supports &-codes and &#RRGGBB hex. Use @prefix to insert your chosen prefix.
+  # Set a line's contents to "" if you handle the notice yourself.
   block.message: "@prefix Your message wasn't sent. Please keep chat friendly."
   repeat.message: "@prefix You've already sent that message. Please wait a moment before repeating yourself."
 

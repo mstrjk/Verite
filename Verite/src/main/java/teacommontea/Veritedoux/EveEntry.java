@@ -29,7 +29,13 @@ public final class EveEntry {
         EveLang.configure(settings.langKnownWeight, settings.langUnknownWeight);
         EveRepeat.configure(settings.blockRepeat, settings.blockRepeatExact, settings.blockRepeatNear,
                 settings.repeatHistorySize, settings.repeatWindowMs, settings.repeatSimilarityThreshold);
-        EveText.loadConfusables(plugin);
+        if (!EveText.loadConfusables(plugin)) {
+            EveBoards.clear();
+            EveGate.configure(settings);
+            EveMatcher.configure(settings);
+            EveRoute.configure(settings);
+            return;
+        }
 
         EveBoards.load(plugin, settings);
         EveGate.configure(settings);
@@ -39,8 +45,10 @@ public final class EveEntry {
         teacommontea.veritedoux.util.Eve eve = EveBoards.eve();
         int wordCount = EveMatcher.buildFingerprints(eve);
         int ruleCount = eve == null ? 0 : eve.ruleCount();
-        plugin.getLogger().info("EVE loaded " + ruleCount + " rules (window " + EveBoards.maxWords()
-                + ", " + EveMatcher.fingerprintCount() + " fingerprints from " + wordCount + " words)");
+        plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(ruleCount) + " rule" + (ruleCount == 1 ? "" : "s")
+                + ". Window: " + EveBoards.maxWords()
+                + ", Fingerprints: " + EveMatcher.fingerprintCount()
+                + ", Words: " + wordCount);
     }
 
     public static void enableStore(EveStore s) {
@@ -99,6 +107,14 @@ public final class EveEntry {
 
     public static String selfHarmMessage() {
         return SelfHarmMessages.message();
+    }
+
+    public static boolean noticeSuppressed(Result r) {
+        if (r == Result.SELF_HARM) {
+            return false;
+        }
+        String body = r == Result.REPEAT ? repeatMessage() : blockMessage();
+        return body == null || body.isEmpty();
     }
 
     public static net.md_5.bungee.api.chat.BaseComponent[] blockNotice(Result r, String message) {

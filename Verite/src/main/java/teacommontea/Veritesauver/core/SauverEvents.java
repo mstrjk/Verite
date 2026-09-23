@@ -63,7 +63,7 @@ public final class SauverEvents {
     private static void warn(String which, Throwable t) {
         Sauver s = Sauver.instance();
         if (s != null && s.plugin() != null) {
-            s.plugin().getLogger().warning("A punishment " + which + " listener threw: " + t);
+            s.plugin().getLogger().warning(teacommontea.util.ConsoleColours.bad("A plugin listening for punishments threw an exception. Consider reporting this error.") + teacommontea.util.Trace.of(t));
         }
     }
 }

@@ -43,6 +43,10 @@ public final class VeriteFilter {
         return EveEntry.blockNotice(toEve(result), message);
     }
 
+    public static boolean noticeSuppressed(FilterResult result) {
+        return EveEntry.noticeSuppressed(toEve(result));
+    }
+
     public static String foldAccents(String s) {
         return EveEntry.foldAccents(s);
     }

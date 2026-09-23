@@ -173,14 +173,8 @@ public final class EveLexicon {
             reader = r;
             langs = r.languageNames();
             TOTALS = r.languageTotals();
-            int dialectRows = 0;
-            for (String name : langs) {
-                if (name.startsWith("dialect_")) dialectRows++;
-            }
-            plugin.getLogger().info("EVE lexicon: opened " + (langs.length - dialectRows)
-                    + " langs + " + dialectRows + " dialect sets (on-disk).");
         } catch (Exception e) {
-            plugin.getLogger().warning("EVE lexicon: open failed: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to instantiate the tokeniser. Consider reporting this error.") + teacommontea.util.Trace.of(e));
             closeReader();
             langs = new String[0];
             TOTALS = new long[0];

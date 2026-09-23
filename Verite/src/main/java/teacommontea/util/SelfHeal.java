@@ -20,7 +20,7 @@ public final class SelfHeal {
         try {
             doHealSettings(plugin);
         } catch (Exception e) {
-            plugin.getLogger().warning("settings.yml self-heal skipped: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped repairing settings.yml.") + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -29,7 +29,7 @@ public final class SelfHeal {
         try {
             doMigrate(plugin);
         } catch (Exception e) {
-            plugin.getLogger().warning("config migration skipped: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped updating your config to the current layout.") + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -45,10 +45,10 @@ public final class SelfHeal {
             if (reason == null) return;
 
             Files.write(deployed.toPath(), bundledText.getBytes(StandardCharsets.UTF_8));
-            plugin.getLogger().warning("config.yml was malformed (" + reason
-                    + "); it has been reset to the default. Any custom edits were discarded.");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("The configuration file was malformed (" + reason
+                    + "). It has been reset to the default. Any custom edits were discarded."));
         } catch (Exception e) {
-            plugin.getLogger().warning("config validation skipped: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped checking config.yml for problems.") + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -106,8 +106,7 @@ public final class SelfHeal {
             if (verb.equals("DROP") && tok.length >= 4
                     && tok[1].equalsIgnoreCase("H2") && tok[2].equalsIgnoreCase("COLUMN")) {
                 if (VeriteH2.isActive() && VeriteH2.active().remove(tok[3])) {
-                    plugin.getLogger().info("config migration: dropped H2 column '"
-                            + tok[3] + "'.");
+                    plugin.getLogger().info("Config update: removed the unused '" + teacommontea.util.ConsoleColours.note(tok[3]) + "' data store.");
                 }
                 continue;
             }
@@ -168,8 +167,9 @@ public final class SelfHeal {
             changed++;
         }
         if (changed > 0 || !deletedFiles.isEmpty()) {
-            plugin.getLogger().info("config migration: " + deletedFiles.size()
-                    + " legacy file(s) removed, " + changed + " file(s) rewritten.");
+            plugin.getLogger().info("Config update: removed " + teacommontea.util.ConsoleColours.note(deletedFiles.size()) + " old file"
+                    + (deletedFiles.size() == 1 ? "" : "s") + " and rewrote " + changed
+                    + " file" + (changed == 1 ? "" : "s") + ".");
         }
     }
 
@@ -210,11 +210,10 @@ public final class SelfHeal {
         try {
             byte[] bytes = Files.readAllBytes(src.toPath());
             db.write(column, bytes);
-            plugin.getLogger().info("migrated " + fileName + " into H2 column '" + column + "'.");
+            plugin.getLogger().info("Config update: moved " + teacommontea.util.ConsoleColours.note(fileName) + " into the database.");
             return true;
         } catch (Exception e) {
-            plugin.getLogger().warning("could not migrate " + fileName
-                    + " into H2 column '" + column + "': " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Config update: failed to move " + fileName + " into the database.") + teacommontea.util.Trace.of(e));
             return false;
         }
     }
@@ -234,8 +233,7 @@ public final class SelfHeal {
             Files.move(from.toPath(), to.toPath());
             return true;
         } catch (Exception e) {
-            plugin.getLogger().warning("config migration: could not rename directory " + src
-                    + " to " + dst + ": " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Config update: failed to rename " + src + " to " + dst + ".") + teacommontea.util.Trace.of(e));
             return false;
         }
     }
@@ -271,8 +269,7 @@ public final class SelfHeal {
                 Files.move(from.toPath(), to.toPath());
                 return true;
             } catch (Exception e) {
-                plugin.getLogger().warning("config migration: could not move " + src
-                        + " to " + dst + ": " + e.getMessage());
+                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Config update: failed to move " + src + " to " + dst + ".") + teacommontea.util.Trace.of(e));
                 return false;
             }
         }
@@ -401,8 +398,8 @@ public final class SelfHeal {
             if (rebuilt.equals(deployedText)) continue;
 
             Files.write(deployed.toPath(), rebuilt.getBytes(StandardCharsets.UTF_8));
-            plugin.getLogger().info("" + name
-                    + " brought up to date with the current config structure; owner option values were preserved.");
+            plugin.getLogger().info(teacommontea.util.ConsoleColours.note(name)
+                    + " was brought up to date with the current configuration structure. Your option values were preserved.");
         }
     }
 
@@ -637,7 +634,7 @@ public final class SelfHeal {
         try {
             doHealEve(plugin, eveConfigs);
         } catch (Exception e) {
-            plugin.getLogger().warning("config .eve self-heal skipped: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped repairing your filter boards.") + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -647,7 +644,7 @@ public final class SelfHeal {
         try {
             doOverwriteEve(plugin, eveConfigs);
         } catch (Exception e) {
-            plugin.getLogger().warning("config .eve overwrite skipped: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped replacing your filter boards.") + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -655,7 +652,7 @@ public final class SelfHeal {
         try {
             doReconcileEve(plugin, eveConfigs);
         } catch (Exception e) {
-            plugin.getLogger().warning(".eve reconcile skipped: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped filter board updates.") + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -703,15 +700,15 @@ public final class SelfHeal {
                 Files.write(deployed.toPath(), append.toString().getBytes(StandardCharsets.UTF_8),
                         java.nio.file.StandardOpenOption.APPEND);
                 preserved += ownerOnly.size();
-                plugin.getLogger().info("" + config + ": preserved " + ownerOnly.size()
+                plugin.getLogger().info("" + config + ": preserved " + teacommontea.util.ConsoleColours.note(ownerOnly.size())
                         + " edited rule" + (ownerOnly.size() == 1 ? "" : "s") + " across the update.");
             } finally {
                 backup.delete();
             }
         }
         if (preserved > 0) {
-            plugin.getLogger().info("filter update: carried over " + preserved
-                    + " owner-edited rule" + (preserved == 1 ? "" : "s") + " in total.");
+            plugin.getLogger().info("Filter update: carried over " + teacommontea.util.ConsoleColours.note(preserved)
+                    + " of your edited rule" + (preserved == 1 ? "" : "s") + " in total.");
         }
     }
 
@@ -752,8 +749,8 @@ public final class SelfHeal {
             rewritten++;
         }
         if (rewritten > 0) {
-            plugin.getLogger().info("auto.update.eve: overwrote " + rewritten
-                    + " .eve file" + (rewritten == 1 ? "" : "s") + " with the current bundled config.");
+            plugin.getLogger().info("Replaced " + teacommontea.util.ConsoleColours.note(rewritten) + " of your filter board" + (rewritten == 1 ? "" : "s")
+                    + " with the bundled versions, because auto.update.eve is on.");
         }
     }
 
@@ -798,7 +795,7 @@ public final class SelfHeal {
 
             Files.write(deployed.toPath(), append.toString().getBytes(StandardCharsets.UTF_8),
                     java.nio.file.StandardOpenOption.APPEND);
-            plugin.getLogger().info("" + config + " self-heal added " + missing.size()
+            plugin.getLogger().info("" + config + ": added " + teacommontea.util.ConsoleColours.note(missing.size())
                     + " new rule" + (missing.size() == 1 ? "" : "s") + " from the current config.");
         }
     }

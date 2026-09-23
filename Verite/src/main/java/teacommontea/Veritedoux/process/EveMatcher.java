@@ -362,7 +362,7 @@ public final class EveMatcher {
         return worst;
     }
 
-    public record MatchTrace(String chunk, String lang, int rule, String ruleName, String realm, EveEntry.Result category) {}
+    public record MatchTrace(String chunk, String lang, int rule, String ruleName, String realm, String matched, EveEntry.Result category) {}
 
     private static final ThreadLocal<java.util.List<MatchTrace>> TRACE = new ThreadLocal<>();
 
@@ -383,7 +383,7 @@ public final class EveMatcher {
             EveEntry.Result r = categoryOf(m, lang);
             java.util.List<MatchTrace> tr = TRACE.get();
             if (tr != null && r != EveEntry.Result.CLEAN) {
-                tr.add(new MatchTrace(c, lang, m.rule(), m.name(), m.realm(), r));
+                tr.add(new MatchTrace(c, lang, m.rule(), m.name(), m.realm(), m.matched(), r));
             }
             if (r == EveEntry.Result.SELF_HARM || r == EveEntry.Result.ABUSE) {
                 return r;

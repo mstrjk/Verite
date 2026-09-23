@@ -48,8 +48,8 @@ public final class EveDialect {
         }
         if (!present) return false;
         REGISTRY.put(language, new EveDialect(dialects, row));
-        plugin.getLogger().info("EVE dialect (" + language + "): " + dialects.length
-                + " dialects from " + row + ".");
+        plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(dialects.length) + " " + teacommontea.util.text.Text.capitalise(language) + " dialect"
+                + (dialects.length == 1 ? "" : "s") + ".");
         return true;
     }
 

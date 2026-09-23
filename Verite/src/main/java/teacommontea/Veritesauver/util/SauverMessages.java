@@ -16,39 +16,39 @@ public final class SauverMessages {
 
     public SauverMessages() {}
 
-    public void send(CommandSender to, String miniMessage) {
-        to.spigot().sendMessage(messages.prefixed(miniMessage));
+    public void send(CommandSender to, String tagged) {
+        to.spigot().sendMessage(messages.prefixed(tagged));
     }
 
-    public void info(CommandSender to, String miniMessage) {
-        send(to, miniMessage);
+    public void info(CommandSender to, String tagged) {
+        send(to, tagged);
     }
 
-    public void err(CommandSender to, String miniMessage) {
-        send(to, miniMessage);
+    public void err(CommandSender to, String tagged) {
+        send(to, tagged);
     }
 
-    public void raw(CommandSender to, String miniMessage) {
-        Text.sendRaw(to, miniMessage);
+    public void raw(CommandSender to, String tagged) {
+        Text.sendRaw(to, tagged);
     }
 
-    public void notify(String permission, String miniMessage) {
-        notify(permission, null, miniMessage);
+    public void notify(String permission, String tagged) {
+        notify(permission, null, tagged);
     }
 
-    public void notify(String permission, Predicate<Player> skip, String miniMessage) {
+    public void notify(String permission, Predicate<Player> skip, String tagged) {
         for (Player staff : Bukkit.getOnlinePlayers()) {
             if (skip != null && skip.test(staff)) {
                 continue;
             }
             if (staff.hasPermission(permission)) {
-                send(staff, miniMessage);
+                send(staff, tagged);
             }
         }
     }
 
-    public static BaseComponent[] screen(String miniMessage) {
-        return Text.screen(miniMessage);
+    public static BaseComponent[] screen(String tagged) {
+        return Text.screen(tagged);
     }
 
     public Messages messages() {

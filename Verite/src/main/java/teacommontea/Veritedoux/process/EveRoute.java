@@ -25,15 +25,7 @@ public final class EveRoute {
     public static void configure(EveSettings s) {
         settings = s;
         EveDebug.reset();
-        EveDebug.enable();
-    }
-
-    public static String benchReport() {
-        return EveDebug.report();
-    }
-
-    public static void benchReset() {
-        EveDebug.reset();
+        EveDebug.disable();
     }
 
     public static void enableStore(EveStore s) {
@@ -48,15 +40,10 @@ public final class EveRoute {
     }
 
     public static EveEntry.Result route(String message) {
-        long benchStart = System.nanoTime();
         long s = EveDebug.start();
-        EveEntry.Result benchResult = routeTimed(message);
+        EveEntry.Result result = routeTimed(message);
         EveDebug.end("ROUTE TOTAL", s);
-        long benchNanos = System.nanoTime() - benchStart;
-        java.util.logging.Logger.getLogger("Minecraft").info(
-                String.format("[EVEBENCH] %8.3f ms  %-9s len=%-4d %s",
-                        benchNanos / 1_000_000.0, benchResult, message.length(), message));
-        return benchResult;
+        return result;
     }
 
     private static EveEntry.Result routeTimed(String message) {

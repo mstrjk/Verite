@@ -1,12 +1,9 @@
 package teacommontea.veritedoux.preprocess;
 
-import org.bukkit.plugin.Plugin;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import teacommontea.veritedoux.preprocess.EveLexicon;
 
 public final class EveLang {
 
@@ -28,14 +25,6 @@ public final class EveLang {
     public static void configure(double known, double unknown) {
         if (known > 0) FIT_KNOWN = known;
         if (unknown > 0) FIT_UNKNOWN = unknown;
-    }
-
-    public static void load(Plugin plugin) {
-        if (!EveLexicon.ready()) {
-            plugin.getLogger().info("EVE lang: lexicon not ready, prior disabled");
-            return;
-        }
-        plugin.getLogger().info("EVE lang: priors served on-disk per token.");
     }
 
     private static final double RATE_SCALE = 1000.0;

@@ -10,7 +10,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 
-import teacommontea.util.text.MiniToBungee;
+import teacommontea.util.text.TagParser;
 import teacommontea.veriteproxy.ProxyConfig;
 import teacommontea.veriteproxy.ProxyStore;
 import teacommontea.veriteproxy.PunishmentGate;
@@ -32,13 +32,12 @@ public final class BungeeProxy extends Plugin implements Listener {
         try {
             store = ProxyStore.open(config);
         } catch (Exception ex) {
-            getLogger().severe("Verite proxy could not open the shared H2 store; punishment "
-                    + "enforcement is disabled: " + ex.getMessage());
+            getLogger().severe(teacommontea.util.ConsoleColours.bad("Verite proxy could not open the shared H2 store. Punishment enforcement is disabled.") + teacommontea.util.Trace.of(ex));
             return;
         }
         gate = new PunishmentGate(store.dao(), config.banAlts());
         getProxy().getPluginManager().registerListener(this, this);
-        getLogger().info("Verite proxy enforcement active (read-only shared store).");
+        getLogger().info(teacommontea.util.ConsoleColours.ok("Verite proxy enforcement active. The shared store is read-only."));
     }
 
     @Override
@@ -61,7 +60,7 @@ public final class BungeeProxy extends Plugin implements Listener {
         Entry ban = gate.resolveLoginBan(uuid, ip, now);
         if (ban != null) {
             e.setCancelled(true);
-            e.setCancelReason(MiniToBungee.parse(PunishmentGate.banScreen(ban)));
+            e.setCancelReason(TagParser.parse(PunishmentGate.banScreen(ban)));
         }
     }
 
@@ -83,7 +82,7 @@ public final class BungeeProxy extends Plugin implements Listener {
         Entry mute = gate.resolveMute(player.getUniqueId(), ip, now);
         if (mute != null) {
             e.setCancelled(true);
-            player.sendMessage(MiniToBungee.parse(PunishmentGate.muteNotice(mute)));
+            player.sendMessage(TagParser.parse(PunishmentGate.muteNotice(mute)));
         }
     }
 

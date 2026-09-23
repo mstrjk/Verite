@@ -29,11 +29,8 @@ public final class SauverGeoIp {
 
         teacommontea.util.sched.Sched.executeAsync(() -> {
             if (download(db)) {
+                log().info(teacommontea.util.ConsoleColours.ok("GeoLite2 country database downloaded."));
                 bind(db);
-                Sauver cur = Sauver.instance();
-                if (cur != null && cur.plugin() != null) {
-                    cur.plugin().getLogger().info("GeoLite2 country database downloaded; geoip is now active.");
-                }
             }
         });
     }
@@ -55,10 +52,8 @@ public final class SauverGeoIp {
             java.nio.file.Files.move(tmp.toPath(), db.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (Throwable t) {
-            Sauver s = Sauver.instance();
-            if (s != null && s.plugin() != null) {
-                s.plugin().getLogger().warning("Could not download GeoLite2 database (geoip stays off): " + t.getMessage());
-            }
+            log().warning(teacommontea.util.ConsoleColours.bad("Failed to download the GeoLite2 database. IP-detection is disabled.")
+                    + teacommontea.util.Trace.of(t));
             return false;
         }
     }
@@ -67,9 +62,19 @@ public final class SauverGeoIp {
         try {
             Class<?> readerClass = Class.forName("com.maxmind.db.Reader");
             reader = readerClass.getConstructor(File.class).newInstance(db);
+            log().info(teacommontea.util.ConsoleColours.ok("Enabled IP-detection."));
         } catch (Throwable t) {
             reader = null;
+            log().warning(teacommontea.util.ConsoleColours.bad("Failed to enable IP-detection.") + teacommontea.util.Trace.of(t));
         }
+    }
+
+    private static java.util.logging.Logger log() {
+        Sauver s = Sauver.instance();
+        if (s != null && s.plugin() != null) {
+            return s.plugin().getLogger();
+        }
+        return java.util.logging.Logger.getLogger("Verite");
     }
 
     public static String country(String ip) {

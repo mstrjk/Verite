@@ -66,17 +66,17 @@ public final class PunishmentGate {
         return r == null || r.isBlank() ? "No reason specified." : r;
     }
 
-    public static String stripTags(String miniMessage) {
-        if (miniMessage == null) {
+    public static String stripTags(String tagged) {
+        if (tagged == null) {
             return "";
         }
-        StringBuilder out = new StringBuilder(miniMessage.length());
+        StringBuilder out = new StringBuilder(tagged.length());
         int i = 0;
-        int n = miniMessage.length();
+        int n = tagged.length();
         while (i < n) {
-            char c = miniMessage.charAt(i);
+            char c = tagged.charAt(i);
             if (c == '<') {
-                int close = miniMessage.indexOf('>', i);
+                int close = tagged.indexOf('>', i);
                 if (close > i) {
                     i = close + 1;
                     continue;

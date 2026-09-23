@@ -247,8 +247,8 @@ public final class PunishDialog {
         }
     }
 
-    private static Object comp(String mini) {
-        return SauverMessages.screen(mini);
+    private static Object comp(String tagged) {
+        return SauverMessages.screen(tagged);
     }
 
     private static Class<?> load(ClassLoader cl, String name) throws ClassNotFoundException {

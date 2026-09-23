@@ -172,14 +172,16 @@ public final class Eve implements AutoCloseable {
                     if (sep >= 0) caps.put(pair.substring(0, sep), pair.substring(sep + CAP_KV.length()));
                 }
             }
-            out.add(new Match(rule, col[1], col[2], flags, caps));
+            String matched = col.length >= 6 ? col[5] : "";
+            out.add(new Match(rule, col[1], col[2], flags, caps, matched));
         }
         return out;
     }
 
     public record Match(int rule, String name, String realm,
                         java.util.Map<String, Boolean> flags,
-                        java.util.Map<String, String> captures) {
+                        java.util.Map<String, String> captures,
+                        String matched) {
         public boolean flag(String name, boolean dflt) {
             return flags.getOrDefault(name, dflt);
         }
@@ -234,7 +236,8 @@ public final class Eve implements AutoCloseable {
             if (col.length < 3) continue;
             int rule = Integer.parseInt(col[0]);
             out.add(new Match(rule, col[1], col[2],
-                    new java.util.LinkedHashMap<>(), new java.util.LinkedHashMap<>()));
+                    new java.util.LinkedHashMap<>(), new java.util.LinkedHashMap<>(),
+                    col.length >= 6 ? col[5] : ""));
         }
         return out;
     }

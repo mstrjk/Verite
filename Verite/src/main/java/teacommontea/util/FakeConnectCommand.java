@@ -86,8 +86,8 @@ public final class FakeConnectCommand implements CommandExecutor, TabCompleter {
     }
 
     @SuppressWarnings("deprecation")
-    private void send(CommandSender to, String mini) {
-        to.spigot().sendMessage(new Messages().prefixed(mini));
+    private void send(CommandSender to, String tagged) {
+        to.spigot().sendMessage(new Messages().prefixed(tagged));
     }
 
     private YamlConfiguration config() {

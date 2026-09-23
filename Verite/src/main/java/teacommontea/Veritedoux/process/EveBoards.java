@@ -66,6 +66,17 @@ public final class EveBoards {
     public static SymbolBoard symbols() { return SYMBOLS; }
     public static int maxWords() { return maxWords; }
 
+    public static void clear() {
+        EVE = null;
+        SYMBOLS = null;
+        MAIN_BOARDS.clear();
+        GENERAL_PROFANITY.clear();
+        DIALECT_BOARDS.clear();
+        DIALECT_TO_LANG.clear();
+        EveDialect.clear();
+        maxWords = 1;
+    }
+
     public static void load(Plugin plugin, EveSettings settings) {
         maxWords = 1;
         for (Config config : CONFIGS) {
@@ -81,8 +92,8 @@ public final class EveBoards {
 
     private static teacommontea.veritedoux.util.Eve loadEve(Plugin plugin, EveSettings settings) {
         if (!teacommontea.veritedoux.util.Eve.nativeAvailable()) {
-            plugin.getLogger().warning("EVE native lib unavailable ("
-                    + teacommontea.veritedoux.util.Eve.nativeError() + "), EVE filter OFF");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to locate EVE library. Disabling chat filter. Consider reporting this error.")
+                    + teacommontea.util.Trace.of(teacommontea.veritedoux.util.Eve.nativeError()));
             return null;
         }
         MAIN_BOARDS.clear();
@@ -106,21 +117,21 @@ public final class EveBoards {
                 maxWords = Math.max(maxWords, eveMaxWords(body));
                 merged.append(body).append('\n');
             } catch (Exception e) {
-                plugin.getLogger().warning("EVE board " + config.file()
-                        + " parse failed, skipped: " + e.getMessage());
+                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to parse " + config.file() + " board.") + teacommontea.util.Trace.of(e));
             }
         }
         if (merged.length() == 0) {
-            plugin.getLogger().warning("no config_*.eve found, EVE filter OFF");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("No filter boards were found. Disabling chat filter."));
             return null;
         }
         try {
             teacommontea.veritedoux.util.Eve eve = teacommontea.veritedoux.util.Eve.parse(merged.toString());
-            plugin.getLogger().info("EVE loaded " + eve.ruleCount() + " rules across "
-                    + MAIN_BOARDS.size() + " languages.");
+            plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(eve.ruleCount()) + " rule" + (eve.ruleCount() == 1 ? "" : "s")
+                    + " across " + MAIN_BOARDS.size() + " language"
+                    + (MAIN_BOARDS.size() == 1 ? "" : "s") + ".");
             return eve;
         } catch (Exception e) {
-            plugin.getLogger().warning("EVE parse failed, EVE filter OFF: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to read the filter boards folder. Disabling chat filter. Consider reporting this error.") + teacommontea.util.Trace.of(e));
             return null;
         }
     }
@@ -151,12 +162,12 @@ public final class EveBoards {
                     maxWords = Math.max(maxWords, eveMaxWords(body));
                     loaded++;
                 } catch (Exception e) {
-                    plugin.getLogger().warning("dialect board " + db.code()
-                            + " parse failed, skipped: " + e.getMessage());
+                    plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to parse " + db.code()
+                            + " dialect board. Skipping.") + teacommontea.util.Trace.of(e));
                 }
             }
             if (loaded > 0) {
-                plugin.getLogger().info("EVE loaded " + loaded + " " + lang
+                plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(loaded) + " " + teacommontea.util.text.Text.capitalise(lang)
                         + " dialect profanity board" + (loaded == 1 ? "" : "s") + ".");
             }
         }
@@ -173,11 +184,11 @@ public final class EveBoards {
         }
         SymbolBoard board = SymbolBoard.parse(body);
         if (board == null) {
-            plugin.getLogger().warning("symbols.eve produced no triggers, symbol board OFF");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("No triggers were found in symbols.eve. Disabling symbol board."));
             return;
         }
         SYMBOLS = board;
-        plugin.getLogger().info("EVE loaded symbol board (" + board.ruleCount() + " rules).");
+        plugin.getLogger().info("Loaded symbol board. " + teacommontea.util.ConsoleColours.note(board.ruleCount()) + " rule" + (board.ruleCount() == 1 ? "" : "s") + ".");
     }
 
     private static String eveVowels(String lang) {

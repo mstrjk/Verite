@@ -147,22 +147,129 @@ public final class LookupCommands extends CommandBase {
         }
     }
 
+    private static final int HISTORY_PAGE_SIZE = 5;
+
+    private static final String SORT_DATE_NEW = "date";
+    private static final String SORT_DATE_OLD = "date-old";
+    private static final String SORT_TYPE = "type";
+    private static final String SORT_DURATION = "duration";
+
     public void history(CommandSender sender, String[] args) {
         UUID u = lookupTarget(sender, args, "history");
         if (u == null) {
             return;
         }
-        List<Entry> hist = dao().history(u, 40);
+        List<Entry> hist = new java.util.ArrayList<>(dao().history(u, 500));
         if (hist.isEmpty()) {
             send(sender, Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0]) + " " + Colours.BRAND_ACCENT_SECONDARY + "has no punishment history.");
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Punishment history for " + Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0])
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "(" + Colours.BRAND_ACCENT_SECONDARY + hist.size() + Colours.BRAND_ACCENT_SECONDARY + ").");
         long now = System.currentTimeMillis();
-        for (Entry e : hist) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  " + historyLine(e, now));
+        int page = args.length > 1 ? Math.max(1, parseIntOr(args[1], 1)) : 1;
+        String sort = args.length > 2 ? args[2].toLowerCase(Locale.ROOT) : SORT_DATE_NEW;
+        sortHistory(hist, sort, now);
+
+        int pages = (hist.size() + HISTORY_PAGE_SIZE - 1) / HISTORY_PAGE_SIZE;
+        page = Math.min(page, pages);
+        int from = (page - 1) * HISTORY_PAGE_SIZE;
+        int to = Math.min(from + HISTORY_PAGE_SIZE, hist.size());
+
+        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Punishment history for " + Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0])
+                + " " + Colours.BRAND_ACCENT_SECONDARY + "(" + Colours.BRAND_ACCENT_SECONDARY + hist.size() + Colours.BRAND_ACCENT_SECONDARY + ") - page "
+                + Colours.BRAND_ACCENT_SECONDARY + page + Colours.BRAND_ACCENT_SECONDARY + "/" + Colours.BRAND_ACCENT_SECONDARY + pages + Colours.BRAND_ACCENT_SECONDARY + ".");
+        for (int i = from; i < to; i++) {
+            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  " + historyLine(hist.get(i), now, args[0]));
         }
+        raw(sender, "  <italic>" + Colours.BRAND_ACCENT_SECONDARY
+                + "Hover a punishment for details, or click it to open the full record.</italic>");
+        raw(sender, navBar(args[0], page, pages, sort));
+    }
+
+    public void punishment(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            usage(sender, "punishment <id>", "show everything recorded about one punishment");
+            return;
+        }
+        String id = args[0].startsWith("#") ? args[0].substring(1) : args[0];
+        Entry found = null;
+        if (args.length > 1) {
+            UUID owner = resolve(args[1]);
+            if (owner != null) {
+                found = findById(dao().history(owner, 500), id);
+            }
+        }
+        if (found == null && sender instanceof Player self) {
+            found = findById(dao().history(self.getUniqueId(), 500), id);
+        }
+        if (found == null) {
+            err(sender, Colours.WARNING + "No punishment found with ID " + Colours.BRAND_ACCENT_SECONDARY + "#" + id + Colours.WARNING + ".");
+            return;
+        }
+        long now = System.currentTimeMillis();
+        String target = found.uuid() != null ? bestName(found.uuid(), "?") : found.ip();
+        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Punishment " + Colours.WARNING + "#" + found.randomId()
+                + Colours.BRAND_ACCENT_SECONDARY + " against " + Colours.BRAND_ACCENT_SECONDARY + target + Colours.BRAND_ACCENT_SECONDARY + ".");
+        for (String line : compendium(found, now).split("<newline>")) {
+            raw(sender, "  " + line);
+        }
+    }
+
+    private static Entry findById(List<Entry> pool, String id) {
+        for (Entry e : pool) {
+            if (e.randomId() != null && e.randomId().equalsIgnoreCase(id)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    private void sortHistory(List<Entry> hist, String sort, long now) {
+        switch (sort) {
+            case SORT_DATE_OLD -> hist.sort(java.util.Comparator.comparingLong(Entry::dateStart));
+            case SORT_TYPE -> hist.sort(java.util.Comparator
+                    .comparing((Entry e) -> e.type().id())
+                    .thenComparing(java.util.Comparator.comparingLong(Entry::dateStart).reversed()));
+            case SORT_DURATION -> hist.sort(java.util.Comparator
+                    .comparingLong((Entry e) -> e.permanent() ? Long.MAX_VALUE : e.dateEnd() - e.dateStart())
+                    .reversed());
+            default -> hist.sort(java.util.Comparator.comparingLong(Entry::dateStart).reversed());
+        }
+    }
+
+    private String navBar(String target, int page, int pages, String sort) {
+        StringBuilder sb = new StringBuilder("  ");
+        sb.append(pageButton("Back", target, page - 1, sort, page > 1));
+        sb.append(' ');
+        sb.append(pageButton("Next", target, page + 1, sort, page < pages));
+        sb.append(' ');
+        String dateNext = SORT_DATE_NEW.equals(sort) ? SORT_DATE_OLD : SORT_DATE_NEW;
+        sb.append(sortButton("Date", target, dateNext,
+                SORT_DATE_NEW.equals(sort) || SORT_DATE_OLD.equals(sort)));
+        sb.append(' ');
+        sb.append(sortButton("Punishment", target, SORT_TYPE, SORT_TYPE.equals(sort)));
+        sb.append(' ');
+        sb.append(sortButton("Duration", target, SORT_DURATION, SORT_DURATION.equals(sort)));
+        return sb.toString();
+    }
+
+    private String pageButton(String label, String target, int toPage, String sort, boolean live) {
+        if (!live) {
+            return "<reset>" + Colours.BRAND_ACCENT + "[" + label + "]";
+        }
+        return "<reset><click:run_command:'/history " + target + " " + toPage + " " + sort + "'>"
+                + "<hover:show_text:'" + Colours.BRAND_ACCENT_SECONDARY + "Go to page " + toPage + "'>"
+                + Colours.BRAND + "[" + label + "]</hover></click>";
+    }
+
+    private String sortButton(String label, String target, String toSort, boolean current) {
+        String colour = current ? Colours.BRAND_ACCENT_SECONDARY : Colours.BRAND;
+        String hint = SORT_DATE_OLD.equals(toSort) ? "oldest first"
+                : SORT_DATE_NEW.equals(toSort) ? "newest first"
+                : SORT_TYPE.equals(toSort) ? "grouped by punishment"
+                : "longest first";
+        return "<reset><click:run_command:'/history " + target + " 1 " + toSort + "'>"
+                + "<hover:show_text:'" + Colours.BRAND_ACCENT_SECONDARY + "Sort by " + hint + "'>"
+                + colour + "[Sort by " + label + "]</hover></click>";
     }
 
     public void staffhistory(CommandSender sender, String[] args) {
@@ -185,28 +292,72 @@ public final class LookupCommands extends CommandBase {
         }
     }
 
-    private String historyLine(Entry e, long now) {
-        String typeColor = switch (e.type()) {
-            case BAN -> Colours.WARNING;
-            case MUTE -> Colours.BRAND_ACCENT_SECONDARY;
-            case WARNING -> Colours.MUTE;
-            case KICK -> Colours.BRAND_ACCENT_SECONDARY;
-        };
-        return typeColor + e.type().id().toUpperCase(Locale.ROOT) + " " + statusWord(e, now)
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "by " + Colours.BRAND_ACCENT_SECONDARY + e.executorName() + " " + Colours.BRAND_ACCENT_SECONDARY + e.reason() + " (#" + e.randomId() + ")";
+    private String historyLine(Entry e, long now, String owner) {
+        String body = Colours.WARNING + e.type().id().toUpperCase(Locale.ROOT) + " " + statusWord(e, now)
+                + Colours.WARNING + " by " + e.executorName() + " " + e.reason() + " (#" + e.randomId() + ")";
+        return "<reset><click:run_command:'/punishment " + e.randomId() + " " + owner + "'>"
+                + "<hover:show_text:'" + compendium(e, now) + "'>" + body + "</hover></click>";
+    }
+
+    private String compendium(Entry e, long now) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Colours.WARNING).append(e.type().id().toUpperCase(Locale.ROOT))
+                .append(" #").append(e.randomId());
+        sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Issued by ")
+                .append(Colours.BRAND_ACCENT_SECONDARY).append(e.executorName());
+        sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Reason ")
+                .append(Colours.BRAND_ACCENT_SECONDARY).append(e.reason());
+        sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Started ")
+                .append(Colours.BRAND_ACCENT_SECONDARY).append(stamp(e.dateStart()));
+        if (e.permanent()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Duration ")
+                    .append(Colours.WARNING).append("permanent");
+        } else {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Duration ")
+                    .append(Colours.BRAND_ACCENT_SECONDARY).append(SauverFormat.fancyTime(e.duration()));
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Ends ")
+                    .append(Colours.BRAND_ACCENT_SECONDARY).append(stamp(e.dateEnd()));
+        }
+        if (e.removedByName() != null) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Removed by ")
+                    .append(Colours.BRAND_ACCENT_SECONDARY).append(e.removedByName());
+            if (e.removalReason() != null && !e.removalReason().isBlank()) {
+                sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Removal reason ")
+                        .append(Colours.BRAND_ACCENT_SECONDARY).append(e.removalReason());
+            }
+        }
+        if (e.ip() != null && !e.ip().isBlank()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("IP ")
+                    .append(Colours.BRAND_ACCENT_SECONDARY).append(e.ip());
+        }
+        if (e.serverOrigin() != null && !e.serverOrigin().isBlank()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Server ")
+                    .append(Colours.BRAND_ACCENT_SECONDARY).append(e.serverOrigin());
+        }
+        if (e.silent()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Issued silently");
+        }
+        if (e.ipban()) {
+            sb.append("<newline>").append(Colours.BRAND_ACCENT).append("Applied to the whole IP");
+        }
+        return sb.toString().replace("'", "’");
+    }
+
+    private static String stamp(long millis) {
+        return new java.text.SimpleDateFormat("d MMM yyyy, HH:mm").format(new java.util.Date(millis));
     }
 
     private String statusWord(Entry e, long now) {
         if (e.removedByName() != null) {
-            return Colours.BRAND + "(removed by " + e.removedByName() + ")";
+            return Colours.BRAND_ACCENT + "(removed by " + e.removedByName() + ")";
         }
         if (e.type() == Entry.Type.KICK || e.type() == Entry.Type.WARNING) {
-            return e.expired(now) ? Colours.BRAND_ACCENT_SECONDARY + "(expired)" : Colours.BRAND_ACCENT_SECONDARY + "(active)";
+            return e.expired(now) ? Colours.BRAND_ACCENT + "(expired)" : Colours.SUCCESS + "(active)";
         }
         if (!e.active()) {
-            return Colours.BRAND_ACCENT_SECONDARY + "(inactive)";
+            return Colours.BRAND_ACCENT + "(expired)";
         }
-        return e.inForce(now) ? Colours.WARNING + "(active)" : Colours.BRAND_ACCENT_SECONDARY + "(expired)";
+        return e.inForce(now) ? Colours.SUCCESS + "(active)" : Colours.BRAND_ACCENT + "(expired)";
     }
 
     public void staffrollback(CommandSender sender, String[] args) {

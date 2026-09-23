@@ -154,9 +154,14 @@ commands:
     description: "List active mutes."
     usage: "/<command> [page]"
     permission: veritesauver.checkmute
+  punishment:
+    description: "Show everything recorded about one punishment."
+    usage: "/<command> <id> [player]"
+    permission: veritesauver.history
+
   history:
     description: "Show a player's punishment history."
-    usage: "/<command> <player>"
+    usage: "/<command> <player> [page] [date|date-old|type|duration]"
     permission: veritesauver.history
   staffhistory:
     description: "Show punishments issued by a staff member."

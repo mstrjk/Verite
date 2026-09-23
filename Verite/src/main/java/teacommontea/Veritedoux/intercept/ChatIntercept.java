@@ -35,7 +35,7 @@ public final class ChatIntercept implements Listener {
         try {
             nms = NmsAccess.resolve();
         } catch (NmsAccess.Unsupported u) {
-            plugin.getLogger().warning("outbound chat interceptor unavailable ("
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Outbound chat interception unavailable. Falling back to chat-event filtering only.")
                     + u.getMessage() + "); falling back to chat-event filtering only.");
             return null;
         }
@@ -44,7 +44,7 @@ public final class ChatIntercept implements Listener {
         for (Player p : Bukkit.getOnlinePlayers()) {
             ci.inject(p);
         }
-        plugin.getLogger().info("outbound chat interceptor active (server "
+        plugin.getLogger().info(teacommontea.util.ConsoleColours.ok("Outbound chat interception active.") + " Server: "
                 + Bukkit.getBukkitVersion() + ", packet " + nms.chatPacketClass().getSimpleName() + ").");
         return ci;
     }
@@ -81,7 +81,7 @@ public final class ChatIntercept implements Listener {
                 pipeline.addLast(HANDLER_NAME, handler);
             }
         } catch (Throwable t) {
-            plugin.getLogger().warning("could not inject chat filter for "
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to attach the chat filter to ")
                     + p.getName() + ": " + t);
         }
     }

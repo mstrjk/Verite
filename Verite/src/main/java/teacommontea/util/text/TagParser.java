@@ -13,23 +13,24 @@ import java.util.Deque;
 import java.util.List;
 
 
-public final class MiniToBungee {
+public final class TagParser {
 
-    private MiniToBungee() {}
+    private TagParser() {}
 
     private static final class Style {
         ChatColor color;
         boolean bold;
+        boolean italic;
         ClickEvent click;
         HoverEvent hover;
         Style copy() {
             Style s = new Style();
-            s.color = color; s.bold = bold; s.click = click; s.hover = hover;
+            s.color = color; s.bold = bold; s.italic = italic; s.click = click; s.hover = hover;
             return s;
         }
     }
 
-    public static BaseComponent[] parse(String mini) {
+    public static BaseComponent[] parse(String tagged) {
         List<BaseComponent> out = new ArrayList<>();
         Deque<Style> stack = new ArrayDeque<>();
         Style base = new Style();
@@ -38,10 +39,10 @@ public final class MiniToBungee {
 
         StringBuilder run = new StringBuilder();
         int i = 0;
-        int n = mini.length();
+        int n = tagged.length();
         while (i < n) {
-            char c = mini.charAt(i);
-            if (c == '\\' && i + 1 < n && mini.charAt(i + 1) == 'n') {
+            char c = tagged.charAt(i);
+            if (c == '\\' && i + 1 < n && tagged.charAt(i + 1) == 'n') {
                 flush(out, run, stack.peek());
                 out.add(new TextComponent("\n"));
                 i += 2;
@@ -52,9 +53,9 @@ public final class MiniToBungee {
                 i++;
                 continue;
             }
-            int close = mini.indexOf('>', i);
+            int close = closingBracket(tagged, i);
             if (close < 0) { run.append(c); i++; continue; }
-            String tag = mini.substring(i + 1, close);
+            String tag = tagged.substring(i + 1, close);
             String handled = applyTag(tag, out, run, stack);
             if (handled == null) {
                 // not a recognised tag: keep the literal text
@@ -67,6 +68,19 @@ public final class MiniToBungee {
         flush(out, run, stack.peek());
         if (out.isEmpty()) out.add(new TextComponent(""));
         return out.toArray(new BaseComponent[0]);
+    }
+
+    private static int closingBracket(String tagged, int open) {
+        boolean quoted = false;
+        for (int i = open + 1; i < tagged.length(); i++) {
+            char c = tagged.charAt(i);
+            if (c == '\'') {
+                quoted = !quoted;
+            } else if (c == '>' && !quoted) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static String applyTag(String tag, List<BaseComponent> out, StringBuilder run, Deque<Style> stack) {
@@ -90,6 +104,18 @@ public final class MiniToBungee {
             Style s = stack.peek().copy();
             s.bold = true;
             stack.push(s);
+            return tag;
+        }
+        if (lower.equals("italic") || lower.equals("i")) {
+            flush(out, run, stack.peek());
+            Style s = stack.peek().copy();
+            s.italic = true;
+            stack.push(s);
+            return tag;
+        }
+        if (lower.equals("/italic") || lower.equals("/i")) {
+            flush(out, run, stack.peek());
+            if (stack.size() > 1) stack.pop();
             return tag;
         }
         if (lower.equals("/bold") || lower.equals("/b")) {
@@ -160,7 +186,7 @@ public final class MiniToBungee {
         TextComponent t = new TextComponent(run.toString());
         t.setColor(style.color);
         t.setBold(style.bold);
-        t.setItalic(false);
+        t.setItalic(style.italic);
         if (style.click != null) t.setClickEvent(style.click);
         if (style.hover != null) t.setHoverEvent(style.hover);
         out.add(t);

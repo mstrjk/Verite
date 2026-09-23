@@ -16,7 +16,7 @@ public final class EveRegister {
     public static void load(Plugin plugin) {
         loaded = EveLexicon.ready();
         if (loaded) {
-            plugin.getLogger().info("EVE register: message-type detection ready.");
+            plugin.getLogger().info(teacommontea.util.ConsoleColours.ok("Loaded message-type detection."));
         }
     }
 

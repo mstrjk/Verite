@@ -216,6 +216,8 @@ public final class ApiBridge {
 
     private static void warn(String which, Throwable t) {
         org.bukkit.Bukkit.getLogger().warning(
-                "[Verite] an API " + which + " listener threw: " + t);
+                teacommontea.util.VeriteLogger.prefix()
+                        + teacommontea.util.ConsoleColours.bad("A plugin listening to the Verite API threw an exception. Consider reporting this error.")
+                        + teacommontea.util.Trace.of(t));
     }
 }

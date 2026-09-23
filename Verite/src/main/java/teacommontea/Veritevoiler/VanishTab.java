@@ -42,11 +42,11 @@ public final class VanishTab {
                     .newInstance(plugin.getName(), bridge);
             integrationClass.getMethod("registerHandler", integrationClass).invoke(null, instance);
             handler = instance;
-            plugin.getLogger().info("TAB detected; vanish tablist integration registered.");
+            plugin.getLogger().info(teacommontea.util.ConsoleColours.ok("TAB detected. Vanish tablist integration registered."));
         } catch (ClassNotFoundException e) {
-            plugin.getLogger().info("TAB is installed but exposes no VanishIntegration; skipping tablist integration.");
+            plugin.getLogger().info(teacommontea.util.ConsoleColours.bad("TAB is installed but this version cannot hide vanished players from the tablist. Skipping."));
         } catch (Throwable t) {
-            plugin.getLogger().warning("TAB vanish integration failed to register: " + t.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to register the TAB vanish integration. Consider reporting this error.") + teacommontea.util.Trace.of(t));
         }
     }
 

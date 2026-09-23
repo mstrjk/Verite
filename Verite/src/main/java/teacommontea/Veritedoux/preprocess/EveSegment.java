@@ -71,7 +71,7 @@ public final class EveSegment {
     public static void load(Plugin plugin) {
         LANGS.clear();
         if (!EveLexicon.ready()) {
-            plugin.getLogger().warning("EVE segmentation: lexicon not ready, disabled");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Segmentation disabled. The tokeniser is unavailable."));
             return;
         }
         java.util.Set<String> present = new java.util.HashSet<>(Arrays.asList(EveLexicon.languages()));
@@ -84,9 +84,9 @@ public final class EveSegment {
             }
         }
         if (LANGS.isEmpty()) {
-            plugin.getLogger().warning("EVE segmentation: no languages loaded, disabled");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Segmentation disabled. No supported languages were found in the tokeniser."));
         } else {
-            plugin.getLogger().info("EVE segmentation: " + LANGS.size() + " langs (on-disk).");
+            plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(LANGS.size()) + " language" + (LANGS.size() == 1 ? "" : "s") + ".");
         }
     }
 

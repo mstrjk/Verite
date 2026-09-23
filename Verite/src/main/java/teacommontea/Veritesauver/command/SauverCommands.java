@@ -69,6 +69,7 @@ public final class SauverCommands implements CommandExecutor, TabCompleter {
             case "banlist"      -> lookup.listActive(sender, args, Entry.Type.BAN);
             case "mutelist"     -> lookup.listActive(sender, args, Entry.Type.MUTE);
             case "history"      -> lookup.history(sender, args);
+            case "punishment"   -> lookup.punishment(sender, args);
             case "staffhistory" -> lookup.staffhistory(sender, args);
             case "staffrollback"-> lookup.staffrollback(sender, args);
             case "prunehistory" -> lookup.prunehistory(sender, args);

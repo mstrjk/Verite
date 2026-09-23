@@ -89,7 +89,7 @@ public final class EveSettings {
             st.profanityConfidenceEnabled = y.getBoolean("chat.filter.advanced.use.profanity.confidence.enabled", st.profanityConfidenceEnabled);
             st.profanityConfidenceThreshold = y.getDouble("chat.filter.advanced.use.profanity.confidence.profanity.confidence.threshold", st.profanityConfidenceThreshold);
         } catch (Exception e) {
-            plugin.getLogger().warning("EVE settings failed to load, using defaults: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to load EVE settings. Using defaults.") + teacommontea.util.Trace.of(e));
         }
         return st;
     }

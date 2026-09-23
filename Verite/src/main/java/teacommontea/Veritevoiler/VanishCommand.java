@@ -24,8 +24,8 @@ public final class VanishCommand implements CommandExecutor, TabCompleter {
         this.vanish = vanish;
     }
 
-    private void msg(CommandSender to, String mini) {
-        to.spigot().sendMessage(messages.prefixed(mini));
+    private void msg(CommandSender to, String tagged) {
+        to.spigot().sendMessage(messages.prefixed(tagged));
     }
 
     @Override

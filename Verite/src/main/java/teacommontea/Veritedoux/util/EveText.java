@@ -78,16 +78,19 @@ public final class EveText {
         return new java.util.ArrayList<>(out);
     }
 
-    public static void loadConfusables(Plugin plugin) {
+    public static boolean loadConfusables(Plugin plugin) {
         try {
             java.io.File f = new java.io.File(plugin.getDataFolder(), "filter/.native/confusables.evefold");
             if (!f.isFile()) {
-                return;
+                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to load confusables. Disabling chat filter."));
+                return false;
             }
             String text = new String(java.nio.file.Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
             teacommontea.veritedoux.util.Eve.loadFold(text);
+            return true;
         } catch (Exception e) {
-            plugin.getLogger().warning("EVE confusables table failed to load: " + e.getMessage());
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to load confusables. Disabling chat filter.") + teacommontea.util.Trace.of(e));
+            return false;
         }
     }
 }

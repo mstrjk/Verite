@@ -15,41 +15,48 @@ public final class Text {
 
     private Text() {}
 
-    public static BaseComponent[] parse(String miniMessage) {
-        return MiniToBungee.parse(miniMessage);
+    public static String capitalise(String s) {
+        if (s == null || s.isEmpty()) {
+            return s == null ? "" : s;
+        }
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
-    public static void send(CommandSender to, String miniMessage) {
-        to.spigot().sendMessage(parse(miniMessage));
+    public static BaseComponent[] parse(String tagged) {
+        return TagParser.parse(tagged);
     }
 
-    public static void sendRaw(CommandSender to, String miniMessage) {
-        to.spigot().sendMessage(parse(miniMessage));
+    public static void send(CommandSender to, String tagged) {
+        to.spigot().sendMessage(parse(tagged));
     }
 
-    public static void actionBar(Player to, String miniMessage) {
-        to.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, parse(miniMessage));
+    public static void sendRaw(CommandSender to, String tagged) {
+        to.spigot().sendMessage(parse(tagged));
+    }
+
+    public static void actionBar(Player to, String tagged) {
+        to.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, parse(tagged));
     }
 
     @SuppressWarnings("deprecation")
-    public static void itemName(ItemMeta meta, String miniMessage) {
-        meta.setDisplayName(toLegacy(miniMessage));
+    public static void itemName(ItemMeta meta, String tagged) {
+        meta.setDisplayName(toLegacy(tagged));
     }
 
     @SuppressWarnings("deprecation")
-    public static void itemLore(ItemMeta meta, List<String> miniMessageLines) {
-        List<String> out = new ArrayList<>(miniMessageLines.size());
-        for (String line : miniMessageLines) out.add(toLegacy(line));
+    public static void itemLore(ItemMeta meta, List<String> taggedLines) {
+        List<String> out = new ArrayList<>(taggedLines.size());
+        for (String line : taggedLines) out.add(toLegacy(line));
         meta.setLore(out);
     }
 
     @SuppressWarnings("deprecation")
-    public static void kick(Player player, String miniMessage) {
-        player.kickPlayer(toLegacy(miniMessage));
+    public static void kick(Player player, String tagged) {
+        player.kickPlayer(toLegacy(tagged));
     }
 
-    public static BaseComponent[] screen(String miniMessage) {
-        return parse(miniMessage);
+    public static BaseComponent[] screen(String tagged) {
+        return parse(tagged);
     }
 
     public static void broadcast(BaseComponent[] components) {
@@ -59,8 +66,8 @@ public final class Text {
         org.bukkit.Bukkit.getConsoleSender().sendMessage(TextComponent.toLegacyText(components));
     }
 
-    public static String toLegacy(String miniMessage) {
-        return TextComponent.toLegacyText(parse(miniMessage));
+    public static String toLegacy(String tagged) {
+        return TextComponent.toLegacyText(parse(tagged));
     }
 
     public static String legacyFrom(Object serverComponent) {

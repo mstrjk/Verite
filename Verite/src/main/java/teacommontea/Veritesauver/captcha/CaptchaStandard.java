@@ -265,11 +265,11 @@ teacommontea.util.sched.Sched.executeFor(p, () -> {
         return false;
     }
 
-    private ItemStack named(Material material, String miniMessage) {
+    private ItemStack named(Material material, String tagged) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            teacommontea.util.text.Text.itemName(meta, miniMessage);
+            teacommontea.util.text.Text.itemName(meta, tagged);
             item.setItemMeta(meta);
         }
         return item;

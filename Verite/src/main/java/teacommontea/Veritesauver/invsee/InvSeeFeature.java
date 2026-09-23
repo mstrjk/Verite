@@ -23,8 +23,7 @@ public final class InvSeeFeature {
             builtGen = InvSeeClassgen.build();
             builtRoles = InvSeeMenuRoles.resolve(builtGen.access());
         } catch (Throwable t) {
-            plugin.getLogger().warning("InvSee spectating disabled: unsupported server ("
-                    + t.getMessage() + ")");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("InvSee spectating disabled. This server is unsupported.") + teacommontea.util.Trace.of(t));
         }
 
         if (builtGen == null || builtRoles == null) {

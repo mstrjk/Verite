@@ -22,11 +22,11 @@ public final class Messages {
     public Messages(String ignored) {}
     public Messages() {}
 
-    public BaseComponent[] parse(String miniMessage) {
-        return Text.parse(miniMessage);
+    public BaseComponent[] parse(String tagged) {
+        return Text.parse(tagged);
     }
 
-    public BaseComponent[] prefixed(String miniMessage) {
-        return Text.parse(prefix + " " + miniMessage);
+    public BaseComponent[] prefixed(String tagged) {
+        return Text.parse(prefix + " " + tagged);
     }
 }

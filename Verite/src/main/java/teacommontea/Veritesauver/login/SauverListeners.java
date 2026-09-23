@@ -295,7 +295,7 @@ public final class SauverListeners implements Listener {
         }
         sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Locale: ")
                 .append(Colours.BRAND).append(localeOf(p));
-        return sb.toString().replace("'", "");
+        return sb.toString().replace("'", "’");
     }
 
     private static String minecraftVersionOf(Player p) {
@@ -324,10 +324,7 @@ public final class SauverListeners implements Listener {
     }
 
     private static String prettyBrand(String brand) {
-        if (brand.isEmpty()) {
-            return brand;
-        }
-        return Character.toUpperCase(brand.charAt(0)) + brand.substring(1);
+        return teacommontea.util.text.Text.capitalise(brand);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -391,7 +388,7 @@ public final class SauverListeners implements Listener {
         } catch (Throwable t) {
             Sauver s = Sauver.instance();
             if (s != null && s.plugin() != null) {
-                s.plugin().getLogger().warning("[Veritesauver] mute-blacklist EVE parse failed: " + t.getMessage());
+                s.plugin().getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to parse the mute command blacklist. Consider reporting this error.") + teacommontea.util.Trace.of(t));
             }
             blacklistCompiled = null;
         }
