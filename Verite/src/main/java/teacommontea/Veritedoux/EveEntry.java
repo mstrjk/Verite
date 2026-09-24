@@ -45,10 +45,11 @@ public final class EveEntry {
         teacommontea.veritedoux.util.Eve eve = EveBoards.eve();
         int wordCount = EveMatcher.buildFingerprints(eve);
         int ruleCount = eve == null ? 0 : eve.ruleCount();
-        plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(ruleCount) + " rule" + (ruleCount == 1 ? "" : "s")
-                + ". Window: " + EveBoards.maxWords()
-                + ", Fingerprints: " + EveMatcher.fingerprintCount()
-                + ", Words: " + wordCount);
+        plugin.getLogger().info(teacommontea.util.Lang.counted("filter.rules.loaded", ruleCount,
+                "count", teacommontea.util.ConsoleColours.note(ruleCount),
+                "window", EveBoards.maxWords(),
+                "fingerprints", EveMatcher.fingerprintCount(),
+                "words", wordCount));
     }
 
     public static void enableStore(EveStore s) {
@@ -117,23 +118,19 @@ public final class EveEntry {
         return body == null || body.isEmpty();
     }
 
-    public static net.md_5.bungee.api.chat.BaseComponent[] blockNotice(Result r, String message) {
+    public static java.util.List<teacommontea.util.text.Span> blockNotice(Result r, String message) {
         if (r == Result.SELF_HARM) {
-            String body = SelfHarmMessages.message().replace("\\n", "\n");
-            return net.md_5.bungee.api.chat.TextComponent.fromLegacyText(body);
+            return teacommontea.util.text.Legacy.parse(
+                    SelfHarmMessages.message().replace("\\n", "\n"));
         }
         if (r == Result.REPEAT) {
             String repeat = repeatMessage();
-            if (repeat == null || repeat.isEmpty()) {
-                return new net.md_5.bungee.api.chat.BaseComponent[] { new net.md_5.bungee.api.chat.TextComponent("") };
-            }
-            return net.md_5.bungee.api.chat.TextComponent.fromLegacyText(repeat.replace("\\n", "\n"));
+            return teacommontea.util.text.Legacy.parse(
+                    repeat == null || repeat.isEmpty() ? "" : repeat.replace("\\n", "\n"));
         }
         String legacy = blockMessage();
-        if (legacy == null || legacy.isEmpty()) {
-            return new net.md_5.bungee.api.chat.BaseComponent[] { new net.md_5.bungee.api.chat.TextComponent("") };
-        }
-        return net.md_5.bungee.api.chat.TextComponent.fromLegacyText(legacy.replace("\\n", "\n"));
+        return teacommontea.util.text.Legacy.parse(
+                legacy == null || legacy.isEmpty() ? "" : legacy.replace("\\n", "\n"));
     }
 
     public static String fingerprint(String w) {

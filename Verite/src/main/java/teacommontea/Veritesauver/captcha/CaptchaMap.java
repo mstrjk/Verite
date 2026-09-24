@@ -185,8 +185,8 @@ public final class CaptchaMap implements Listener {
         player.addPotionEffect(new PotionEffect(SLOWNESS_EFFECT, LIMIT_SECONDS * 20, 255, false, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, LIMIT_SECONDS * 20, 1, false, false));
         player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
-        player.spigot().sendMessage(messages.prefixed(
-                Colours.BRAND + "Type the code shown on the map. " + Colours.BRAND_ACCENT_SECONDARY + "Type " + Colours.BRAND_ACCENT_SECONDARY + "exit " + Colours.BRAND_ACCENT_SECONDARY + "to give up."));
+        teacommontea.util.text.Send.to(player, messages.prefixed(
+                teacommontea.util.Lang.of("captcha.map.prompt")));
         player.sendMap(view);
 
         startTick(player, s);
@@ -214,7 +214,7 @@ public final class CaptchaMap implements Listener {
         MapMeta meta = (MapMeta) item.getItemMeta();
         if (meta != null) {
             meta.setMapView(view);
-            teacommontea.util.text.Text.itemName(meta, Colours.BRAND + "Captcha");
+            teacommontea.util.text.Text.itemName(meta, teacommontea.util.Lang.of("captcha.map.item"));
             item.setItemMeta(meta);
         }
         return item;
@@ -240,8 +240,8 @@ public final class CaptchaMap implements Listener {
             return;
         }
         player.sendMap(s.view);
-        player.spigot().sendMessage(messages.prefixed(
-                Colours.WARNING + "Incorrect. " + Colours.BRAND_ACCENT_SECONDARY + "Tries left: " + Colours.BRAND_ACCENT_SECONDARY + (MAX_TRIES - s.tries)));
+        teacommontea.util.text.Send.to(player, messages.prefixed(
+                teacommontea.util.Lang.of("captcha.incorrect", "tries", MAX_TRIES - s.tries)));
     }
 
     private void timeout(Player player) {

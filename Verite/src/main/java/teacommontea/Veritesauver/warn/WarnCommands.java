@@ -25,10 +25,10 @@ public final class WarnCommands extends CommandBase {
     public void warn(CommandSender sender, String[] args) {
         Parsed parsed = parse(args);
         if (parsed.targetName() == null) {
-            usage(sender, "warn <player> [-s] [reason]", "warn a player");
+            usage(sender, "warn <player> [-s] [reason]", teacommontea.util.Lang.of("warn.description"));
             return;
         }
-        String reason = parsed.rest().isEmpty() ? "No reason specified." : String.join(" ", parsed.rest());
+        String reason = parsed.rest().isEmpty() ? teacommontea.util.Lang.of("reason.none") : String.join(" ", parsed.rest());
 
         if (isAllTarget(parsed.targetName())) {
             int done = 0;
@@ -43,11 +43,10 @@ public final class WarnCommands extends CommandBase {
                 }
             }
             if (done == 0) {
-                err(sender, Colours.WARNING + "No online players could be warned.");
+                err(sender, teacommontea.util.Lang.of("warn.none.online"));
                 return;
             }
-            send(sender, Colours.BRAND + "You warned " + Colours.BRAND_ACCENT_SECONDARY + done + Colours.BRAND
-                    + " " + SauverFormat.pluralize(done, "player") + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason);
+            send(sender, teacommontea.util.Lang.counted("warn.mass.issued", done, "count", done, "reason", reason));
             return;
         }
 
@@ -68,13 +67,13 @@ public final class WarnCommands extends CommandBase {
             return;
         }
         int active = dao().activeWarnings(target, System.currentTimeMillis()).size();
-        send(sender, Colours.BRAND + "You warned " + Colours.BRAND_ACCENT_SECONDARY + bestName(target, parsed.targetName())
-                + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Active warnings: " + Colours.BRAND_ACCENT_SECONDARY + active + " " + Colours.BRAND_ACCENT_SECONDARY + "(#" + r.entry().randomId() + ")");
+        send(sender, teacommontea.util.Lang.of("warn.issued", "name", bestName(target, parsed.targetName()),
+                "active", active, "id", r.entry().randomId()));
     }
 
     public void unwarn(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            usage(sender, "unwarn <player> [reason]", "remove a player's most recent warning");
+            usage(sender, "unwarn <player> [reason]", teacommontea.util.Lang.of("warn.remove.description"));
             return;
         }
         String reason = args.length > 1 ? String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length))
@@ -97,11 +96,10 @@ public final class WarnCommands extends CommandBase {
                 }
             }
             if (done == 0) {
-                err(sender, Colours.WARNING + "There are no active warnings to remove.");
+                err(sender, teacommontea.util.Lang.of("warn.remove.none"));
                 return;
             }
-            send(sender, Colours.BRAND + "You removed a warning from " + Colours.BRAND_ACCENT_SECONDARY + done
-                    + Colours.BRAND + " " + SauverFormat.pluralize(done, "player") + Colours.BRAND + ".");
+            send(sender, teacommontea.util.Lang.counted("warn.mass.removed", done, "count", done));
             return;
         }
 
@@ -117,8 +115,7 @@ public final class WarnCommands extends CommandBase {
             return;
         }
         int active = dao().activeWarnings(target, System.currentTimeMillis()).size();
-        send(sender, Colours.BRAND + "You removed a warning from " + Colours.BRAND_ACCENT_SECONDARY + bestName(target, args[0])
-                + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Active warnings: " + Colours.BRAND_ACCENT_SECONDARY + active);
+        send(sender, teacommontea.util.Lang.of("warn.removed", "name", bestName(target, args[0]), "active", active));
     }
 
     public void warnings(CommandSender sender, String[] args) {
@@ -126,14 +123,14 @@ public final class WarnCommands extends CommandBase {
         String name;
         if (args.length == 0) {
             if (!(sender instanceof Player p)) {
-                err(sender, Colours.WARNING + "Console must specify a player.");
+                err(sender, teacommontea.util.Lang.of("warn.console.needs.player"));
                 return;
             }
             target = p.getUniqueId();
             name = p.getName();
         } else {
             if (!sender.hasPermission("veritesauver.warnings")) {
-                err(sender, Colours.WARNING + "You may only view your own warnings.");
+                err(sender, teacommontea.util.Lang.of("warn.view.own.only"));
                 return;
             }
             target = resolve(args[0]);
@@ -145,15 +142,14 @@ public final class WarnCommands extends CommandBase {
         }
         List<Entry> active = dao().activeWarnings(target, System.currentTimeMillis());
         if (active.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + name + " " + Colours.BRAND + "has no active warnings.");
+            send(sender, teacommontea.util.Lang.of("warn.player.none", "name", name));
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + name + " " + Colours.BRAND_ACCENT_SECONDARY + "has " + Colours.BRAND_ACCENT_SECONDARY + active.size()
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "active " + SauverFormat.pluralize(active.size(), "warning") + ".");
+        send(sender, teacommontea.util.Lang.counted("warn.active.count", active.size(), "name", name, "count", active.size()));
         long now = System.currentTimeMillis();
         for (Entry e : active) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  #" + e.randomId() + " " + Colours.BRAND_ACCENT_SECONDARY + e.reason()
-                    + " " + Colours.BRAND_ACCENT_SECONDARY + "by " + Colours.BRAND_ACCENT_SECONDARY + e.executorName() + " " + Colours.BRAND_ACCENT_SECONDARY + "(expires in " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(e.remaining(now)) + Colours.BRAND_ACCENT_SECONDARY + ")");
+            raw(sender, teacommontea.util.Lang.of("warn.entry", "id", e.randomId(), "reason", e.reason(),
+                    "issuer", e.executorName(), "duration", SauverFormat.fancyTime(e.remaining(now))));
         }
     }
 
@@ -165,10 +161,9 @@ public final class WarnCommands extends CommandBase {
         int n = dao().activeWarnings(u, System.currentTimeMillis()).size();
         String name = bestName(u, args[0]);
         if (n == 0) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + name + " " + Colours.BRAND + "has no active warnings.");
+            send(sender, teacommontea.util.Lang.of("warn.player.none", "name", name));
         } else {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + name + " " + Colours.WARNING + "has " + Colours.BRAND_ACCENT_SECONDARY + n + " " + Colours.WARNING + "active "
-                    + SauverFormat.pluralize(n, "warning") + ". " + Colours.BRAND_ACCENT_SECONDARY + "See " + Colours.BRAND_ACCENT_SECONDARY + "/warnings " + name);
+            send(sender, teacommontea.util.Lang.counted("warn.check.count", n, "name", name, "count", n));
         }
     }
 
@@ -192,7 +187,7 @@ public final class WarnCommands extends CommandBase {
         long now = System.currentTimeMillis();
         List<Entry> all = dao().allActiveWarnings(now);
         if (all.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "There are no active warnings.");
+            send(sender, teacommontea.util.Lang.of("warn.list.empty"));
             return;
         }
         int page = args.length > 0 ? Math.max(1, parseIntOr(args[0], 1)) : 1;
@@ -200,13 +195,13 @@ public final class WarnCommands extends CommandBase {
         page = Math.min(page, pages);
         int from = (page - 1) * PAGE_SIZE;
         int to = Math.min(from + PAGE_SIZE, all.size());
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Active warnings (" + Colours.BRAND_ACCENT_SECONDARY + all.size()
-                + Colours.BRAND_ACCENT_SECONDARY + ") - page " + Colours.BRAND_ACCENT_SECONDARY + page + Colours.BRAND_ACCENT_SECONDARY + "/" + Colours.BRAND_ACCENT_SECONDARY + pages + Colours.BRAND_ACCENT_SECONDARY + ".");
+        send(sender, teacommontea.util.Lang.of("warn.list.header", "count", all.size(), "page", page, "pages", pages));
         for (int i = from; i < to; i++) {
             Entry e = all.get(i);
             String tname = e.uuid() != null ? bestName(e.uuid(), "?") : "?";
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  #" + e.randomId() + " " + Colours.BRAND_ACCENT_SECONDARY + tname + " " + Colours.BRAND_ACCENT_SECONDARY + "by " + Colours.BRAND_ACCENT_SECONDARY
-                    + e.executorName() + " " + Colours.BRAND_ACCENT_SECONDARY + "(expires " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(e.remaining(now)) + Colours.BRAND_ACCENT_SECONDARY + ") " + e.reason());
+            raw(sender, teacommontea.util.Lang.of("warn.list.entry", "id", e.randomId(), "name", tname,
+                    "issuer", e.executorName(), "duration", SauverFormat.fancyTime(e.remaining(now)),
+                    "reason", e.reason()));
         }
     }
 }

@@ -23,10 +23,10 @@ public final class SauverExempt {
         String t = type.id();
 
         if (!issuerConsole && isPermissionExempt(target, t) && !hasBypass(issuer, t)) {
-            return target.getName() + " is exempt from being " + pastTense(type) + ".";
+            return teacommontea.util.Lang.of("punish.exempt." + keyOf(type), "name", target.getName());
         }
         if (SauverConfig.useGroupWeights() && issuer instanceof Player p && !outranks(p, target)) {
-            return "You cannot " + type.id() + " a player of equal or higher rank.";
+            return teacommontea.util.Lang.of("punish.rank." + keyOf(type));
         }
         return null;
     }
@@ -79,12 +79,12 @@ public final class SauverExempt {
         }
     }
 
-    private static String pastTense(Entry.Type type) {
+    private static String keyOf(Entry.Type type) {
         return switch (type) {
-            case BAN -> "banned";
-            case MUTE -> "muted";
-            case WARNING -> "warned";
-            case KICK -> "kicked";
+            case BAN -> "ban";
+            case MUTE -> "mute";
+            case WARNING -> "warn";
+            case KICK -> "kick";
         };
     }
 }

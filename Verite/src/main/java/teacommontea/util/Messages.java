@@ -1,13 +1,13 @@
 package teacommontea.util;
 
-import net.md_5.bungee.api.chat.BaseComponent;
+import teacommontea.util.text.Span;
 import teacommontea.util.text.Text;
+
+import java.util.List;
 
 public final class Messages {
 
     public static final String DEFAULT_PREFIX = Colours.BRAND_ACCENT + "[" + Colours.BRAND + "Verité" + Colours.BRAND_ACCENT + "]<reset>";
-
-    public static final String DENY_PERMISSION = Colours.WARNING + "You do not have permission.";
 
     private static volatile String prefix = DEFAULT_PREFIX;
 
@@ -22,11 +22,11 @@ public final class Messages {
     public Messages(String ignored) {}
     public Messages() {}
 
-    public BaseComponent[] parse(String tagged) {
+    public List<Span> parse(String tagged) {
         return Text.parse(tagged);
     }
 
-    public BaseComponent[] prefixed(String tagged) {
+    public List<Span> prefixed(String tagged) {
         return Text.parse(prefix + " " + tagged);
     }
 }

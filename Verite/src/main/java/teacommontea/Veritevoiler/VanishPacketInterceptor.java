@@ -55,8 +55,8 @@ public final class VanishPacketInterceptor implements Listener {
         try {
             access = VanishPacketAccess.resolve();
         } catch (VanishPacketAccess.Unsupported u) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Vanish sound and particle muffling is unavailable. Vanished players stay hidden, but their ambient sounds and particles will leak.")
-                    + u.getMessage() + "); vanish still hides the player, only ambient sounds and particles leak.");
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("vanish.muffle.unavailable",
+                    "reason", u.getMessage())));
             return null;
         }
         VanishPacketInterceptor mi = new VanishPacketInterceptor(plugin, vanish, access,
@@ -134,7 +134,7 @@ public final class VanishPacketInterceptor implements Listener {
             }
             handlers.put(p.getUniqueId(), handler);
         } catch (Throwable t) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to attach the vanish muffler to " + p.getName() + ". Consider reporting this error.") + teacommontea.util.Trace.of(t));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("vanish.muffle.attach.failed", "name", p.getName())) + teacommontea.util.Trace.of(t));
         }
     }
 

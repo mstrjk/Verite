@@ -30,7 +30,10 @@ val proxyCompile: Configuration by configurations.creating
 val velocityAp: Configuration by configurations.creating
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT") {
+        exclude(group = "net.md-5", module = "bungeecord-chat")
+    }
+    compileOnly("net.md-5:bungeecord-chat:1.20-R0.2")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")

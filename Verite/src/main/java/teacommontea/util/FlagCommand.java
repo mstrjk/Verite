@@ -10,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 
 import teacommontea.util.VeriteFlags;
+import teacommontea.util.Lang;
 import teacommontea.util.Messages;
 
 public final class FlagCommand implements CommandExecutor, TabCompleter {
@@ -29,47 +30,52 @@ public final class FlagCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Messages m = messages;
         if (!sender.hasPermission(PERMISSION)) {
-            sender.spigot().sendMessage(m.prefixed(Messages.DENY_PERMISSION));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("deny.permission")));
             return true;
         }
         if (args.length == 0) {
-            sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Editable flags " + Colours.BRAND_ACCENT + "(" + VeriteFlags.names().size() + "):"));
+            teacommontea.util.text.Send.to(sender, m.prefixed(
+                    Lang.of("flag.list.header", "count", VeriteFlags.names().size())));
             for (String name : VeriteFlags.names()) {
-                sender.spigot().sendMessage(m.parse("  " + Colours.BRAND_ACCENT + "- " + Colours.BRAND_ACCENT_SECONDARY + name));
+                teacommontea.util.text.Send.to(sender, m.parse(Lang.of("flag.list.entry", "name", name)));
             }
-            sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + "Usage: " + Colours.BRAND_ACCENT + "/veriteflag <flag> [value]"));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("flag.usage")));
             return true;
         }
         VeriteFlags.Flag flag = VeriteFlags.flag(args[0]);
         if (flag == null) {
-            sender.spigot().sendMessage(m.prefixed(Colours.WARNING + "Unknown flag " + Colours.BRAND_ACCENT_SECONDARY + args[0] + Colours.WARNING + "."));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("flag.unknown", "name", args[0])));
             return true;
         }
         if (args.length == 1) {
             String current = VeriteFlags.get(plugin, flag);
-            sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + flag.name() + " " + Colours.BRAND_ACCENT + "= " + Colours.SUCCESS
-                    + (current == null ? Colours.WARNING + "unset" : current)));
-            sender.spigot().sendMessage(m.parse("  " + Colours.BRAND_ACCENT_SECONDARY + "accepts: " + Colours.BRAND_ACCENT_SECONDARY
-                    + String.join(" " + Colours.BRAND_ACCENT + "| " + Colours.BRAND_ACCENT_SECONDARY, VeriteFlags.suggest(flag))));
+            teacommontea.util.text.Send.to(sender, m.prefixed(current == null
+                    ? Lang.of("flag.value.unset", "name", flag.name())
+                    : Lang.of("flag.value", "name", flag.name(), "value", current)));
+            teacommontea.util.text.Send.to(sender, m.parse(Lang.of("flag.accepts", "options", accepted(flag))));
             return true;
         }
         String value = args[1];
         boolean ok = VeriteFlags.set(plugin, flag, value);
         if (!ok) {
-            sender.spigot().sendMessage(m.prefixed(Colours.WARNING + "Could not set " + Colours.BRAND_ACCENT_SECONDARY + flag.name()
-                    + Colours.WARNING + " to " + Colours.BRAND_ACCENT_SECONDARY + value + Colours.WARNING + ". Accepted: " + Colours.BRAND_ACCENT_SECONDARY
-                    + String.join(" " + Colours.BRAND_ACCENT + "| " + Colours.BRAND_ACCENT_SECONDARY, VeriteFlags.suggest(flag))));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("flag.set.failed",
+                    "name", flag.name(), "value", value, "options", accepted(flag))));
             return true;
         }
-        sender.spigot().sendMessage(m.prefixed(Colours.SUCCESS + "Set " + Colours.BRAND_ACCENT_SECONDARY + flag.name()
-                + " " + Colours.BRAND_ACCENT + "= " + Colours.BRAND_ACCENT_SECONDARY + value + Colours.BRAND_ACCENT + "."));
+        teacommontea.util.text.Send.to(sender, m.prefixed(
+                Lang.of("flag.set.ok", "name", flag.name(), "value", value)));
         if (flag.isConfigGate()) {
-            sender.spigot().sendMessage(m.parse("  " + Colours.BRAND_ACCENT_SECONDARY + "This change is instant and applies right away."));
+            teacommontea.util.text.Send.to(sender, m.parse(Lang.of("flag.applied.instant")));
         } else {
             onReload.run();
-            sender.spigot().sendMessage(m.parse("  " + Colours.BRAND_ACCENT_SECONDARY + "Applied live; the change is active now."));
+            teacommontea.util.text.Send.to(sender, m.parse(Lang.of("flag.applied.live")));
         }
         return true;
+    }
+
+    private static String accepted(VeriteFlags.Flag flag) {
+        return String.join(" " + Colours.BRAND_ACCENT + "| " + Colours.BRAND_ACCENT_SECONDARY,
+                VeriteFlags.suggest(flag));
     }
 
     @Override

@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,8 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 public final class FakeConnectCommand implements CommandExecutor, TabCompleter {
 
-    private static final String DEFAULT_JOIN = "&#FFFF55%player% joined the game";
-    private static final String DEFAULT_LEAVE = "&#FFFF55%player% left the game";
 
     private final Plugin plugin;
 
@@ -34,13 +30,12 @@ public final class FakeConnectCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         boolean leave = leave(command);
 
         if (!enabled()) {
-            send(sender, Colours.WARNING + "Fake join and leave messages are currently disabled.");
+            send(sender, Lang.of("fakeconnect.disabled"));
             return true;
         }
 
@@ -48,30 +43,25 @@ public final class FakeConnectCommand implements CommandExecutor, TabCompleter {
         String name;
         if (args.length == 0) {
             if (!(sender instanceof Player p)) {
-                send(sender, Colours.WARNING + "Console must name a player: " + Colours.BRAND_ACCENT_SECONDARY
-                        + "/" + command.getName() + " <player>");
+                send(sender, Lang.of("console.name.player", "command", command.getName()));
                 return true;
             }
             if (!p.hasPermission(base)) {
-                send(sender, Colours.WARNING + "You may not do that.");
+                send(sender, Lang.of("fakeconnect.deny.self"));
                 return true;
             }
             name = p.getName();
         } else {
             if (!sender.hasPermission(base + ".others")) {
-                send(sender, Colours.WARNING + "You may not fake a message for another player.");
+                send(sender, Lang.of("fakeconnect.deny.others"));
                 return true;
             }
             name = args[0];
         }
 
         String template = leave ? leaveMessage() : joinMessage();
-        BaseComponent[] line = TextComponent.fromLegacyText(
-                Colours.legacy(template.replace("%player%", name)));
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            p.spigot().sendMessage(line);
-        }
-        Bukkit.getConsoleSender().sendMessage(TextComponent.toLegacyText(line));
+        teacommontea.util.text.Send.broadcast(teacommontea.util.text.Legacy.parse(
+                Colours.legacy(template.replace("%player%", name))));
         return true;
     }
 
@@ -85,9 +75,8 @@ public final class FakeConnectCommand implements CommandExecutor, TabCompleter {
         return new ArrayList<>();
     }
 
-    @SuppressWarnings("deprecation")
     private void send(CommandSender to, String tagged) {
-        to.spigot().sendMessage(new Messages().prefixed(tagged));
+        teacommontea.util.text.Send.to(to, new Messages().prefixed(tagged));
     }
 
     private YamlConfiguration config() {
@@ -100,10 +89,10 @@ public final class FakeConnectCommand implements CommandExecutor, TabCompleter {
     }
 
     private String joinMessage() {
-        return config().getString("fake.connect.join.message", DEFAULT_JOIN);
+        return config().getString("fake.connect.join.message", Lang.of("fakeconnect.join"));
     }
 
     private String leaveMessage() {
-        return config().getString("fake.connect.leave.message", DEFAULT_LEAVE);
+        return config().getString("fake.connect.leave.message", Lang.of("fakeconnect.leave"));
     }
 }

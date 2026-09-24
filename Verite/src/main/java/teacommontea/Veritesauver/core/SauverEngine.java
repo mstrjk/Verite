@@ -78,7 +78,7 @@ public final class SauverEngine {
             now, now, Entry.GLOBAL_SCOPE, Entry.GLOBAL_SCOPE, 0, silent, false, false);
         dao().save(e);
 
-        online.kickPlayer(teacommontea.util.text.Text.toLegacy(renderTemplate("kick.template",
+        teacommontea.util.text.Kick.disconnect(online, teacommontea.util.text.Text.toLegacy(renderTemplate("kick.template",
                 "You have been kicked by @enforcer.\\n@reason", e, targetName, 0)));
         announce(e, targetName);
         SauverEvents.fireAdded(e);
@@ -155,7 +155,7 @@ public final class SauverEngine {
         if (type == Entry.Type.BAN) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (ip.equals(addressOf(p))) {
-                    p.kickPlayer(teacommontea.util.text.Text.toLegacy(banScreen(e)));
+                    teacommontea.util.text.Kick.disconnect(p, teacommontea.util.text.Text.toLegacy(banScreen(e)));
                 }
             }
         }
@@ -186,7 +186,7 @@ public final class SauverEngine {
             return;
         }
         if (e.type() == Entry.Type.BAN) {
-            online.kickPlayer(teacommontea.util.text.Text.toLegacy(banScreen(e)));
+            teacommontea.util.text.Kick.disconnect(online, teacommontea.util.text.Text.toLegacy(banScreen(e)));
         } else if (e.type() == Entry.Type.MUTE && !e.silent()) {
             msg().send(online, muteLine(e));
         }

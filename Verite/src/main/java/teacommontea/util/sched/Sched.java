@@ -39,7 +39,7 @@ public final class Sched {
                 b = (Backend) ctor.newInstance(pl);
             } catch (Throwable t) {
                 Throwable cause = t.getCause() != null ? t.getCause() : t;
-                pl.getLogger().severe(teacommontea.util.ConsoleColours.bad("Folia scheduler was detected but its backend could not be built. Verité cannot schedule safely on this server. Consider reporting this error.")
+                pl.getLogger().severe(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("sched.folia.failed"))
                         + cause + "); Verité cannot schedule safely on this server.");
                 throw cause instanceof RuntimeException re ? re : new RuntimeException(cause);
             }

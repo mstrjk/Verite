@@ -20,7 +20,7 @@ public final class SelfHeal {
         try {
             doHealSettings(plugin);
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped repairing settings.yml.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("config.heal.skipped")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -29,7 +29,7 @@ public final class SelfHeal {
         try {
             doMigrate(plugin);
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped updating your config to the current layout.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("config.migrate.skipped")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -37,18 +37,17 @@ public final class SelfHeal {
         try {
             File deployed = new File(plugin.getDataFolder(), "config.yml");
             if (!deployed.isFile()) return;
-            String bundledText = readResource(plugin, "config.yml");
-            if (bundledText == null) return;
             String deployedText = new String(Files.readAllBytes(deployed.toPath()), StandardCharsets.UTF_8);
+            String bundledText = bundledConfig(plugin, "config.yml", deployedText, false);
+            if (bundledText == null) return;
 
             String reason = malformedReason(bundledText, deployedText);
             if (reason == null) return;
 
             Files.write(deployed.toPath(), bundledText.getBytes(StandardCharsets.UTF_8));
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("The configuration file was malformed (" + reason
-                    + "). It has been reset to the default. Any custom edits were discarded."));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("config.malformed", "reason", reason)));
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped checking config.yml for problems.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("config.validate.skipped")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -57,7 +56,7 @@ public final class SelfHeal {
             new org.bukkit.configuration.file.YamlConfiguration()
                     .loadFromString(teacommontea.util.Yaml.protectForValidation(deployedText));
         } catch (Throwable t) {
-            return "invalid YAML";
+            return teacommontea.util.Lang.of("config.malformed.yaml");
         }
 
         List<String> deployedLines = Yaml.splitLines(deployedText);
@@ -66,14 +65,14 @@ public final class SelfHeal {
         Set<String> seen = new java.util.HashSet<>();
         for (Entry e : deployedEntries) {
             if (!seen.add(e.path)) {
-                return "duplicate key " + e.path.replace(SEP, '.');
+                return teacommontea.util.Lang.of("config.malformed.duplicate", "key", e.path.replace(SEP, '.'));
             }
         }
 
         Set<String> allowed = paths(parse(Yaml.splitLines(bundledText)));
         for (Entry e : deployedEntries) {
             if (!allowed.contains(e.path)) {
-                return "unknown key " + e.path.replace(SEP, '.');
+                return teacommontea.util.Lang.of("config.malformed.unknown", "key", e.path.replace(SEP, '.'));
             }
         }
         return null;
@@ -106,7 +105,7 @@ public final class SelfHeal {
             if (verb.equals("DROP") && tok.length >= 4
                     && tok[1].equalsIgnoreCase("H2") && tok[2].equalsIgnoreCase("COLUMN")) {
                 if (VeriteH2.isActive() && VeriteH2.active().remove(tok[3])) {
-                    plugin.getLogger().info("Config update: removed the unused '" + teacommontea.util.ConsoleColours.note(tok[3]) + "' data store.");
+                    plugin.getLogger().info(teacommontea.util.Lang.of("config.store.removed", "name", teacommontea.util.ConsoleColours.note(tok[3])));
                 }
                 continue;
             }
@@ -167,9 +166,9 @@ public final class SelfHeal {
             changed++;
         }
         if (changed > 0 || !deletedFiles.isEmpty()) {
-            plugin.getLogger().info("Config update: removed " + teacommontea.util.ConsoleColours.note(deletedFiles.size()) + " old file"
-                    + (deletedFiles.size() == 1 ? "" : "s") + " and rewrote " + changed
-                    + " file" + (changed == 1 ? "" : "s") + ".");
+            plugin.getLogger().info(teacommontea.util.Lang.counted("config.files.removed", deletedFiles.size(),
+                    "count", teacommontea.util.ConsoleColours.note(deletedFiles.size())));
+            plugin.getLogger().info(teacommontea.util.Lang.counted("config.files.rewrote", changed, "count", changed));
         }
     }
 
@@ -210,10 +209,10 @@ public final class SelfHeal {
         try {
             byte[] bytes = Files.readAllBytes(src.toPath());
             db.write(column, bytes);
-            plugin.getLogger().info("Config update: moved " + teacommontea.util.ConsoleColours.note(fileName) + " into the database.");
+            plugin.getLogger().info(teacommontea.util.Lang.of("config.moved.database", "file", teacommontea.util.ConsoleColours.note(fileName)));
             return true;
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Config update: failed to move " + fileName + " into the database.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("config.move.database.failed", "file", fileName)) + teacommontea.util.Trace.of(e));
             return false;
         }
     }
@@ -233,7 +232,7 @@ public final class SelfHeal {
             Files.move(from.toPath(), to.toPath());
             return true;
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Config update: failed to rename " + src + " to " + dst + ".") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("config.rename.failed", "from", src, "to", dst)) + teacommontea.util.Trace.of(e));
             return false;
         }
     }
@@ -269,7 +268,7 @@ public final class SelfHeal {
                 Files.move(from.toPath(), to.toPath());
                 return true;
             } catch (Exception e) {
-                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Config update: failed to move " + src + " to " + dst + ".") + teacommontea.util.Trace.of(e));
+                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("config.move.failed", "from", src, "to", dst)) + teacommontea.util.Trace.of(e));
                 return false;
             }
         }
@@ -383,10 +382,10 @@ public final class SelfHeal {
             File deployed = new File(plugin.getDataFolder(), name);
             if (!deployed.isFile()) continue;
 
-            String bundledText = readResource(plugin, name);
-            if (bundledText == null) continue;
-
             String deployedText = new String(Files.readAllBytes(deployed.toPath()), StandardCharsets.UTF_8);
+
+            String bundledText = bundledConfig(plugin, name, deployedText, true);
+            if (bundledText == null) continue;
 
             String baseText = readConfigBase(name);
             String rebuilt = baseText == null
@@ -398,8 +397,7 @@ public final class SelfHeal {
             if (rebuilt.equals(deployedText)) continue;
 
             Files.write(deployed.toPath(), rebuilt.getBytes(StandardCharsets.UTF_8));
-            plugin.getLogger().info(teacommontea.util.ConsoleColours.note(name)
-                    + " was brought up to date with the current configuration structure. Your option values were preserved.");
+            plugin.getLogger().info(teacommontea.util.Lang.of("config.updated", "file", teacommontea.util.ConsoleColours.note(name)));
         }
     }
 
@@ -634,7 +632,7 @@ public final class SelfHeal {
         try {
             doHealEve(plugin, eveConfigs);
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped repairing your filter boards.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("filter.heal.skipped")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -644,7 +642,7 @@ public final class SelfHeal {
         try {
             doOverwriteEve(plugin, eveConfigs);
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped replacing your filter boards.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("filter.overwrite.skipped")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -652,7 +650,7 @@ public final class SelfHeal {
         try {
             doReconcileEve(plugin, eveConfigs);
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint("Automatically skipped filter board updates.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("filter.update.skipped")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -700,15 +698,15 @@ public final class SelfHeal {
                 Files.write(deployed.toPath(), append.toString().getBytes(StandardCharsets.UTF_8),
                         java.nio.file.StandardOpenOption.APPEND);
                 preserved += ownerOnly.size();
-                plugin.getLogger().info("" + config + ": preserved " + teacommontea.util.ConsoleColours.note(ownerOnly.size())
-                        + " edited rule" + (ownerOnly.size() == 1 ? "" : "s") + " across the update.");
+                plugin.getLogger().info(teacommontea.util.Lang.counted("filter.rules.preserved", ownerOnly.size(),
+                        "file", config, "count", teacommontea.util.ConsoleColours.note(ownerOnly.size())));
             } finally {
                 backup.delete();
             }
         }
         if (preserved > 0) {
-            plugin.getLogger().info("Filter update: carried over " + teacommontea.util.ConsoleColours.note(preserved)
-                    + " of your edited rule" + (preserved == 1 ? "" : "s") + " in total.");
+            plugin.getLogger().info(teacommontea.util.Lang.counted("filter.rules.preserved.total", preserved,
+                    "count", teacommontea.util.ConsoleColours.note(preserved)));
         }
     }
 
@@ -749,8 +747,8 @@ public final class SelfHeal {
             rewritten++;
         }
         if (rewritten > 0) {
-            plugin.getLogger().info("Replaced " + teacommontea.util.ConsoleColours.note(rewritten) + " of your filter board" + (rewritten == 1 ? "" : "s")
-                    + " with the bundled versions, because auto.update.eve is on.");
+            plugin.getLogger().info(teacommontea.util.Lang.counted("filter.boards.replaced", rewritten,
+                    "count", teacommontea.util.ConsoleColours.note(rewritten)));
         }
     }
 
@@ -795,8 +793,8 @@ public final class SelfHeal {
 
             Files.write(deployed.toPath(), append.toString().getBytes(StandardCharsets.UTF_8),
                     java.nio.file.StandardOpenOption.APPEND);
-            plugin.getLogger().info("" + config + ": added " + teacommontea.util.ConsoleColours.note(missing.size())
-                    + " new rule" + (missing.size() == 1 ? "" : "s") + " from the current config.");
+            plugin.getLogger().info(teacommontea.util.Lang.counted("filter.rules.added", missing.size(),
+                    "file", config, "count", teacommontea.util.ConsoleColours.note(missing.size())));
         }
     }
 
@@ -901,6 +899,13 @@ public final class SelfHeal {
             sb.append(t.replaceAll("\\s+", " "));
         }
         return sb.toString();
+    }
+
+    private static String bundledConfig(Plugin plugin, String name, String deployedText, boolean report) {
+        String bundledText = readResource(plugin, name);
+        if (bundledText == null || !name.equals("config.yml")) return bundledText;
+        String code = report ? ConfigLang.read(plugin, deployedText) : ConfigLang.read(deployedText);
+        return ConfigLang.localise(plugin, bundledText, code);
     }
 
     private static String readResource(Plugin plugin, String name) {

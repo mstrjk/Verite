@@ -72,7 +72,7 @@ public final class PunishTree implements Listener, InventoryHolder {
     public void open(Player staff, UUID target, String targetName) {
         SauverTree tree = SauverTree.load();
         if (!tree.enabled()) {
-            msg().err(staff, Colours.WARNING + "The punishment tree is disabled.");
+            msg().err(staff, teacommontea.util.Lang.of("punishtree.disabled"));
             return;
         }
         View v = new View();
@@ -94,7 +94,7 @@ public final class PunishTree implements Listener, InventoryHolder {
         int pages = pageCount(online.size());
         pageIndex = Math.max(0, Math.min(pageIndex, pages - 1));
 
-        Inventory inv = Bukkit.createInventory(v, SIZE, title("Select a player"));
+        Inventory inv = teacommontea.util.text.Server.inventory(v, SIZE, title("Select a player"));
         v.inventory = inv;
         v.page = Page.PLAYERS;
         v.pageIndex = pageIndex;
@@ -113,14 +113,14 @@ public final class PunishTree implements Listener, InventoryHolder {
     private void openCategories(Player staff, View v, int pageIndex, SauverTree tree) {
         List<SauverTree.Category> allowed = allowedCategories(staff, tree);
         if (allowed.isEmpty()) {
-            msg().err(staff, Colours.WARNING + "You have no punishment categories available.");
+            msg().err(staff, teacommontea.util.Lang.of("punishtree.no.categories"));
             staff.closeInventory();
             return;
         }
         int pages = pageCount(allowed.size());
         pageIndex = Math.max(0, Math.min(pageIndex, pages - 1));
 
-        Inventory inv = Bukkit.createInventory(v, SIZE, title("Punish " + v.targetName));
+        Inventory inv = teacommontea.util.text.Server.inventory(v, SIZE, title("Punish " + v.targetName));
         v.inventory = inv;
         v.page = Page.CATEGORIES;
         v.pageIndex = pageIndex;
@@ -145,18 +145,18 @@ public final class PunishTree implements Listener, InventoryHolder {
         }
         SauverTree.Step step = cat.stepFor(offences(v.target, v.category));
 
-        Inventory inv = Bukkit.createInventory(v, SIZE, title("Punish " + v.targetName));
+        Inventory inv = teacommontea.util.text.Server.inventory(v, SIZE, title("Punish " + v.targetName));
         v.inventory = inv;
         v.page = Page.CONFIRM;
 
         frame(inv);
-        inv.setItem(11, named(Material.RED_CONCRETE, Colours.WARNING + "Cancel",
-                List.of(Colours.BRAND_ACCENT + "Close without punishing")));
-        inv.setItem(13, named(Material.LIME_CONCRETE, Colours.SUCCESS + "Confirm",
-                List.of(Colours.BRAND_ACCENT + "Apply " + Colours.WARNING + describe(step) + " " + Colours.BRAND_ACCENT + "to " + Colours.BRAND_ACCENT_SECONDARY + v.targetName,
-                        Colours.BRAND_ACCENT + "Category: " + Colours.BRAND_ACCENT_SECONDARY + pretty(v.category))));
-        inv.setItem(15, named(Material.LIGHT_BLUE_CONCRETE, Colours.BRAND + "Manual",
-                List.of(Colours.BRAND_ACCENT + "Choose the punishment yourself")));
+        inv.setItem(11, named(Material.RED_CONCRETE, teacommontea.util.Lang.of("punishtree.cancel"),
+                List.of(teacommontea.util.Lang.of("punishtree.cancel.lore"))));
+        inv.setItem(13, named(Material.LIME_CONCRETE, teacommontea.util.Lang.of("punishtree.confirm"),
+                List.of(teacommontea.util.Lang.of("punishtree.confirm.lore", "step", describe(step), "name", v.targetName),
+                        teacommontea.util.Lang.of("punishtree.confirm.category", "category", pretty(v.category)))));
+        inv.setItem(15, named(Material.LIGHT_BLUE_CONCRETE, teacommontea.util.Lang.of("punishtree.manual.item"),
+                List.of(teacommontea.util.Lang.of("punishtree.manual.lore"))));
         nav(inv, 0, 1, true);
         staff.openInventory(inv);
     }
@@ -293,7 +293,7 @@ public final class PunishTree implements Listener, InventoryHolder {
 
         SauverEngine.Result r = apply(staff, step, target, targetName, reason);
         if (r == null) {
-            msg().err(staff, Colours.WARNING + "That punishment could not be applied.");
+            msg().err(staff, teacommontea.util.Lang.of("punish.failed"));
             staff.closeInventory();
             return;
         }
@@ -303,8 +303,8 @@ public final class PunishTree implements Listener, InventoryHolder {
             return;
         }
         setOffences(target, v.category, prior + 1);
-        msg().send(staff, Colours.BRAND + "Punished " + Colours.BRAND_ACCENT_SECONDARY + targetName + " " + Colours.BRAND + "for " + Colours.BRAND_ACCENT_SECONDARY
-                + pretty(v.category) + " " + Colours.BRAND_ACCENT + "(" + Colours.WARNING + describe(step) + Colours.BRAND_ACCENT + ")");
+        msg().send(staff, teacommontea.util.Lang.of("punishtree.punished", "name", targetName,
+                "category", pretty(v.category), "step", describe(step)));
         staff.closeInventory();
     }
 
@@ -318,15 +318,15 @@ public final class PunishTree implements Listener, InventoryHolder {
     private void manualChat(Player staff, View v) {
         staff.closeInventory();
         String t = v.targetName;
-        String prompt = Colours.BRAND + "Choose the punishment for " + Colours.BRAND_ACCENT_SECONDARY + t + Colours.BRAND + ":<newline>"
-                + manualButton(Colours.WARN + "Warn", "run_command", "/warn " + t,
-                        Colours.BRAND_ACCENT_SECONDARY + "Warn " + Colours.WARN + t + " " + Colours.BRAND_ACCENT_SECONDARY + "now") + " "
-                + manualButton(Colours.MUTE + "Mute", "suggest_command", "/mute " + t + " [<days>] [<reason>]",
-                        Colours.BRAND_ACCENT_SECONDARY + "Prefill a mute for " + Colours.MUTE + t + Colours.BRAND_ACCENT_SECONDARY + ". " + Colours.BRAND_ACCENT + "Leave days blank for permanent.") + " "
-                + manualButton(Colours.WARNING + "Kick", "run_command", "/kick " + t,
-                        Colours.BRAND_ACCENT_SECONDARY + "Kick " + Colours.WARNING + t + " " + Colours.BRAND_ACCENT_SECONDARY + "now") + " "
-                + manualButton(Colours.DANGER + "Ban", "suggest_command", "/ban " + t + " [<days>] [<reason>]",
-                        Colours.BRAND_ACCENT_SECONDARY + "Prefill a ban for " + Colours.DANGER + t + Colours.BRAND_ACCENT_SECONDARY + ". " + Colours.BRAND_ACCENT + "Leave days blank for permanent.");
+        String prompt = teacommontea.util.Lang.of("punishtree.manual.prompt", "name", t) + "<newline>"
+                + manualButton(Colours.WARN + teacommontea.util.Lang.of("punishtree.button.warn"), "run_command", "/warn " + t,
+                        teacommontea.util.Lang.of("punishtree.manual.warn.hover", "name", t)) + " "
+                + manualButton(Colours.MUTE + teacommontea.util.Lang.of("punishtree.button.mute"), "suggest_command", "/mute " + t + " [<days>] [<reason>]",
+                        teacommontea.util.Lang.of("punishtree.manual.mute.hover", "name", t)) + " "
+                + manualButton(Colours.WARNING + teacommontea.util.Lang.of("punishtree.button.kick"), "run_command", "/kick " + t,
+                        teacommontea.util.Lang.of("punishtree.manual.kick.hover", "name", t)) + " "
+                + manualButton(Colours.DANGER + teacommontea.util.Lang.of("punishtree.button.ban"), "suggest_command", "/ban " + t + " [<days>] [<reason>]",
+                        teacommontea.util.Lang.of("punishtree.manual.ban.hover", "name", t));
         msg().send(staff, prompt);
     }
 
@@ -441,7 +441,7 @@ public final class PunishTree implements Listener, InventoryHolder {
         if (head.getItemMeta() instanceof SkullMeta sm) {
             sm.setOwningPlayer(p);
             teacommontea.util.text.Text.itemName(sm, Colours.BRAND_ACCENT_SECONDARY + p.getName());
-            teacommontea.util.text.Text.itemLore(sm, List.of(Colours.BRAND_ACCENT + "Click to punish this player"));
+            teacommontea.util.text.Text.itemLore(sm, List.of(teacommontea.util.Lang.of("punishtree.click.to.punish")));
             sm.addItemFlags(org.bukkit.inventory.ItemFlag.values());
             head.setItemMeta(sm);
         }
@@ -451,11 +451,11 @@ public final class PunishTree implements Listener, InventoryHolder {
     private ItemStack categoryIcon(UUID target, SauverTree.Category cat, SauverTree tree) {
         SauverTree.Step next = cat.stepFor(offences(target, cat.name()));
         List<String> lore = new ArrayList<>();
-        lore.add(Colours.BRAND_ACCENT + "Next: " + Colours.WARNING + describe(next));
-        lore.add(Colours.BRAND_ACCENT + "Offences so far: " + Colours.BRAND_ACCENT_SECONDARY + offences(target, cat.name()));
-        lore.add(Colours.BRAND_ACCENT + "Ladder:");
+        lore.add(teacommontea.util.Lang.of("punishtree.icon.next", "step", describe(next)));
+        lore.add(teacommontea.util.Lang.of("punishtree.icon.offences", "count", offences(target, cat.name())));
+        lore.add(teacommontea.util.Lang.of("punishtree.icon.ladder"));
         for (SauverTree.Step s : cat.ladder()) {
-            lore.add(Colours.BRAND_ACCENT + " - " + Colours.BRAND_ACCENT_SECONDARY + describe(s));
+            lore.add(teacommontea.util.Lang.of("punishtree.icon.ladder.entry", "step", describe(s)));
         }
         return named(cat.icon(), Colours.BRAND_ACCENT_SECONDARY + pretty(cat.name()), lore);
     }
@@ -472,12 +472,12 @@ public final class PunishTree implements Listener, InventoryHolder {
 
     private void nav(Inventory inv, int pageIndex, int pages, boolean canBack) {
         if (pageIndex > 0 || canBack) {
-            inv.setItem(BACK_SLOT, turtleArrow(Colours.BRAND + "Back"));
+            inv.setItem(BACK_SLOT, turtleArrow(teacommontea.util.Lang.of("punishtree.nav.back")));
         } else {
-            inv.setItem(BACK_SLOT, named(Material.BARRIER, Colours.WARNING + "<bold>CLOSE", List.of()));
+            inv.setItem(BACK_SLOT, named(Material.BARRIER, teacommontea.util.Lang.of("punishtree.nav.close"), List.of()));
         }
         if (pageIndex + 1 < pages) {
-            inv.setItem(NEXT_SLOT, turtleArrow(Colours.BRAND + "Next"));
+            inv.setItem(NEXT_SLOT, turtleArrow(teacommontea.util.Lang.of("punishtree.nav.next")));
         }
     }
 
@@ -528,13 +528,15 @@ public final class PunishTree implements Listener, InventoryHolder {
 
     private static String describe(SauverTree.Step step) {
         if (step == null) {
-            return "nothing";
+            return teacommontea.util.Lang.of("punishtree.step.none");
         }
         return switch (step.type()) {
-            case WARN -> "Warn";
-            case KICK -> "Kick";
-            case MUTE -> step.permanent() ? "Permanent mute" : "Mute " + SauverFormat.fancyTime(step.durationMillis());
-            case BAN -> step.permanent() ? "Permanent ban" : "Ban " + SauverFormat.fancyTime(step.durationMillis());
+            case WARN -> teacommontea.util.Lang.of("punishtree.step.warn");
+            case KICK -> teacommontea.util.Lang.of("punishtree.step.kick");
+            case MUTE -> step.permanent() ? teacommontea.util.Lang.of("punishtree.step.mute.permanent")
+                    : teacommontea.util.Lang.of("punishtree.step.mute", "duration", SauverFormat.fancyTime(step.durationMillis()));
+            case BAN -> step.permanent() ? teacommontea.util.Lang.of("punishtree.step.ban.permanent")
+                    : teacommontea.util.Lang.of("punishtree.step.ban", "duration", SauverFormat.fancyTime(step.durationMillis()));
         };
     }
 }

@@ -1,8 +1,5 @@
 package teacommontea.util.text;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,62 +19,64 @@ public final class Text {
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
-    public static BaseComponent[] parse(String tagged) {
-        return TagParser.parse(tagged);
+    public static List<Span> parse(String tagged) {
+        return Tags.parse(tagged);
     }
 
     public static void send(CommandSender to, String tagged) {
-        to.spigot().sendMessage(parse(tagged));
+        Send.to(to, parse(tagged));
     }
 
     public static void sendRaw(CommandSender to, String tagged) {
-        to.spigot().sendMessage(parse(tagged));
+        Send.to(to, parse(tagged));
     }
 
     public static void actionBar(Player to, String tagged) {
-        to.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, parse(tagged));
+        List<Span> spans = parse(tagged);
+        if (!Send.actionBar(to, spans)) {
+            Send.to(to, spans);
+        }
     }
 
-    @SuppressWarnings("deprecation")
     public static void itemName(ItemMeta meta, String tagged) {
-        meta.setDisplayName(toLegacy(tagged));
+        Items.name(meta, toLegacy(tagged));
     }
 
-    @SuppressWarnings("deprecation")
     public static void itemLore(ItemMeta meta, List<String> taggedLines) {
         List<String> out = new ArrayList<>(taggedLines.size());
         for (String line : taggedLines) out.add(toLegacy(line));
-        meta.setLore(out);
+        Items.lore(meta, out);
     }
 
-    @SuppressWarnings("deprecation")
     public static void kick(Player player, String tagged) {
-        player.kickPlayer(toLegacy(tagged));
+        Kick.disconnect(player, toLegacy(tagged));
     }
 
-    public static BaseComponent[] screen(String tagged) {
+    public static List<Span> screen(String tagged) {
         return parse(tagged);
     }
 
-    public static void broadcast(BaseComponent[] components) {
-        for (Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
-            p.spigot().sendMessage(components);
-        }
-        org.bukkit.Bukkit.getConsoleSender().sendMessage(TextComponent.toLegacyText(components));
+    public static void broadcast(List<Span> spans) {
+        Send.broadcast(spans);
     }
 
     public static String toLegacy(String tagged) {
-        return TextComponent.toLegacyText(parse(tagged));
+        return Legacy.of(parse(tagged));
     }
 
     public static String legacyFrom(Object serverComponent) {
         if (serverComponent == null) return "";
-        if (serverComponent instanceof BaseComponent[] arr) return TextComponent.toLegacyText(arr);
-        if (serverComponent instanceof BaseComponent one) return TextComponent.toLegacyText(one);
+        if (serverComponent instanceof List<?> list) {
+            List<Span> spans = new ArrayList<>();
+            for (Object o : list) {
+                if (o instanceof Span s) spans.add(s);
+            }
+            if (!spans.isEmpty()) return Legacy.of(spans);
+        }
         return String.valueOf(serverComponent);
     }
 
     public static String plainFrom(Object serverComponent) {
-        return net.md_5.bungee.api.ChatColor.stripColor(legacyFrom(serverComponent));
+        return Legacy.strip(legacyFrom(serverComponent));
     }
 }

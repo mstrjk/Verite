@@ -63,14 +63,14 @@ public final class SauverListeners implements Listener {
 
         Entry block = resolveLoginBan(uuid, ip, now);
         if (block != null) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
+            teacommontea.util.text.Server.disallow(event, AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
                     teacommontea.util.text.Text.toLegacy(SauverEngine.banScreen(block)));
             notifyBannedJoin(event.getName(), block, now);
             return;
         }
 
         if (SauverLockdown.active() && !hasOfflineBypass(uuid)) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+            teacommontea.util.text.Server.disallow(event, AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                     teacommontea.util.text.Text.toLegacy(Colours.WARNING + "<bold>Server locked down.</bold><newline><newline>" + Colours.BRAND_ACCENT_SECONDARY
                             + SauverLockdown.reason()));
         }
@@ -256,8 +256,9 @@ public final class SauverListeners implements Listener {
         if (alts.isEmpty()) {
             return;
         }
-        String head = (flagged ? Colours.WARNING + "⚠ " : Colours.BRAND_ACCENT_SECONDARY) + Colours.BRAND_ACCENT_SECONDARY + joining.getName()
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "shares an IP with: " + String.join(Colours.BRAND_ACCENT_SECONDARY + ", ", alts);
+        String head = teacommontea.util.Lang.of(flagged ? "login.dupeip.notice.flagged" : "login.dupeip.notice",
+                "name", joining.getName(),
+                "alts", String.join(Colours.BRAND_ACCENT_SECONDARY + ", ", alts));
         sauver.messages().notify("veritesauver.notify.dupeip_join", head);
     }
 
@@ -265,36 +266,29 @@ public final class SauverListeners implements Listener {
         if (brand == null || brand.equalsIgnoreCase("vanilla")) {
             return;
         }
-        String head = Colours.BRAND_ACCENT_SECONDARY + joining.getName()
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "joined using "
-                + "<hover:show_text:'" + clientDetails(joining, brand) + "'>"
-                + Colours.BRAND + prettyBrand(brand) + "</hover>"
-                + Colours.BRAND_ACCENT_SECONDARY + ".";
+        String head = teacommontea.util.Lang.of("login.client.brand", "name", joining.getName(),
+                "client", "<hover:show_text:'" + clientDetails(joining, brand) + "'>"
+                        + prettyBrand(brand) + "</hover>");
         sauver.messages().notify("veritesauver.notify.client_join", head);
     }
 
     private String clientDetails(Player p, String brand) {
         StringBuilder sb = new StringBuilder();
-        sb.append(Colours.BRAND_ACCENT_SECONDARY).append("Client: ")
-                .append(Colours.BRAND).append(prettyBrand(brand));
+        sb.append(teacommontea.util.Lang.of("login.client.label", "client", prettyBrand(brand)));
 
         int protocol = protocolOf(p);
         if (protocol > 0) {
-            sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Protocol: ")
-                    .append(Colours.BRAND).append(protocol);
+            sb.append("<newline>").append(teacommontea.util.Lang.of("login.protocol", "protocol", protocol));
         }
         String version = minecraftVersionOf(p);
         if (version != null && !version.isBlank()) {
-            sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Version: ")
-                    .append(Colours.BRAND).append(version);
+            sb.append("<newline>").append(teacommontea.util.Lang.of("login.version", "version", version));
         }
         String referrer = virtualHostOf(p);
         if (referrer != null && !referrer.isBlank()) {
-            sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Connected via: ")
-                    .append(Colours.BRAND).append(referrer);
+            sb.append("<newline>").append(teacommontea.util.Lang.of("login.connected.via", "host", referrer));
         }
-        sb.append("<newline>").append(Colours.BRAND_ACCENT_SECONDARY).append("Locale: ")
-                .append(Colours.BRAND).append(localeOf(p));
+        sb.append("<newline>").append(teacommontea.util.Lang.of("login.locale", "locale", localeOf(p)));
         return sb.toString().replace("'", "’");
     }
 
@@ -388,7 +382,7 @@ public final class SauverListeners implements Listener {
         } catch (Throwable t) {
             Sauver s = Sauver.instance();
             if (s != null && s.plugin() != null) {
-                s.plugin().getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to parse the mute command blacklist. Consider reporting this error.") + teacommontea.util.Trace.of(t));
+                s.plugin().getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("login.blacklist.failed")) + teacommontea.util.Trace.of(t));
             }
             blacklistCompiled = null;
         }

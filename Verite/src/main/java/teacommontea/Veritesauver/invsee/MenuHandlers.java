@@ -174,10 +174,10 @@ final class MenuHandlers {
             addEquip(menu, genContainer, 38, nms(InvSeeIcons.heldLabel()));
             addEquip(menu, genContainer, 39, nms(InvSeeIcons.offhandLabel()));
             addVehicle(menu, genContainer, 40);
-            addEquip(menu, genContainer, 41, nms(InvSeeIcons.armourLabel("Helmet")));
-            addEquip(menu, genContainer, 42, nms(InvSeeIcons.armourLabel("Chestplate")));
-            addEquip(menu, genContainer, 43, nms(InvSeeIcons.armourLabel("Pants")));
-            addEquip(menu, genContainer, 44, nms(InvSeeIcons.armourLabel("Boots")));
+            addEquip(menu, genContainer, 41, nms(InvSeeIcons.armourLabel(teacommontea.util.Lang.of("invsee.armour.helmet"))));
+            addEquip(menu, genContainer, 42, nms(InvSeeIcons.armourLabel(teacommontea.util.Lang.of("invsee.armour.chestplate"))));
+            addEquip(menu, genContainer, 43, nms(InvSeeIcons.armourLabel(teacommontea.util.Lang.of("invsee.armour.leggings"))));
+            addEquip(menu, genContainer, 44, nms(InvSeeIcons.armourLabel(teacommontea.util.Lang.of("invsee.armour.boots"))));
             addPlayerRows(menu);
         }
 

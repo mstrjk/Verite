@@ -39,7 +39,7 @@ public final class VeriteFilter {
         return EveEntry.selfHarmMessage();
     }
 
-    public static net.md_5.bungee.api.chat.BaseComponent[] blockNotice(FilterResult result, String message) {
+    public static java.util.List<teacommontea.util.text.Span> blockNotice(FilterResult result, String message) {
         return EveEntry.blockNotice(toEve(result), message);
     }
 

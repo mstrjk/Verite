@@ -174,7 +174,7 @@ public final class EveLexicon {
             langs = r.languageNames();
             TOTALS = r.languageTotals();
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to instantiate the tokeniser. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("filter.tokeniser.failed")) + teacommontea.util.Trace.of(e));
             closeReader();
             langs = new String[0];
             TOTALS = new long[0];

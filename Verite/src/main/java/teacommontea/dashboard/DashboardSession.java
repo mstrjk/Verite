@@ -89,10 +89,10 @@ public final class DashboardSession {
         String channelName = fields.get("channel");
 
         if (sessionKey == null) {
-            throw new IllegalStateException("The dashboard did not return a session key.");
+            throw new IllegalStateException(teacommontea.util.Lang.of("dashboard.session.key.missing"));
         }
         if (realtimeUrl == null || realtimeKey == null) {
-            throw new IllegalStateException("The dashboard did not return its relay details.");
+            throw new IllegalStateException(teacommontea.util.Lang.of("dashboard.relay.missing"));
         }
 
         this.nonce = newNonce();
@@ -103,7 +103,7 @@ public final class DashboardSession {
                 this::onFrame,
                 () -> {},
                 problem -> plugin.getLogger().warning(
-                        ConsoleColours.bad("Dashboard channel problem: " + problem)));
+                        ConsoleColours.bad(teacommontea.util.Lang.of("dashboard.channel.problem", "problem", problem))));
         channel.open();
 
         return sessionKey;
@@ -118,11 +118,9 @@ public final class DashboardSession {
 
     public void approve(String approvedBy) {
         trusted = true;
-        plugin.getLogger().info(ConsoleColours.ok("Dashboard approved by ")
-                + ConsoleColours.value(approvedBy)
-                + ConsoleColours.ok(" for ")
-                + ConsoleColours.value(ownerName)
-                + ConsoleColours.ok(". The browser now has control."));
+        plugin.getLogger().info(ConsoleColours.ok(teacommontea.util.Lang.of("dashboard.approved",
+                "name", ConsoleColours.value(approvedBy),
+                "owner", ConsoleColours.value(ownerName))));
         send(Json.object("type", "connected", "sessionKey", sessionKey));
     }
 
@@ -155,7 +153,7 @@ public final class DashboardSession {
             String offered = body.get("browserKey");
             if (offered == null || !DashboardKeys.verify(offered, msg, signature)) {
                 plugin.getLogger().warning(ConsoleColours.bad(
-                        "A dashboard browser failed its signature check and was refused."));
+                        teacommontea.util.Lang.of("dashboard.browser.refused")));
                 return;
             }
             browserKey = offered;
@@ -184,7 +182,7 @@ public final class DashboardSession {
 
         if (browserKey == null || !DashboardKeys.verify(browserKey, msg, signature)) {
             plugin.getLogger().warning(ConsoleColours.bad(
-                    "A dashboard message failed its signature check and was ignored."));
+                    teacommontea.util.Lang.of("dashboard.message.ignored")));
             return;
         }
 
@@ -200,13 +198,13 @@ public final class DashboardSession {
     private void handleChange(Map<String, String> body) {
         if (!trusted) {
             plugin.getLogger().warning(ConsoleColours.bad(
-                    "An unapproved dashboard tried to change something. It was refused."));
-            reply(body, false, "This connection has not been approved yet.");
+                    teacommontea.util.Lang.of("dashboard.unapproved.refused")));
+            reply(body, false, teacommontea.util.Lang.of("dashboard.not.approved"));
             return;
         }
         String changeKey = body.get("changeKey");
         if (changeKey == null) {
-            reply(body, false, "That change was missing its key.");
+            reply(body, false, teacommontea.util.Lang.of("dashboard.change.missing.key"));
             return;
         }
         teacommontea.util.sched.Sched.executeAsync(() -> {
@@ -220,8 +218,8 @@ public final class DashboardSession {
                 reply(body, false, e.getMessage());
             } catch (Exception e) {
                 plugin.getLogger().warning(ConsoleColours.bad(
-                        "Failed to apply a dashboard change.") + Trace.of(e));
-                reply(body, false, "That change could not be applied.");
+                        teacommontea.util.Lang.of("dashboard.change.failed.console")) + Trace.of(e));
+                reply(body, false, teacommontea.util.Lang.of("dashboard.change.failed"));
             }
         });
     }
@@ -241,7 +239,7 @@ public final class DashboardSession {
                         "result", Json.raw(result)
                 ));
             } catch (Exception e) {
-                reply(body, false, "That lookup failed.");
+                reply(body, false, teacommontea.util.Lang.of("dashboard.lookup.failed"));
             }
         };
 
@@ -269,7 +267,7 @@ public final class DashboardSession {
             }
         } catch (Exception e) {
             plugin.getLogger().warning(ConsoleColours.bad(
-                    "Failed to deliver information to the dashboard.") + Trace.of(e));
+                    teacommontea.util.Lang.of("dashboard.deliver.failed")) + Trace.of(e));
         }
     }
 
@@ -360,7 +358,7 @@ public final class DashboardSession {
         while ((n = in.read(buf)) > 0) {
             total += n;
             if (total > MAX_BYTES) {
-                throw new IllegalStateException("The dashboard reply was too large.");
+                throw new IllegalStateException(teacommontea.util.Lang.of("dashboard.reply.too.large"));
             }
             out.write(buf, 0, n);
         }

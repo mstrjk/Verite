@@ -41,33 +41,32 @@ public final class SauverChat {
 
     public void broadcast(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            msg().send(sender, Colours.BRAND_ACCENT_SECONDARY + "Usage: " + Colours.BRAND_ACCENT_SECONDARY + "/bc <message> " + Colours.BRAND_ACCENT_SECONDARY + "- broadcast a message to the server");
+            msg().send(sender, teacommontea.util.Lang.of("chat.broadcast.usage"));
             return;
         }
         String message = String.join(" ", args);
-        Bukkit.broadcastMessage(" ");
-        Bukkit.broadcastMessage(teacommontea.util.text.Text.toLegacy(Messages.prefix()
+        teacommontea.util.text.Server.broadcast(" ");
+        teacommontea.util.text.Server.broadcast(teacommontea.util.text.Text.toLegacy(Messages.prefix()
                 + Colours.BRAND_ACCENT_SECONDARY + ": " + Colours.BRAND_ACCENT_SECONDARY + message));
-        Bukkit.broadcastMessage(" ");
+        teacommontea.util.text.Server.broadcast(" ");
     }
 
     public void chatClear(CommandSender sender) {
         for (int i = 0; i < 300; i++) {
-            Bukkit.broadcastMessage(" ");
+            teacommontea.util.text.Server.broadcast(" ");
         }
         String who = sender instanceof Player p ? p.getName() : SauverEngine.CONSOLE_NAME;
-        Text.broadcast(SauverMessages.screen(Colours.BRAND_ACCENT + "[" + Colours.WARNING + "!" + Colours.BRAND_ACCENT + "] " + Colours.BRAND_ACCENT_SECONDARY + "Chat was cleared by "
-                + who + " " + Colours.BRAND_ACCENT + "[" + Colours.WARNING + "!" + Colours.BRAND_ACCENT + "]"));
+        Text.broadcast(SauverMessages.screen(teacommontea.util.Lang.of("chat.cleared", "who", who)));
     }
 
     public void chatMute(CommandSender sender) {
         boolean muted = isChatMuted();
         if (!muted) {
             chat().set("muted", true);
-            Text.broadcast(SauverMessages.screen(Colours.BRAND_ACCENT + "[" + Colours.WARNING + "!" + Colours.BRAND_ACCENT + "]" + Colours.WARNING + " Chat has been muted! " + Colours.BRAND_ACCENT + "[" + Colours.WARNING + "!" + Colours.BRAND_ACCENT + "]"));
+            Text.broadcast(SauverMessages.screen(teacommontea.util.Lang.of("chat.muted.broadcast")));
         } else {
             chat().set("muted", false);
-            Text.broadcast(SauverMessages.screen(Colours.BRAND_ACCENT + "[" + Colours.WARNING + "!" + Colours.BRAND_ACCENT + "]" + Colours.BRAND + " Chat has been unmuted! " + Colours.BRAND_ACCENT + "[" + Colours.WARNING + "!" + Colours.BRAND_ACCENT + "]"));
+            Text.broadcast(SauverMessages.screen(teacommontea.util.Lang.of("chat.unmuted.broadcast")));
         }
     }
 
@@ -80,7 +79,7 @@ public final class SauverChat {
             return false;
         }
         if (isChatMuted()) {
-            msg().err(p, Colours.WARNING + "You cannot speak while the chat is muted.");
+            msg().err(p, teacommontea.util.Lang.of("chat.muted.deny"));
             return true;
         }
         return false;
@@ -92,9 +91,9 @@ public final class SauverChat {
         if (arg1 == null) {
             if (chat().has("global")) {
                 chat().delete("global");
-                Text.broadcast(SauverMessages.screen(Messages.prefix() + " " + Colours.BRAND + "Slowmode has been disabled."));
+                Text.broadcast(SauverMessages.screen(Messages.prefix() + " " + teacommontea.util.Lang.of("slowmode.disabled")));
             } else {
-                msg().send(sender, Colours.BRAND_ACCENT_SECONDARY + "Usage: " + Colours.BRAND_ACCENT_SECONDARY + "/slowmode <duration> [player] " + Colours.BRAND_ACCENT_SECONDARY + "- set chat slowmode");
+                msg().send(sender, teacommontea.util.Lang.of("slowmode.usage"));
             }
             return;
         }
@@ -102,41 +101,40 @@ public final class SauverChat {
             if (targetName != null) {
                 OfflinePlayer t = Bukkit.getOfflinePlayer(targetName);
                 chat().delete("player." + t.getUniqueId());
-                msg().send(sender, Colours.BRAND + "You removed slowmode from " + Colours.BRAND_ACCENT_SECONDARY + targetName + Colours.BRAND + ".");
+                msg().send(sender, teacommontea.util.Lang.of("slowmode.removed.other", "name", targetName));
                 if (t.isOnline() && t.getPlayer() != null) {
-                    msg().send(t.getPlayer(), Colours.BRAND_ACCENT_SECONDARY + "Your personal slowmode has been removed.");
+                    msg().send(t.getPlayer(), teacommontea.util.Lang.of("slowmode.removed.self"));
                 }
             } else {
                 chat().delete("global");
-                Text.broadcast(SauverMessages.screen(Messages.prefix() + " " + Colours.BRAND + "Slowmode has been disabled."));
+                Text.broadcast(SauverMessages.screen(Messages.prefix() + " " + teacommontea.util.Lang.of("slowmode.disabled")));
             }
             return;
         }
         long millis = SauverDuration.parseShort(arg1);
         if (millis < 0) {
-            msg().err(sender, Colours.WARNING + "That duration is invalid. " + Colours.BRAND_ACCENT_SECONDARY + "Use " + Colours.BRAND_ACCENT_SECONDARY + "s" + Colours.BRAND_ACCENT_SECONDARY + ", " + Colours.BRAND_ACCENT_SECONDARY + "m" + Colours.BRAND_ACCENT_SECONDARY + ", "
-                    + Colours.BRAND_ACCENT_SECONDARY + "h" + Colours.BRAND_ACCENT_SECONDARY + ", or " + Colours.BRAND_ACCENT_SECONDARY + "d" + Colours.BRAND_ACCENT_SECONDARY + ". Example: " + Colours.BRAND_ACCENT_SECONDARY + "/slowmode 10s" + Colours.BRAND_ACCENT_SECONDARY + ".");
+            msg().err(sender, teacommontea.util.Lang.of("slowmode.duration.invalid"));
             return;
         }
         if (millis <= 0) {
-            msg().err(sender, Colours.WARNING + "The duration must be greater than " + Colours.BRAND_ACCENT_SECONDARY + "0" + Colours.WARNING + ".");
+            msg().err(sender, teacommontea.util.Lang.of("slowmode.duration.too.small"));
             return;
         }
         if (millis > MAX_SLOWMODE) {
-            msg().err(sender, Colours.WARNING + "Slowmode cannot be longer than " + Colours.BRAND_ACCENT_SECONDARY + "24h" + Colours.WARNING + ".");
+            msg().err(sender, teacommontea.util.Lang.of("slowmode.duration.too.large"));
             return;
         }
         if (targetName != null) {
             OfflinePlayer t = Bukkit.getOfflinePlayer(targetName);
             chat().set("player." + t.getUniqueId(), millis);
-            msg().send(sender, Colours.BRAND_ACCENT_SECONDARY + "You set a slowmode of " + Colours.BRAND_ACCENT_SECONDARY + arg1 + " " + Colours.BRAND_ACCENT_SECONDARY + "on " + Colours.BRAND_ACCENT_SECONDARY + targetName + Colours.BRAND_ACCENT_SECONDARY + ".");
+            msg().send(sender, teacommontea.util.Lang.of("slowmode.set.other", "duration", arg1, "name", targetName));
             if (t.isOnline() && t.getPlayer() != null) {
-                msg().send(t.getPlayer(), Colours.BRAND_ACCENT_SECONDARY + "You have been given a personal slowmode of " + Colours.BRAND_ACCENT_SECONDARY + arg1 + Colours.BRAND_ACCENT_SECONDARY + ".");
+                msg().send(t.getPlayer(), teacommontea.util.Lang.of("slowmode.set.self", "duration", arg1));
             }
         } else {
             chat().set("global", millis);
-            Text.broadcast(SauverMessages.screen(Messages.prefix()
-                    + " " + Colours.BRAND_ACCENT_SECONDARY + "Slowmode has been set to " + Colours.BRAND_ACCENT_SECONDARY + arg1 + Colours.BRAND_ACCENT_SECONDARY + "."));
+            Text.broadcast(SauverMessages.screen(Messages.prefix() + " "
+                    + teacommontea.util.Lang.of("slowmode.set.broadcast", "duration", arg1)));
         }
     }
 
@@ -155,8 +153,7 @@ public final class SauverChat {
                 long diff = System.currentTimeMillis() - last;
                 if (diff < sm) {
                     long remain = sm - diff;
-                    msg().err(p, Colours.WARNING + "Your slowmode is active. " + Colours.BRAND_ACCENT_SECONDARY + "Time remaining: " + Colours.BRAND_ACCENT_SECONDARY
-                            + SauverFormat.fancyTime(remain));
+                    msg().err(p, teacommontea.util.Lang.of("slowmode.active", "duration", SauverFormat.fancyTime(remain)));
                     return true;
                 }
             }

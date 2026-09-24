@@ -60,7 +60,7 @@ public final class DashboardChanges {
             case "gamemode" -> "set " + who + " to " + action.getOrDefault("value", "a gamemode");
             case "config-set" -> "set " + action.getOrDefault("path", "a setting")
                     + " to " + action.getOrDefault("value", "a value");
-            case "config" -> "replaced config.yml";
+            case "config" -> teacommontea.util.Lang.of("dashboard.config.replaced");
             default -> kind;
         };
 
@@ -94,7 +94,7 @@ public final class DashboardChanges {
         try {
             failure = done.get(15, java.util.concurrent.TimeUnit.SECONDS);
         } catch (java.util.concurrent.TimeoutException e) {
-            throw new IllegalStateException("The server did not apply that change in time.");
+            throw new IllegalStateException(teacommontea.util.Lang.of("dashboard.change.timeout"));
         }
 
         if (failure != null) {
@@ -124,13 +124,13 @@ public final class DashboardChanges {
     private static void punish(Map<String, String> action) {
         Entry.Type type = parseType(action.get("type"));
         if (type == null) {
-            throw new IllegalArgumentException("That punishment type is not recognised.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.punish.type.unknown"));
         }
 
         UUID target = parseUuid(action.get("uuid"));
         String ip = action.get("ip");
         if (target == null && (ip == null || ip.isBlank())) {
-            throw new IllegalArgumentException("A punishment needs a player or an IP.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.punish.target.missing"));
         }
 
         SauverEngine.Result result = SauverEngine.issue(
@@ -153,7 +153,7 @@ public final class DashboardChanges {
         Entry.Type type = parseType(action.get("type"));
         UUID target = parseUuid(action.get("uuid"));
         if (type == null || target == null) {
-            throw new IllegalArgumentException("A pardon needs a type and a player.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.pardon.incomplete"));
         }
 
         fail(SauverEngine.pardon(
@@ -162,14 +162,14 @@ public final class DashboardChanges {
                 action.getOrDefault("name", "unknown"),
                 parseUuid(action.get("byUuid")),
                 action.getOrDefault("byName", "Dashboard"),
-                action.getOrDefault("reason", "Removed from the dashboard")
+                action.getOrDefault("reason", teacommontea.util.Lang.of("dashboard.pardon.source"))
         ));
     }
 
     private static void vanish(Map<String, String> action) {
         UUID target = parseUuid(action.get("uuid"));
         if (target == null) {
-            throw new IllegalArgumentException("A vanish change needs a player.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.vanish.target.missing"));
         }
         boolean on = Boolean.parseBoolean(action.getOrDefault("value", "false"));
         if (!DashboardState.vanish(target, on)) {
@@ -180,23 +180,23 @@ public final class DashboardChanges {
     private static void gamemode(Map<String, String> action) {
         UUID target = parseUuid(action.get("uuid"));
         if (target == null) {
-            throw new IllegalArgumentException("A gamemode change needs a player.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.gamemode.target.missing"));
         }
         if (!DashboardState.gamemode(target, action.get("value"))) {
-            throw new IllegalArgumentException("That player is offline, or that gamemode is unknown.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.gamemode.unknown"));
         }
     }
 
     private static void kick(Map<String, String> action) {
         UUID target = parseUuid(action.get("uuid"));
         if (target == null) {
-            throw new IllegalArgumentException("A kick needs a player.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.kick.target.missing"));
         }
 
         fail(SauverEngine.kick(
                 target,
                 action.getOrDefault("name", "unknown"),
-                action.getOrDefault("reason", "Kicked from the dashboard"),
+                action.getOrDefault("reason", teacommontea.util.Lang.of("dashboard.kick.source")),
                 parseUuid(action.get("byUuid")),
                 action.getOrDefault("byName", "Dashboard"),
                 Boolean.parseBoolean(action.getOrDefault("silent", "false"))
@@ -207,7 +207,7 @@ public final class DashboardChanges {
         String path = action.get("path");
         String value = action.get("value");
         if (path == null || value == null) {
-            throw new IllegalArgumentException("A config change needs a key and a value.");
+            throw new IllegalArgumentException(teacommontea.util.Lang.of("dashboard.config.incomplete"));
         }
         if (!DashboardConfig.set(plugin, path, value)) {
             throw new IllegalArgumentException("There is no config key called " + path + ".");
@@ -236,7 +236,7 @@ public final class DashboardChanges {
     private static void reload(Plugin plugin) {
         teacommontea.util.sched.Sched.executeGlobal(() -> {
             plugin.getLogger().info(ConsoleColours.ok(
-                    "The dashboard changed the configuration. Reloading..."));
+                    teacommontea.util.Lang.of("dashboard.config.reloading")));
             try {
                 plugin.getServer().dispatchCommand(
                         plugin.getServer().getConsoleSender(), "verite reload");

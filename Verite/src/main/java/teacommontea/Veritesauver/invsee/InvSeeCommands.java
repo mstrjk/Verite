@@ -28,12 +28,12 @@ public final class InvSeeCommands {
 
     private void run(CommandSender sender, String[] args, boolean ender) {
         if (!(sender instanceof Player spectator)) {
-            Text.send(sender, (Colours.WARNING + "This command can only be used by players!"));
+            Text.send(sender, teacommontea.util.Lang.of("invsee.players.only"));
             return;
         }
         if (args.length == 0 || args[0].isEmpty()) {
             Text.send(spectator, (
-                    Colours.WARNING + "Usage: /" + (ender ? "endersee" : "invsee") + " <username|uuid>"));
+                    teacommontea.util.Lang.of("invsee.usage", "command", ender ? "endersee" : "invsee")));
             return;
         }
         String raw = args[0];
@@ -54,15 +54,15 @@ public final class InvSeeCommands {
 
         future.whenComplete((result, error) -> {
             if (error != null) {
-                Text.send(spectator, (Colours.WARNING + "An error occurred while trying to open "
-                        + escape(raw) + "'s " + (ender ? "ender chest." : "inventory.")));
-                core.plugin().getLogger().log(java.util.logging.Level.SEVERE, "InvSee open failed", error);
+                Text.send(spectator, teacommontea.util.Lang.of("invsee.open.error", "name", escape(raw),
+                        "what", teacommontea.util.Lang.of(ender ? "invsee.what.enderchest" : "invsee.what.inventory")));
+                core.plugin().getLogger().log(java.util.logging.Level.SEVERE, teacommontea.util.Lang.of("invsee.open.failed"), error);
                 return;
             }
             if (result.isSuccess()) {
                 return;
             }
-            Text.send(spectator, (Colours.WARNING + escape(message(result.reason(), raw, ender))));
+            Text.send(spectator, message(result.reason(), escape(raw), ender));
         });
     }
 
@@ -71,14 +71,15 @@ public final class InvSeeCommands {
     }
 
     private static String message(SpectateResult.Reason reason, String raw, boolean ender) {
-        String what = ender ? "ender chest" : "inventory";
+        String what = teacommontea.util.Lang.of(ender ? "invsee.what.enderchest" : "invsee.what.inventory");
         return switch (reason) {
-            case TARGET_DOES_NOT_EXIST -> "Player " + raw + " does not exist.";
-            case UNKNOWN_TARGET -> "Player " + raw + " has not logged onto the server yet.";
-            case TARGET_EXEMPT -> "Player " + raw + " is exempted from being spectated.";
-            case OFFLINE_SUPPORT_DISABLED -> "Spectating offline players' " + what + "s is disabled.";
-            case OPEN_CANCELLED -> "Another plugin prevented you from spectating " + raw + "'s " + what + ".";
-            default -> "Could not open " + raw + "'s " + what + " for an unknown reason.";
+            case TARGET_DOES_NOT_EXIST -> teacommontea.util.Lang.of("invsee.player.unknown", "name", raw);
+            case UNKNOWN_TARGET -> teacommontea.util.Lang.of("invsee.player.never.joined", "name", raw);
+            case TARGET_EXEMPT -> teacommontea.util.Lang.of("invsee.player.exempt", "name", raw);
+            case OFFLINE_SUPPORT_DISABLED -> teacommontea.util.Lang.of(ender
+                    ? "invsee.offline.disabled.enderchest" : "invsee.offline.disabled.inventory");
+            case OPEN_CANCELLED -> teacommontea.util.Lang.of("invsee.blocked.by.plugin", "name", raw, "what", what);
+            default -> teacommontea.util.Lang.of("invsee.open.unknown", "name", raw, "what", what);
         };
     }
 }

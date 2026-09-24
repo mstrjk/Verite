@@ -33,15 +33,14 @@ public final class GeoCommands extends CommandBase {
             ip = ips.isEmpty() ? null : ips.get(0);
         }
         if (ip == null) {
-            err(sender, Colours.WARNING + "No IP on record for that player.");
+            err(sender, teacommontea.util.Lang.of("geo.no.ip"));
             return;
         }
         String country = SauverGeoIp.country(ip);
         if (country == null) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "GeoIP for " + Colours.BRAND_ACCENT_SECONDARY + ip
-                    + Colours.BRAND_ACCENT_SECONDARY + ": unavailable (no GeoLite2 database configured).");
+            send(sender, teacommontea.util.Lang.of("geo.unavailable", "ip", ip));
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "GeoIP for " + Colours.BRAND_ACCENT_SECONDARY + ip + Colours.BRAND_ACCENT_SECONDARY + ": " + Colours.BRAND_ACCENT_SECONDARY + country);
+        send(sender, teacommontea.util.Lang.of("geo.result", "ip", ip, "country", country));
     }
 }

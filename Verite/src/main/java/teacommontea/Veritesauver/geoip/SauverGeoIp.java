@@ -29,7 +29,7 @@ public final class SauverGeoIp {
 
         teacommontea.util.sched.Sched.executeAsync(() -> {
             if (download(db)) {
-                log().info(teacommontea.util.ConsoleColours.ok("GeoLite2 country database downloaded."));
+                log().info(teacommontea.util.ConsoleColours.ok(teacommontea.util.Lang.of("geo.database.downloaded")));
                 bind(db);
             }
         });
@@ -52,7 +52,7 @@ public final class SauverGeoIp {
             java.nio.file.Files.move(tmp.toPath(), db.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (Throwable t) {
-            log().warning(teacommontea.util.ConsoleColours.bad("Failed to download the GeoLite2 database. IP-detection is disabled.")
+            log().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("geo.database.failed"))
                     + teacommontea.util.Trace.of(t));
             return false;
         }
@@ -62,10 +62,10 @@ public final class SauverGeoIp {
         try {
             Class<?> readerClass = Class.forName("com.maxmind.db.Reader");
             reader = readerClass.getConstructor(File.class).newInstance(db);
-            log().info(teacommontea.util.ConsoleColours.ok("Enabled IP-detection."));
+            log().info(teacommontea.util.ConsoleColours.ok(teacommontea.util.Lang.of("geo.detection.enabled")));
         } catch (Throwable t) {
             reader = null;
-            log().warning(teacommontea.util.ConsoleColours.bad("Failed to enable IP-detection.") + teacommontea.util.Trace.of(t));
+            log().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("geo.detection.failed")) + teacommontea.util.Trace.of(t));
         }
     }
 

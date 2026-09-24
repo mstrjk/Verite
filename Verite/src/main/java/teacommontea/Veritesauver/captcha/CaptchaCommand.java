@@ -2,6 +2,7 @@ package teacommontea.veritesauver.captcha;
 
 import teacommontea.util.Colours;
 import teacommontea.util.Complete;
+import teacommontea.util.Lang;
 import teacommontea.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -29,16 +30,16 @@ public final class CaptchaCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Messages m = messages;
         if (!sender.hasPermission(PERMISSION)) {
-            sender.spigot().sendMessage(m.prefixed(Messages.DENY_PERMISSION));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("deny.permission")));
             return true;
         }
         if (args.length < 2) {
-            sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + "Usage: " + Colours.BRAND_ACCENT_SECONDARY + "/captcha <standard|detailed> <player|*>"));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("captcha.usage")));
             return true;
         }
         String mode = args[0].toLowerCase();
         if (!mode.equals("standard") && !mode.equals("detailed")) {
-            sender.spigot().sendMessage(m.prefixed(Colours.WARNING + "Invalid mode. Use " + Colours.BRAND_ACCENT_SECONDARY + "standard " + Colours.WARNING + "or " + Colours.BRAND_ACCENT_SECONDARY + "detailed" + Colours.WARNING + "."));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("captcha.mode.invalid")));
             return true;
         }
         CaptchaKind kind = mode.equals("detailed") ? CaptchaKind.DETAILED : CaptchaKind.STANDARD;
@@ -50,21 +51,23 @@ public final class CaptchaCommand implements CommandExecutor, TabCompleter {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (captcha.challenge(p, kind, source)) sent++;
             }
-            sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Sent a " + mode + " captcha to " + Colours.BRAND_ACCENT_SECONDARY + sent + " " + Colours.BRAND + "eligible player(s)."));
+            teacommontea.util.text.Send.to(sender, m.prefixed(
+                    Lang.counted("captcha.sent.bulk", sent, "mode", mode, "count", sent)));
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(targetArg);
         if (target == null || !target.isOnline()) {
-            sender.spigot().sendMessage(m.prefixed(Colours.WARNING + "That player is not online."));
+            teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("player.offline")));
             return true;
         }
         if (!captcha.challenge(target, kind, source)) {
-            sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + target.getName()
-                    + " " + Colours.WARNING + "could not be challenged (exempt or already has one open)."));
+            teacommontea.util.text.Send.to(sender, m.prefixed(
+                    Lang.of("captcha.challenge.refused", "name", target.getName())));
             return true;
         }
-        sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Sent a " + mode + " captcha to " + Colours.BRAND_ACCENT_SECONDARY + target.getName() + Colours.BRAND + "."));
+        teacommontea.util.text.Send.to(sender, m.prefixed(
+                Lang.of("captcha.sent.player", "mode", mode, "name", target.getName())));
         return true;
     }
 

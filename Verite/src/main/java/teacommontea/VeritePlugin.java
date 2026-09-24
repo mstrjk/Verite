@@ -80,7 +80,7 @@ public final class VeritePlugin extends JavaPlugin
     private final Messages messages = new Messages();
 
     private void msg(CommandSender to, String tagged) {
-        to.spigot().sendMessage(messages.prefixed(tagged));
+        teacommontea.util.text.Send.to(to, messages.prefixed(tagged));
     }
 
     private java.util.logging.Logger logger;
@@ -104,12 +104,12 @@ public final class VeritePlugin extends JavaPlugin
         try {
             teacommontea.util.VeriteH2.open(databaseMode());
         } catch (Throwable t) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Verité's H2 database could not be opened. Disabling Verité. "
-                    + "Consider reporting this error.") + teacommontea.util.Trace.of(t));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of("plugin.database.failed")) + teacommontea.util.Trace.of(t));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
+        loadLanguage();
         teacommontea.util.SelfHeal.migrate(this);
 
         for (String legacy : new String[] {"config/sieve_settings.yml",
@@ -124,23 +124,20 @@ public final class VeritePlugin extends JavaPlugin
         resolveChannel();
 
         if (!ensureFilter()) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate filter boards. Disabling Verité. "
-                    + "Verité will retry the download on next start."));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of("plugin.filter.missing")));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         if (!ensureNative()) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate native library. Disabling Verité. "
-                    + "Verité will retry the download on next start."));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of("plugin.native.missing")));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         teacommontea.veritedoux.util.Eve.configureNativeDir(new File(filterDir(), ".native"));
 
         if (!ensureTokenizers()) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Failed to locate tokenisers. Disabling Verité. "
-                    + "Verité will retry the download on next start."));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of("plugin.tokenisers.missing")));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -149,6 +146,7 @@ public final class VeritePlugin extends JavaPlugin
 
         teacommontea.util.SelfHeal.validate(this);
         teacommontea.util.SelfHeal.healSettings(this);
+        loadLanguage();
         readComponentToggles();
 
         bringUpFilter();
@@ -175,13 +173,13 @@ public final class VeritePlugin extends JavaPlugin
         }
         if (sauverLoaded && sauver != null) {
             teacommontea.veritesauver.markers.ShowMarkers showBarriers = new teacommontea.veritesauver.markers.ShowMarkers(
-                    this, sauver.store(), org.bukkit.Material.BARRIER, "barriers", "showbarriers", "veritedoux.showbarriers");
+                    this, sauver.store(), org.bukkit.Material.BARRIER, teacommontea.util.Lang.of("plugin.marker.barriers"), "showbarriers", "veritedoux.showbarriers");
             registerCommand("showbarriers", showBarriers);
             Bukkit.getPluginManager().registerEvents(showBarriers, this);
             showBarriers.resumeAll();
 
             teacommontea.veritesauver.markers.ShowMarkers showLight = new teacommontea.veritesauver.markers.ShowMarkers(
-                    this, sauver.store(), org.bukkit.Material.LIGHT, "light blocks", "showlight", "veritedoux.showlight");
+                    this, sauver.store(), org.bukkit.Material.LIGHT, teacommontea.util.Lang.of("plugin.marker.light"), "showlight", "veritedoux.showlight");
             registerCommand("showlight", showLight);
             Bukkit.getPluginManager().registerEvents(showLight, this);
             showLight.resumeAll();
@@ -208,7 +206,7 @@ public final class VeritePlugin extends JavaPlugin
         try {
             this.skript = teacommontea.skript.VeriteSkript.enable(this);
         } catch (Throwable t) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Skript integration failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(t));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.skript.failed")) + teacommontea.util.Trace.of(t));
             this.skript = null;
         }
     }
@@ -218,7 +216,7 @@ public final class VeritePlugin extends JavaPlugin
             this.vanish = teacommontea.veritevoiler.Vanish.enable(this);
             this.vanishLoaded = true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Veritévoiler (Vanish) failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.vanish.failed")) + teacommontea.util.Trace.of(e));
             this.vanish = null;
             this.vanishLoaded = false;
         }
@@ -367,10 +365,10 @@ public final class VeritePlugin extends JavaPlugin
         String latest = channelDigest(FILTER_ASSET);
         if (latest == null) {
             if (present) {
-                getLogger().info(teacommontea.util.ConsoleColours.faint("Unable to locate supported release version. Falling back to the filter boards on disk."));
+                getLogger().info(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("bundle.filter.fallback")));
                 return true;
             }
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Unable to locate filter boards and no supported release is available."));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.filter.unavailable")));
             return false;
         }
 
@@ -386,7 +384,7 @@ public final class VeritePlugin extends JavaPlugin
             try {
                 downloadTo(channelUrl(FILTER_ASSET), tmp);
             } catch (Exception e) {
-                getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to download filter boards. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+                getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.filter.download.failed")) + teacommontea.util.Trace.of(e));
                 return present;
             }
             if (present) {
@@ -400,10 +398,10 @@ public final class VeritePlugin extends JavaPlugin
                 teacommontea.util.SelfHeal.reconcileEve(this, SIEVE_CONFIGS);
             }
             recordBundle("filter", latest);
-            getLogger().info(teacommontea.util.ConsoleColours.ok("Filter boards installed."));
+            getLogger().info(teacommontea.util.ConsoleColours.ok(teacommontea.util.Lang.of("bundle.filter.installed")));
             return true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to extract filter boards. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.filter.extract.failed")) + teacommontea.util.Trace.of(e));
             return present;
         } finally {
             tmp.delete();
@@ -421,7 +419,7 @@ public final class VeritePlugin extends JavaPlugin
                 java.nio.file.Files.copy(deployed.toPath(), backup.toPath(),
                         java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             } catch (Exception e) {
-                getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to back up " + config + " before update. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+                getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.backup.failed", "file", config)) + teacommontea.util.Trace.of(e));
             }
         }
     }
@@ -432,15 +430,14 @@ public final class VeritePlugin extends JavaPlugin
             String version = getDescription().getVersion();
             channel = teacommontea.util.ReleaseChannel.resolve(json, version, this::fetchText);
             if (channel != null) {
-                getLogger().info("Using release " + teacommontea.util.ConsoleColours.note(channel.tag())
-                        + " (supported by build " + version + ").");
+                getLogger().info(teacommontea.util.Lang.of("bundle.release.using",
+                        "version", teacommontea.util.ConsoleColours.note(channel.tag()), "build", version));
             } else {
-                getLogger().warning(teacommontea.util.ConsoleColours.bad("No published release supports build ")
-                        + version + "; using bundles on disk if present.");
+                getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.release.unsupported", "build", version)));
             }
         } catch (Exception e) {
             channel = null;
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to fetch releases.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.release.fetch.failed")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -477,10 +474,10 @@ public final class VeritePlugin extends JavaPlugin
         String latest = channelDigest(NATIVE_ASSET);
         if (latest == null) {
             if (present) {
-                getLogger().info(teacommontea.util.ConsoleColours.faint("Unable to locate supported release version. Falling back to the native library on disk."));
+                getLogger().info(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("bundle.native.fallback")));
                 return true;
             }
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Unable to locate native library and no supported release is available."));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.native.unavailable")));
             return false;
         }
 
@@ -498,7 +495,7 @@ public final class VeritePlugin extends JavaPlugin
             try {
                 downloadTo(channelUrl(NATIVE_ASSET), tmp);
             } catch (Exception e) {
-                getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to download native library. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+                getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.native.download.failed")) + teacommontea.util.Trace.of(e));
                 return present;
             }
             dir.mkdirs();
@@ -507,10 +504,10 @@ public final class VeritePlugin extends JavaPlugin
                 throw new java.io.IOException("native bundle did not contain .native");
             }
             recordBundle("native", latest);
-            getLogger().info(teacommontea.util.ConsoleColours.ok("Native library installed."));
+            getLogger().info(teacommontea.util.ConsoleColours.ok(teacommontea.util.Lang.of("bundle.native.installed")));
             return true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to extract native library. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.native.extract.failed")) + teacommontea.util.Trace.of(e));
             deleteRecursive(nativeDir);
             return false;
         } finally {
@@ -526,10 +523,10 @@ public final class VeritePlugin extends JavaPlugin
         String latest = channelDigest(TOKENIZER_ASSET);
         if (latest == null) {
             if (present) {
-                getLogger().info(teacommontea.util.ConsoleColours.faint("Unable to locate supported release version. Falling back to the tokenisers on disk."));
+                getLogger().info(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("bundle.tokenisers.fallback")));
                 return true;
             }
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Unable to locate tokenisers and no supported release is available."));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.tokenisers.unavailable")));
             return false;
         }
 
@@ -547,7 +544,7 @@ public final class VeritePlugin extends JavaPlugin
             try {
                 downloadTo(channelUrl(TOKENIZER_ASSET), tmp);
             } catch (Exception e) {
-                getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to download tokenisers. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+                getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.tokenisers.download.failed")) + teacommontea.util.Trace.of(e));
                 return present;
             }
             filterDir().mkdirs();
@@ -556,10 +553,10 @@ public final class VeritePlugin extends JavaPlugin
                 throw new java.io.IOException("bundle did not contain .tokenizers/tokenizer.vlex9");
             }
             recordBundle("tokenizers", latest);
-            getLogger().info(teacommontea.util.ConsoleColours.ok("Tokenisers installed."));
+            getLogger().info(teacommontea.util.ConsoleColours.ok(teacommontea.util.Lang.of("bundle.tokenisers.installed")));
             return true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to extract tokenisers. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.tokenisers.extract.failed")) + teacommontea.util.Trace.of(e));
             deleteRecursive(tokDir);
             return false;
         } finally {
@@ -583,6 +580,21 @@ public final class VeritePlugin extends JavaPlugin
         }
     }
 
+    private void loadLanguage() {
+        File deployed = new File(getDataFolder(), "config.yml");
+        String code = teacommontea.util.ConfigLang.DEFAULT;
+        if (deployed.isFile()) {
+            try {
+                code = teacommontea.util.ConfigLang.read(new String(
+                        java.nio.file.Files.readAllBytes(deployed.toPath()),
+                        java.nio.charset.StandardCharsets.UTF_8));
+            } catch (Exception ignored) {
+                code = teacommontea.util.ConfigLang.DEFAULT;
+            }
+        }
+        teacommontea.util.Lang.load(this, code);
+    }
+
     private void extractResource(String resource, String targetName) {
         File out = new File(getDataFolder(), targetName);
         if (out.exists()) return;
@@ -591,7 +603,7 @@ public final class VeritePlugin extends JavaPlugin
         try (java.io.InputStream in = getResource(resource)) {
             if (in != null) java.nio.file.Files.copy(in, out.toPath());
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to extract " + targetName + ". Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("bundle.extract.failed", "name", targetName)) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -690,8 +702,7 @@ public final class VeritePlugin extends JavaPlugin
         try {
             EveEntry.enableStore(EveStore.open(this));
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to open the flag store. Player flag counts will read 0. "
-                    + "Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.flagstore.failed")) + teacommontea.util.Trace.of(e));
         }
 
         new ChatEventGuard().register();
@@ -715,7 +726,7 @@ public final class VeritePlugin extends JavaPlugin
             worker.join(FILTER_LOAD_BUDGET_MS);
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Filter loading was interrupted during boot. Consider reporting this error.") + teacommontea.util.Trace.of(ie));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of("plugin.filter.interrupted")) + teacommontea.util.Trace.of(ie));
             ie.printStackTrace();
             return false;
         }
@@ -732,7 +743,7 @@ public final class VeritePlugin extends JavaPlugin
             return false;
         }
         if (failure[0] != null) {
-            getLogger().severe(teacommontea.util.ConsoleColours.fatal("Filter loading failed with an exception. Consider reporting this error.") + teacommontea.util.Trace.of(failure[0]));
+            getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of("plugin.filter.load.failed")) + teacommontea.util.Trace.of(failure[0]));
             failure[0].printStackTrace();
             return false;
         }
@@ -766,7 +777,7 @@ public final class VeritePlugin extends JavaPlugin
                 event.setCancelled(true);
                 logBlock(event.sender().getName(), text, trace);
                 if (!EveEntry.noticeSuppressed(r)) {
-                    event.sender().spigot().sendMessage(EveEntry.blockNotice(r, text));
+                    teacommontea.util.text.Send.to(event.sender(), EveEntry.blockNotice(r, text));
                 }
             });
             teacommontea.util.chat.ChatRouter.register(
@@ -795,7 +806,7 @@ public final class VeritePlugin extends JavaPlugin
             getServer().getPluginManager().registerEvents(captcha.detailedListener(), this);
             this.sauverLoaded = true;
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Veritésauver (Moderation) failed to initialise. Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.moderation.failed")) + teacommontea.util.Trace.of(e));
             this.sauverLoaded = false;
         }
     }
@@ -808,7 +819,7 @@ public final class VeritePlugin extends JavaPlugin
             return;
         }
 
-        getLogger().warning(teacommontea.util.ConsoleColours.faint("/" + name + " was not in the command map. Registering dynamically."));
+        getLogger().warning(teacommontea.util.ConsoleColours.faint(teacommontea.util.Lang.of("plugin.command.registering", "name", name)));
         try {
             java.lang.reflect.Constructor<org.bukkit.command.PluginCommand> ctor =
                     org.bukkit.command.PluginCommand.class.getDeclaredConstructor(String.class, org.bukkit.plugin.Plugin.class);
@@ -821,7 +832,7 @@ public final class VeritePlugin extends JavaPlugin
             org.bukkit.command.CommandMap map = (org.bukkit.command.CommandMap) getMap.invoke(Bukkit.getServer());
             map.register(getName().toLowerCase(java.util.Locale.ROOT), cmd);
         } catch (Exception e) {
-            getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to dynamically register /" + name + ". Consider reporting this error.") + teacommontea.util.Trace.of(e));
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.command.register.failed", "name", name)) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -830,25 +841,25 @@ public final class VeritePlugin extends JavaPlugin
                              @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 0 || args[0].equalsIgnoreCase("status")) {
-            String on = Colours.BRAND + "on", off = Colours.WARNING + "off";
-            msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Veritédoux " + Colours.BRAND_ACCENT_SECONDARY + "(chat filter)" + Colours.BRAND_ACCENT_SECONDARY + ": " + (filterGear() ? on : off));
-            msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Veritésauver " + Colours.BRAND_ACCENT_SECONDARY + "(moderation)" + Colours.BRAND_ACCENT_SECONDARY + ": " + (moderationGear() ? on : off));
-            msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Veritévoiler " + Colours.BRAND_ACCENT_SECONDARY + "(vanish)" + Colours.BRAND_ACCENT_SECONDARY + ": " + (vanishGear() ? on : off));
+            String on = teacommontea.util.Lang.of("command.status.on"), off = teacommontea.util.Lang.of("command.status.off");
+            msg(sender, teacommontea.util.Lang.of("command.status.filter", "state", filterGear() ? on : off));
+            msg(sender, teacommontea.util.Lang.of("command.status.moderation", "state", moderationGear() ? on : off));
+            msg(sender, teacommontea.util.Lang.of("command.status.vanish", "state", vanishGear() ? on : off));
             return true;
         }
         if (!sender.hasPermission("verite.admin")) {
-            msg(sender, Colours.WARNING + "You don't have permission to do that.");
+            msg(sender, teacommontea.util.Lang.of("deny.permission"));
             return true;
         }
         switch (args[0].toLowerCase()) {
             case "reload" -> {
                 reloadAll();
-                msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Reloaded " + Colours.BRAND + "Verité" + Colours.BRAND_ACCENT_SECONDARY + ": chat filter, moderation, vanish, and config.");
+                msg(sender, teacommontea.util.Lang.of("command.reloaded"));
             }
             case "dashboard" -> {
                 if (args.length > 1 && args[1].equalsIgnoreCase("trust")) {
                     if (args.length < 3) {
-                        msg(sender, Colours.WARNING + "Usage: /verite dashboard trust <code>");
+                        msg(sender, teacommontea.util.Lang.of("command.dashboard.usage"));
                     } else {
                         teacommontea.dashboard.Dashboard.trust(sender, args[2]);
                     }
@@ -859,13 +870,13 @@ public final class VeritePlugin extends JavaPlugin
                 }
             }
             case "count" -> {
-                if (!douxLoaded) { msg(sender, Colours.WARNING + "The chat filter is unavailable."); return true; }
-                if (args.length < 2) { msg(sender, Colours.BRAND_ACCENT_SECONDARY + "Usage" + Colours.BRAND_ACCENT_SECONDARY + ": " + Colours.BRAND_ACCENT_SECONDARY + "/verite count " + Colours.BRAND_ACCENT_SECONDARY + "<" + Colours.BRAND_ACCENT_SECONDARY + "player" + Colours.BRAND_ACCENT_SECONDARY + ">"); return true; }
+                if (!douxLoaded) { msg(sender, teacommontea.util.Lang.of("command.filter.unavailable")); return true; }
+                if (args.length < 2) { msg(sender, teacommontea.util.Lang.of("command.count.usage")); return true; }
                 org.bukkit.OfflinePlayer t = org.bukkit.Bukkit.getOfflinePlayer(args[1]);
-                msg(sender, Colours.BRAND_ACCENT_SECONDARY + args[1] + " " + Colours.BRAND_ACCENT_SECONDARY + "has " + Colours.WARNING
-                        + teacommontea.veritedoux.EveEntry.count(t.getUniqueId()) + " " + Colours.BRAND_ACCENT_SECONDARY + "flags.");
+                msg(sender, teacommontea.util.Lang.of("command.flag.count", "name", args[1],
+                        "count", teacommontea.veritedoux.EveEntry.count(t.getUniqueId())));
             }
-            default -> msg(sender, Colours.BRAND_ACCENT_SECONDARY + "/verite " + Colours.BRAND_ACCENT_SECONDARY + "status " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "reload " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "count " + Colours.BRAND_ACCENT_SECONDARY + "<" + Colours.BRAND_ACCENT_SECONDARY + "player" + Colours.BRAND_ACCENT_SECONDARY + "> " + Colours.BRAND_ACCENT_SECONDARY + "| " + Colours.BRAND_ACCENT_SECONDARY + "dashboard");
+            default -> msg(sender, teacommontea.util.Lang.of("command.usage"));
         }
         return true;
     }

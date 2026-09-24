@@ -41,7 +41,7 @@ public final class SauverCommands implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!SauverConfig.moderationEnabled()) {
-            sauver.messages().err(sender, "Moderation is currently disabled.");
+            sauver.messages().err(sender, teacommontea.util.Lang.of("moderation.disabled"));
             return true;
         }
         String cmd = command.getName().toLowerCase(Locale.ROOT);

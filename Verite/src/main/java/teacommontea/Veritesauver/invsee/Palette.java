@@ -30,28 +30,28 @@ public final class Palette {
 
     public static Palette glass() {
         Map<Kind, ItemStack> m = new EnumMap<>(Kind.class);
-        m.put(Kind.INACCESSIBLE, named(Material.BLACK_STAINED_GLASS_PANE, "Inaccessible"));
-        m.put(Kind.ARMOUR_HELMET, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Helmet"));
-        m.put(Kind.ARMOUR_CHESTPLATE, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Chestplate"));
-        m.put(Kind.ARMOUR_LEGGINGS, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Leggings"));
-        m.put(Kind.ARMOUR_BOOTS, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Boots"));
-        m.put(Kind.OFFHAND, named(Material.YELLOW_STAINED_GLASS_PANE, "Off-hand"));
-        m.put(Kind.BODY, named(Material.GRAY_STAINED_GLASS_PANE, "Body"));
-        m.put(Kind.SADDLE, named(Material.ORANGE_STAINED_GLASS_PANE, "Saddle"));
-        m.put(Kind.CURSOR, named(Material.WHITE_STAINED_GLASS_PANE, "Cursor"));
-        m.put(Kind.GENERIC, named(Material.CYAN_STAINED_GLASS_PANE, "Empty"));
-        m.put(Kind.CRAFTING, named(Material.ORANGE_STAINED_GLASS_PANE, "Crafting"));
-        m.put(Kind.ANVIL, named(Material.GRAY_STAINED_GLASS_PANE, "Anvil"));
-        m.put(Kind.MERCHANT, named(Material.LIME_STAINED_GLASS_PANE, "Trade"));
-        m.put(Kind.CARTOGRAPHY, named(Material.BROWN_STAINED_GLASS_PANE, "Cartography"));
-        m.put(Kind.ENCHANTING_ITEM, named(Material.BLUE_STAINED_GLASS_PANE, "Enchanting"));
-        m.put(Kind.ENCHANTING_FUEL, named(Material.BLUE_STAINED_GLASS_PANE, "Lapis"));
-        m.put(Kind.GRINDSTONE, named(Material.MAGENTA_STAINED_GLASS_PANE, "Grindstone"));
-        m.put(Kind.LOOM, named(Material.PINK_STAINED_GLASS_PANE, "Loom"));
-        m.put(Kind.SMITHING_BASE, named(Material.GRAY_STAINED_GLASS_PANE, "Smithing Base"));
-        m.put(Kind.SMITHING_TEMPLATE, named(Material.GRAY_STAINED_GLASS_PANE, "Smithing Template"));
-        m.put(Kind.SMITHING_ADDITION, named(Material.GRAY_STAINED_GLASS_PANE, "Smithing Addition"));
-        m.put(Kind.STONECUTTER, named(Material.LIGHT_GRAY_STAINED_GLASS_PANE, "Stonecutter"));
+        m.put(Kind.INACCESSIBLE, named(Material.BLACK_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.inaccessible")));
+        m.put(Kind.ARMOUR_HELMET, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.helmet")));
+        m.put(Kind.ARMOUR_CHESTPLATE, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.chestplate")));
+        m.put(Kind.ARMOUR_LEGGINGS, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.leggings")));
+        m.put(Kind.ARMOUR_BOOTS, named(Material.LIGHT_BLUE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.boots")));
+        m.put(Kind.OFFHAND, named(Material.YELLOW_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.offhand")));
+        m.put(Kind.BODY, named(Material.GRAY_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.body")));
+        m.put(Kind.SADDLE, named(Material.ORANGE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.saddle")));
+        m.put(Kind.CURSOR, named(Material.WHITE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.cursor")));
+        m.put(Kind.GENERIC, named(Material.CYAN_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.empty")));
+        m.put(Kind.CRAFTING, named(Material.ORANGE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.crafting")));
+        m.put(Kind.ANVIL, named(Material.GRAY_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.anvil")));
+        m.put(Kind.MERCHANT, named(Material.LIME_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.trade")));
+        m.put(Kind.CARTOGRAPHY, named(Material.BROWN_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.cartography")));
+        m.put(Kind.ENCHANTING_ITEM, named(Material.BLUE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.enchanting")));
+        m.put(Kind.ENCHANTING_FUEL, named(Material.BLUE_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.lapis")));
+        m.put(Kind.GRINDSTONE, named(Material.MAGENTA_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.grindstone")));
+        m.put(Kind.LOOM, named(Material.PINK_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.loom")));
+        m.put(Kind.SMITHING_BASE, named(Material.GRAY_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.smithing.base")));
+        m.put(Kind.SMITHING_TEMPLATE, named(Material.GRAY_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.smithing.template")));
+        m.put(Kind.SMITHING_ADDITION, named(Material.GRAY_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.smithing.addition")));
+        m.put(Kind.STONECUTTER, named(Material.LIGHT_GRAY_STAINED_GLASS_PANE, teacommontea.util.Lang.of("invsee.pane.stonecutter")));
         return new Palette(m);
     }
 
@@ -59,7 +59,7 @@ public final class Palette {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(name);
+            teacommontea.util.text.Items.name(meta, name);
             item.setItemMeta(meta);
         }
         return item;

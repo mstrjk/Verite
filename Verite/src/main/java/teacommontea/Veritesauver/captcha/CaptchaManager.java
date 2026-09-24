@@ -106,7 +106,7 @@ public final class CaptchaManager {
         if (request.isCancelled() || !player.isOnline()) {
             return;
         }
-        player.kickPlayer(teacommontea.util.text.Text.toLegacy(request.getKickMessage()));
+        teacommontea.util.text.Kick.disconnect(player, teacommontea.util.text.Text.toLegacy(request.getKickMessage()));
     }
 
     private void announce(Player player, CaptchaKind kind, CaptchaOutcome outcome,
@@ -123,7 +123,7 @@ public final class CaptchaManager {
             if (!staff.hasPermission(NOTIFY_PERMISSION)) {
                 continue;
             }
-            staff.spigot().sendMessage(messages.prefixed(body));
+            teacommontea.util.text.Send.to(staff, messages.prefixed(body));
         }
     }
 

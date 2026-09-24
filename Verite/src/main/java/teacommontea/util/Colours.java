@@ -25,6 +25,22 @@ public final class Colours {
     public static final String INVSEE_BLUE = "<#" + HEX_INVSEE_BLUE + ">";
     public static final String INVENTORY_NAME = "<#" + HEX_INVENTORY_NAME + ">";
 
+    public static String byName(String name) {
+        return switch (name) {
+            case "SUCCESS" -> SUCCESS;
+            case "BRAND_ACCENT" -> BRAND_ACCENT;
+            case "DANGER" -> DANGER;
+            case "BRAND" -> BRAND;
+            case "WARNING" -> WARNING;
+            case "MUTE" -> MUTE;
+            case "WARN" -> WARN;
+            case "BRAND_ACCENT_SECONDARY" -> BRAND_ACCENT_SECONDARY;
+            case "INVSEE_BLUE" -> INVSEE_BLUE;
+            case "INVENTORY_NAME" -> INVENTORY_NAME;
+            default -> null;
+        };
+    }
+
     public static String amp(String hex) {
         return "&#" + hex;
     }

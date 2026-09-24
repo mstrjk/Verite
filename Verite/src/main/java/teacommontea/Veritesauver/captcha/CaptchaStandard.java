@@ -99,7 +99,7 @@ public final class CaptchaStandard implements Listener {
         Holder holder = new Holder();
         String readable = titleCase(answer.name());
 
-        Inventory inv = Bukkit.createInventory(holder, SIZE,
+        Inventory inv = teacommontea.util.text.Server.inventory(holder, SIZE,
                 teacommontea.util.text.Text.toLegacy(Colours.INVENTORY_NAME + "Click the " + readable));
         holder.inventory = inv;
         s.inventory = inv;
@@ -216,7 +216,7 @@ teacommontea.util.sched.Sched.executeFor(p, () -> {
                     s.failed, s.source);
             return;
         }
-        player.spigot().sendMessage(messages.prefixed(
+        teacommontea.util.text.Send.to(player, messages.prefixed(
                 Colours.WARNING + "Wrong item. " + Colours.BRAND_ACCENT + "[" + Colours.BRAND + s.failed.size() + Colours.BRAND_ACCENT_SECONDARY + "/" + Colours.WARNING + MAX_FAILS + Colours.BRAND_ACCENT + "]"));
     }
 

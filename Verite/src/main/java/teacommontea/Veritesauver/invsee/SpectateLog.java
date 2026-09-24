@@ -20,7 +20,7 @@ public final class SpectateLog {
     }
 
     public void onOpen() {
-        plugin.getLogger().info(target + "'s inventory is being viewed by " + viewer + ".");
+        plugin.getLogger().info(teacommontea.util.Lang.of("spectate.viewing", "name", target, "viewer", viewer));
     }
 
     public void onClick(List<ItemStack> before, List<ItemStack> after) {
@@ -29,9 +29,9 @@ public final class SpectateLog {
 
     public void onClose() {
         if (!session.isEmpty()) {
-            plugin.getLogger().info(target + "'s inventory was modified by " + viewer
-                    + "\nChanges:\n" + session.changes());
+            plugin.getLogger().info(teacommontea.util.Lang.of("spectate.modified",
+                    "name", target, "viewer", viewer, "changes", session.changes()));
         }
-        plugin.getLogger().info(target + "'s inventory is no longer being viewed by " + viewer + ".");
+        plugin.getLogger().info(teacommontea.util.Lang.of("spectate.stopped", "name", target, "viewer", viewer));
     }
 }

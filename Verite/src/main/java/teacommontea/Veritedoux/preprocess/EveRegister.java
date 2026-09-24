@@ -16,7 +16,7 @@ public final class EveRegister {
     public static void load(Plugin plugin) {
         loaded = EveLexicon.ready();
         if (loaded) {
-            plugin.getLogger().info(teacommontea.util.ConsoleColours.ok("Loaded message-type detection."));
+            plugin.getLogger().info(teacommontea.util.ConsoleColours.ok(teacommontea.util.Lang.of("filter.detection.loaded")));
         }
     }
 

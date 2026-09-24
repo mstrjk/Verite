@@ -43,17 +43,17 @@ public final class PunishDialog {
 
             List<Object> bodies = new ArrayList<>();
             bodies.add(plainMessage(dialogBody, componentCls,
-                    comp(Colours.BRAND + "Actor: " + Colours.BRAND_ACCENT_SECONDARY + staff.getName())));
+                    comp(teacommontea.util.Lang.of("punishdialogue.actor", "name", staff.getName()))));
             bodies.add(plainMessage(dialogBody, componentCls,
-                    comp(Colours.BRAND + "Target: " + Colours.BRAND_ACCENT_SECONDARY + targetName)));
+                    comp(teacommontea.util.Lang.of("punishdialogue.target", "name", targetName))));
             if (category != null && !category.isBlank()) {
                 bodies.add(plainMessage(dialogBody, componentCls,
-                        comp(Colours.BRAND + "Issue: " + Colours.BRAND_ACCENT_SECONDARY + pretty(category))));
+                        comp(teacommontea.util.Lang.of("punishdialogue.issue", "category", pretty(category)))));
             }
 
             List<Object> inputs = new ArrayList<>();
             inputs.add(singleOption(dialogInput, optionEntryCls, componentCls, "punishment",
-                    comp(Colours.BRAND_ACCENT_SECONDARY + "Punishment"), List.of(
+                    comp(teacommontea.util.Lang.of("punishdialogue.punishment")), List.of(
                             new String[]{"warn", "Warn"},
                             new String[]{"mute", "Mute"},
                             new String[]{"permmute", "Perma-mute"},
@@ -61,8 +61,8 @@ public final class PunishDialog {
                             new String[]{"ban", "Ban"},
                             new String[]{"permban", "Perma-ban"})));
             inputs.add(text(dialogInput, componentCls, "duration",
-                    comp(Colours.BRAND_ACCENT_SECONDARY + "Duration " + Colours.BRAND_ACCENT + "(blank or Perma = permanent)")));
-            inputs.add(text(dialogInput, componentCls, "reason", comp(Colours.BRAND_ACCENT_SECONDARY + "Reason")));
+                    comp(teacommontea.util.Lang.of("punishdialogue.duration"))));
+            inputs.add(text(dialogInput, componentCls, "reason", comp(teacommontea.util.Lang.of("punishdialogue.reason"))));
 
             Class<?> afterActionCls = load(cl, "io.papermc.paper.registry.data.dialog.DialogBase$DialogAfterAction");
             @SuppressWarnings({"unchecked", "rawtypes"})
@@ -70,7 +70,7 @@ public final class PunishDialog {
             Object base = dialogBase.getMethod("create",
                             componentCls, componentCls, boolean.class, boolean.class,
                             afterActionCls, List.class, List.class)
-                    .invoke(null, comp(Colours.BRAND_ACCENT_SECONDARY + "Punish " + targetName), null, true, true, afterClose, bodies, inputs);
+                    .invoke(null, comp(teacommontea.util.Lang.of("punishdialogue.header", "name", targetName)), null, true, true, afterClose, bodies, inputs);
 
             Object callback = Proxy.newProxyInstance(cl, new Class<?>[]{dialogActionCallback},
                     (proxy, method, args) -> {
@@ -87,9 +87,9 @@ public final class PunishDialog {
                     .invoke(null, callback, options);
 
             Object confirm = actionButton.getMethod("create", componentCls, componentCls, int.class, dialogAction)
-                    .invoke(null, comp(Colours.SUCCESS + "Confirm"), null, 150, action);
+                    .invoke(null, comp(teacommontea.util.Lang.of("punishdialogue.confirm")), null, 150, action);
             Object cancel = actionButton.getMethod("create", componentCls, componentCls, int.class, dialogAction)
-                    .invoke(null, comp(Colours.WARNING + "Cancel"), null, 150, null);
+                    .invoke(null, comp(teacommontea.util.Lang.of("punishdialogue.cancel")), null, 150, null);
 
             Object type = dialogType.getMethod("confirmation", actionButton, actionButton)
                     .invoke(null, confirm, cancel);
@@ -128,7 +128,7 @@ public final class PunishDialog {
                 return;
             }
             String finalReason = (reason == null || reason.isBlank())
-                    ? (category == null || category.isBlank() ? "Manual punishment" : pretty(category))
+                    ? (category == null || category.isBlank() ? teacommontea.util.Lang.of("punishdialogue.title") : pretty(category))
                     : reason;
             String verb = punishment.toLowerCase(java.util.Locale.ROOT);
             boolean forcePermanent = verb.startsWith("perm");
@@ -170,15 +170,14 @@ public final class PunishDialog {
             if (r != null && !r.ok()) {
                 sauver.messages().err(staff, Colours.WARNING + r.error());
             } else if (r != null) {
-                sauver.messages().send(staff, Colours.BRAND + "Punished " + Colours.BRAND_ACCENT_SECONDARY + targetName
-                        + " " + Colours.BRAND_ACCENT + "(" + Colours.WARNING + punishment + Colours.BRAND_ACCENT + ")");
+                sauver.messages().send(staff, teacommontea.util.Lang.of("punishtree.punished.simple", "name", targetName, "step", punishment));
             }
         } catch (Throwable t) {
             Throwable cause = t instanceof java.lang.reflect.InvocationTargetException ite && ite.getCause() != null
                     ? ite.getCause() : t;
             sauver.plugin().getLogger().log(java.util.logging.Level.WARNING,
                     "[Veritésauver] punishment dialog response handling failed", cause);
-            sauver.messages().err(staff, Colours.WARNING + "That punishment could not be applied.");
+            sauver.messages().err(staff, teacommontea.util.Lang.of("punish.failed"));
         }
     }
 

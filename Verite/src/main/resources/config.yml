@@ -310,3 +310,29 @@ fake.connect:
   # Supports &-codes and &#RRGGBB hex.
   join.message: "&#FFFF55%player% joined the game"
   leave.message: "&#FFFF55%player% left the game"
+
+# By changing the value below to en, es, it, fr, pt or de, you change the
+# language in which the plugin operates. You can switch back at any time.
+# Changing languages requires a full restart (not a reload) of your server
+# in order to take effect.
+# Al cambiar el valor de abajo a en, es, it, fr, pt o de, cambias el
+# idioma en el que funciona el plugin. Puedes volver a cambiarlo en cualquier momento.
+# Cambiar de idioma requiere un reinicio completo (no una recarga) de tu servidor
+# para que los cambios surtan efecto.
+# Modificando il valore qui sotto in en, es, it, fr, pt o de, puoi cambiare la
+# lingua in cui funziona il plugin. Puoi cambiarla nuovamente in qualsiasi momento.
+# Per rendere effettivo il cambio di lingua è necessario riavviare completamente
+# il server (non è sufficiente ricaricarlo).
+# En modifiant la valeur ci-dessous par en, es, it, fr, pt ou de, vous changez la
+# langue dans laquelle fonctionne le plugin. Vous pouvez la modifier à nouveau à tout moment.
+# Le changement de langue nécessite un redémarrage complet (et non un simple rechargement)
+# de votre serveur pour prendre effet.
+# Ao alterar o valor abaixo para en, es, it, fr, pt ou de, você altera o
+# idioma no qual o plugin funciona. Você pode alterá-lo novamente a qualquer momento.
+# A alteração do idioma requer uma reinicialização completa (não apenas um recarregamento)
+# do seu servidor para entrar em vigor.
+# Indem du den unten stehenden Wert auf en, es, it, fr, pt oder de änderst,
+# änderst du die Sprache, in der das Plugin ausgeführt wird. Du kannst sie jederzeit
+# wieder ändern. Damit die Sprachänderung wirksam wird, ist ein vollständiger Neustart
+# deines Servers erforderlich (ein Neuladen reicht nicht aus).
+config.language: en

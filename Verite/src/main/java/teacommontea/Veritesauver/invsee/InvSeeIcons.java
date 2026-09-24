@@ -29,7 +29,7 @@ final class InvSeeIcons {
     private InvSeeIcons() {}
 
     static ItemStack placeholder() {
-        return named(Material.BARRIER, teacommontea.util.Colours.BRAND_ACCENT_SECONDARY + "Verité Placeholder");
+        return named(Material.BARRIER, teacommontea.util.Colours.BRAND_ACCENT_SECONDARY + teacommontea.util.Lang.of("invsee.placeholder"));
     }
 
     static ItemStack heldLabel() {

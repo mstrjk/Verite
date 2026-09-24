@@ -80,11 +80,11 @@ public final class ShowMarkers implements CommandExecutor, TabCompleter, Listene
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
         Messages m = messages;
         if (!sender.hasPermission(permission)) {
-            sender.spigot().sendMessage(m.prefixed(Messages.DENY_PERMISSION));
+            teacommontea.util.text.Send.to(sender, m.prefixed(teacommontea.util.Lang.of("deny.permission")));
             return true;
         }
         if (!(sender instanceof Player player)) {
-            sender.spigot().sendMessage(m.prefixed(Colours.WARNING + "Players only."));
+            teacommontea.util.text.Send.to(sender, m.prefixed(teacommontea.util.Lang.of("players.only")));
             return true;
         }
 
@@ -93,11 +93,14 @@ public final class ShowMarkers implements CommandExecutor, TabCompleter, Listene
 
         if (modeArg.isEmpty()) {
             switch (fadeOff(id, true)) {
-                case STOPPED -> sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Stopped showing " + noun + "."));
-                case ALREADY_STOPPING -> sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + "Already fading out."));
+                case STOPPED -> teacommontea.util.text.Send.to(sender,
+                        m.prefixed(teacommontea.util.Lang.of("markers.stopped", "noun", noun)));
+                case ALREADY_STOPPING -> teacommontea.util.text.Send.to(sender,
+                        m.prefixed(teacommontea.util.Lang.of("markers.fading")));
                 case NOT_RUNNING -> {
                     start(player, Mode.MOVE, true);
-                    sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Showing " + noun + " near you as you move. Run " + Colours.BRAND_ACCENT_SECONDARY + "/" + label + " off" + Colours.BRAND + " to stop."));
+                    teacommontea.util.text.Send.to(sender, m.prefixed(
+                            teacommontea.util.Lang.of("markers.showing.move", "noun", noun, "label", label)));
                 }
             }
             return true;
@@ -105,9 +108,12 @@ public final class ShowMarkers implements CommandExecutor, TabCompleter, Listene
 
         if (modeArg.equals("off")) {
             switch (fadeOff(id, true)) {
-                case STOPPED -> sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Stopped showing " + noun + "."));
-                case ALREADY_STOPPING -> sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + "Already fading out."));
-                case NOT_RUNNING -> sender.spigot().sendMessage(m.prefixed(Colours.BRAND_ACCENT_SECONDARY + "You were not showing " + noun + "."));
+                case STOPPED -> teacommontea.util.text.Send.to(sender,
+                        m.prefixed(teacommontea.util.Lang.of("markers.stopped", "noun", noun)));
+                case ALREADY_STOPPING -> teacommontea.util.text.Send.to(sender,
+                        m.prefixed(teacommontea.util.Lang.of("markers.fading")));
+                case NOT_RUNNING -> teacommontea.util.text.Send.to(sender,
+                        m.prefixed(teacommontea.util.Lang.of("markers.not.running", "noun", noun)));
             }
             return true;
         }
@@ -118,14 +124,15 @@ public final class ShowMarkers implements CommandExecutor, TabCompleter, Listene
         } else if (modeArg.equals("all")) {
             mode = Mode.ALL;
         } else {
-            sender.spigot().sendMessage(m.prefixed(Colours.WARNING + "Usage: " + Colours.BRAND_ACCENT_SECONDARY + "/" + label + " all|move|off"));
+            teacommontea.util.text.Send.to(sender,
+                    m.prefixed(teacommontea.util.Lang.of("markers.usage", "label", label)));
             return true;
         }
 
         start(player, mode, true);
-        String where = mode == Mode.ALL ? "across your view distance" : "near you as you move";
-        sender.spigot().sendMessage(m.prefixed(Colours.BRAND + "Showing " + noun + " " + Colours.BRAND_ACCENT_SECONDARY + where
-                + Colours.BRAND + ". Run " + Colours.BRAND_ACCENT_SECONDARY + "/" + label + " off" + Colours.BRAND + " to stop."));
+        teacommontea.util.text.Send.to(sender, m.prefixed(teacommontea.util.Lang.of(
+                mode == Mode.ALL ? "markers.showing.view" : "markers.showing.move",
+                "noun", noun, "label", label)));
         return true;
     }
 

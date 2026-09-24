@@ -82,14 +82,14 @@ public final class EveText {
         try {
             java.io.File f = new java.io.File(plugin.getDataFolder(), "filter/.native/confusables.evefold");
             if (!f.isFile()) {
-                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to load confusables. Disabling chat filter."));
+                plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("filter.confusables.failed")));
                 return false;
             }
             String text = new String(java.nio.file.Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
             teacommontea.veritedoux.util.Eve.loadFold(text);
             return true;
         } catch (Exception e) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to load confusables. Disabling chat filter.") + teacommontea.util.Trace.of(e));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("filter.confusables.failed")) + teacommontea.util.Trace.of(e));
             return false;
         }
     }

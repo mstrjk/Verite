@@ -18,8 +18,6 @@ import teacommontea.veritesauver.util.SauverFormat;
 
 public final class PunishCommands extends CommandBase {
 
-    private static final String DEFAULT_BAN_REASON  = "The Ban Hammer has spoken!";
-    private static final String DEFAULT_MUTE_REASON = "Spamming";
 
     public PunishCommands(Sauver sauver) {
         super(sauver);
@@ -50,24 +48,24 @@ public final class PunishCommands extends CommandBase {
                 duration = maybe;
                 rest.remove(0);
             } else if (requireDuration) {
-                err(sender, Colours.WARNING + "That duration is invalid: " + Colours.BRAND_ACCENT_SECONDARY + rest.get(0)
-                        + Colours.WARNING + ". Use forms like " + Colours.BRAND_ACCENT_SECONDARY + "7d" + Colours.WARNING + ", " + Colours.BRAND_ACCENT_SECONDARY + "12h" + Colours.WARNING + ", " + Colours.BRAND_ACCENT_SECONDARY + "2w" + Colours.WARNING + ", " + Colours.BRAND_ACCENT_SECONDARY + "1mo" + Colours.WARNING + ".");
+                err(sender, teacommontea.util.Lang.of("duration.invalid", "duration", rest.get(0))
+                        + " " + teacommontea.util.Lang.of("punish.duration.forms"));
                 return;
             }
         } else if (requireDuration) {
-            usage(sender, "temp" + word + " <player> <duration> [-s] [reason]", "temporarily " + word + " a player");
+            usage(sender, "temp" + word + " <player> <duration> [-s] [reason]",
+                    teacommontea.util.Lang.of("punish.description.temp." + word));
             return;
         }
 
         String reason = rest.isEmpty()
-                ? (type == Entry.Type.BAN ? DEFAULT_BAN_REASON : DEFAULT_MUTE_REASON)
+                ? teacommontea.util.Lang.of("punish.reason." + word)
                 : String.join(" ", rest);
 
         long now = System.currentTimeMillis();
         long cd = SauverLimits.cooldownRemaining(sender, type, now);
         if (cd > 0) {
-            err(sender, Colours.WARNING + "Slow down. Wait " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(cd)
-                    + " " + Colours.WARNING + "before your next " + type.id() + ".");
+            err(sender, teacommontea.util.Lang.of("punish.cooldown." + word, "duration", SauverFormat.fancyTime(cd)));
             return;
         }
         SauverLimits.Check cap = SauverLimits.capDuration(sender, type, duration);
@@ -91,13 +89,13 @@ public final class PunishCommands extends CommandBase {
                 }
             }
             if (done == 0) {
-                err(sender, Colours.WARNING + "No online players could be " + pastTense(word) + ".");
+                err(sender, teacommontea.util.Lang.of("punish.mass.none." + word));
                 return;
             }
             SauverLimits.markUsed(sender, type, now);
-            String durAll = duration == Entry.PERMANENT ? "permanently" : "for " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(duration);
-            send(sender, Colours.BRAND + "You " + pastTense(word) + " " + Colours.BRAND_ACCENT_SECONDARY + done + Colours.BRAND
-                    + " " + SauverFormat.pluralize(done, "player") + " " + Colours.BRAND + durAll + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason);
+            send(sender, teacommontea.util.Lang.counted("punish.mass." + word
+                    + (duration == Entry.PERMANENT ? ".permanent" : ".temporary"), done,
+                    "count", done, "duration", SauverFormat.fancyTime(duration), "reason", reason));
             return;
         }
 
@@ -116,17 +114,18 @@ public final class PunishCommands extends CommandBase {
             return;
         }
         SauverLimits.markUsed(sender, type, now);
-        String dur = r.entry().permanent() ? "permanently" : "for " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(r.entry().duration());
-        String verb = overwriting ? "updated the " + word + " on" : pastTense(word);
-        send(sender, Colours.BRAND + "You " + verb + " " + Colours.BRAND_ACCENT_SECONDARY + bestName(target, parsed.targetName())
-                + " " + Colours.BRAND + dur + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason + " " + Colours.BRAND_ACCENT_SECONDARY + "(#" + r.entry().randomId() + ")");
+        send(sender, teacommontea.util.Lang.of((overwriting ? "punish.updated." : "punish.issued.") + word
+                + (r.entry().permanent() ? ".permanent" : ".temporary"),
+                "name", bestName(target, parsed.targetName()),
+                "duration", SauverFormat.fancyTime(r.entry().duration()),
+                "reason", reason, "id", r.entry().randomId()));
     }
 
     public void issueIp(CommandSender sender, String[] args, Entry.Type type) {
         String word = type == Entry.Type.BAN ? "ipban" : "ipmute";
         Parsed parsed = parse(args);
         if (parsed.targetName() == null) {
-            usage(sender, word + " <player|IP> [-s] [duration] [reason]", word + " a player or IP");
+            usage(sender, word + " <player|IP> [-s] [duration] [reason]", teacommontea.util.Lang.of("punish.description." + word));
             return;
         }
         List<String> rest = new ArrayList<>(parsed.rest());
@@ -139,7 +138,7 @@ public final class PunishCommands extends CommandBase {
             }
         }
         String reason = rest.isEmpty()
-                ? (type == Entry.Type.BAN ? DEFAULT_BAN_REASON : DEFAULT_MUTE_REASON)
+                ? teacommontea.util.Lang.of("punish.reason." + word)
                 : String.join(" ", rest);
 
         if (isAllTarget(parsed.targetName())) {
@@ -159,12 +158,12 @@ public final class PunishCommands extends CommandBase {
                 }
             }
             if (done == 0) {
-                err(sender, Colours.WARNING + "No online players had an IP on record to " + word + ".");
+                err(sender, teacommontea.util.Lang.of("punish.ip.none.mass." + word));
                 return;
             }
-            String durAll = duration == Entry.PERMANENT ? "permanently" : "for " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(duration);
-            send(sender, Colours.BRAND + "You " + pastTense(word) + " " + Colours.BRAND_ACCENT_SECONDARY + done + Colours.BRAND
-                    + " " + SauverFormat.pluralize(done, "player") + " " + Colours.BRAND + durAll + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason);
+            send(sender, teacommontea.util.Lang.counted("punish.mass." + word
+                    + (duration == Entry.PERMANENT ? ".permanent" : ".temporary"), done,
+                    "count", done, "duration", SauverFormat.fancyTime(duration), "reason", reason));
             return;
         }
 
@@ -182,8 +181,7 @@ public final class PunishCommands extends CommandBase {
             }
             List<String> ips = dao().ipsOf(targetUuid);
             if (ips.isEmpty()) {
-                err(sender, Colours.WARNING + "No IP on record for " + Colours.BRAND_ACCENT_SECONDARY + parsed.targetName()
-                        + Colours.WARNING + ". They must have logged in at least once.");
+                err(sender, teacommontea.util.Lang.of("punish.ip.none.player", "name", parsed.targetName()));
                 return;
             }
             ip = ips.get(0);
@@ -197,17 +195,19 @@ public final class PunishCommands extends CommandBase {
             return;
         }
         String dur = r.entry().permanent() ? "permanently" : "for " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(r.entry().duration());
-        send(sender, Colours.BRAND + "You " + pastTense(word) + " " + Colours.BRAND_ACCENT_SECONDARY + labelName
-                + " " + Colours.BRAND + dur + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason + " " + Colours.BRAND_ACCENT_SECONDARY + "(#" + r.entry().randomId() + ")");
+        send(sender, teacommontea.util.Lang.of("punish.issued." + word
+                + (r.entry().permanent() ? ".permanent" : ".temporary"),
+                "name", labelName, "duration", SauverFormat.fancyTime(r.entry().duration()),
+                "reason", reason, "id", r.entry().randomId()));
     }
 
     public void kick(CommandSender sender, String[] args) {
         Parsed parsed = parse(args);
         if (parsed.targetName() == null) {
-            usage(sender, "kick <player> [-s] [reason]", "kick a player");
+            usage(sender, "kick <player> [-s] [reason]", teacommontea.util.Lang.of("punish.description.kick"));
             return;
         }
-        String reason = parsed.rest().isEmpty() ? "Kicked by an operator." : String.join(" ", parsed.rest());
+        String reason = parsed.rest().isEmpty() ? teacommontea.util.Lang.of("punish.reason.kick") : String.join(" ", parsed.rest());
 
         if (isAllTarget(parsed.targetName())) {
             List<Player> targets = new ArrayList<>();
@@ -217,7 +217,7 @@ public final class PunishCommands extends CommandBase {
                 }
             }
             if (targets.isEmpty()) {
-                err(sender, Colours.WARNING + "No online players can be kicked.");
+                err(sender, teacommontea.util.Lang.of("punish.kick.none"));
                 return;
             }
             int done = 0;
@@ -228,14 +228,13 @@ public final class PunishCommands extends CommandBase {
                     done++;
                 }
             }
-            send(sender, Colours.BRAND + "You kicked " + Colours.BRAND_ACCENT_SECONDARY + done + Colours.BRAND
-                    + " " + SauverFormat.pluralize(done, "player") + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason);
+            send(sender, teacommontea.util.Lang.counted("punish.kick.mass", done, "count", done, "reason", reason));
             return;
         }
 
         Player target = Bukkit.getPlayerExact(parsed.targetName());
         if (target == null) {
-            err(sender, Colours.WARNING + "That player is not online.");
+            err(sender, teacommontea.util.Lang.of("player.offline"));
             return;
         }
         String exempt = SauverExempt.blockReason(sender, target.getUniqueId(), Entry.Type.KICK);
@@ -249,14 +248,13 @@ public final class PunishCommands extends CommandBase {
             err(sender, Colours.WARNING + r.error());
             return;
         }
-        send(sender, Colours.BRAND + "You kicked " + Colours.BRAND_ACCENT_SECONDARY + target.getName()
-                + Colours.BRAND + ". " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason);
+        send(sender, teacommontea.util.Lang.of("punish.kick.issued", "name", target.getName(), "reason", reason));
     }
 
     public void pardon(CommandSender sender, String[] args, Entry.Type type) {
         String word = type == Entry.Type.BAN ? "ban" : "mute";
         if (args.length == 0) {
-            usage(sender, "un" + word + " <player> [reason]", "un" + word + " a player");
+            usage(sender, "un" + word + " <player> [reason]", teacommontea.util.Lang.of("punish.description.un" + word));
             return;
         }
         String reason = args.length > 1 ? String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length))
@@ -275,11 +273,10 @@ public final class PunishCommands extends CommandBase {
                 }
             }
             if (done == 0) {
-                err(sender, Colours.WARNING + "There are no " + word + "s you can remove.");
+                err(sender, teacommontea.util.Lang.of("punish.remove.none." + word));
                 return;
             }
-            send(sender, Colours.BRAND + "You " + pastTense("un" + word) + " " + Colours.BRAND_ACCENT_SECONDARY + done
-                    + Colours.BRAND + " " + SauverFormat.pluralize(done, "player") + Colours.BRAND + ".");
+            send(sender, teacommontea.util.Lang.counted("punish.mass.removed." + word, done, "count", done));
             return;
         }
 
@@ -291,7 +288,7 @@ public final class PunishCommands extends CommandBase {
 
         Entry active = type == Entry.Type.BAN ? dao().activeBan(target) : dao().activeMute(target);
         if (active != null && !canRemove(sender, type, active)) {
-            err(sender, Colours.WARNING + "You can only remove " + word + "s you issued.");
+            err(sender, teacommontea.util.Lang.of("punish.remove.own." + word));
             return;
         }
         SauverEngine.Result r = SauverEngine.pardon(type, target, bestName(target, args[0]),
@@ -300,7 +297,7 @@ public final class PunishCommands extends CommandBase {
             err(sender, Colours.WARNING + r.error());
             return;
         }
-        send(sender, Colours.BRAND + "You " + pastTense("un" + word) + " " + Colours.BRAND_ACCENT_SECONDARY + bestName(target, args[0]) + Colours.BRAND + ".");
+        send(sender, teacommontea.util.Lang.of("punish.removed." + word, "name", bestName(target, args[0])));
     }
 
     private boolean canRemove(CommandSender sender, Entry.Type type, Entry e) {
@@ -318,7 +315,7 @@ public final class PunishCommands extends CommandBase {
     public void check(CommandSender sender, String[] args, Entry.Type type) {
         String word = type == Entry.Type.BAN ? "ban" : "mute";
         if (args.length == 0) {
-            usage(sender, "check" + word + " <player>", "check a player's " + word + " status");
+            usage(sender, "check" + word + " <player>", teacommontea.util.Lang.of("punish.description.check" + word));
             return;
         }
         UUID target = resolve(args[0]);
@@ -329,24 +326,19 @@ public final class PunishCommands extends CommandBase {
         Entry e = type == Entry.Type.BAN ? sauver.activeBan(target) : sauver.activeMute(target);
         String name = bestName(target, args[0]);
         if (e == null) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + name + " " + Colours.BRAND + "is not " + pastTense(word) + ".");
+            send(sender, teacommontea.util.Lang.of("punish.check.clean." + word, "name", name));
             return;
         }
         long now = System.currentTimeMillis();
-        String when = e.permanent() ? Colours.WARNING + "permanent" : Colours.BRAND_ACCENT_SECONDARY + "expires in " + SauverFormat.fancyTime(e.remaining(now));
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + name + " " + Colours.WARNING + "is " + pastTense(word) + Colours.BRAND_ACCENT_SECONDARY + ".");
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  By: " + Colours.BRAND_ACCENT_SECONDARY + e.executorName());
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Reason: " + Colours.BRAND_ACCENT_SECONDARY + e.reason());
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Duration: " + when);
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  ID: " + Colours.BRAND_ACCENT_SECONDARY + "#" + e.randomId());
+        send(sender, teacommontea.util.Lang.of("punish.check.active." + word, "name", name));
+        raw(sender, teacommontea.util.Lang.of("punish.check.by", "name", e.executorName()));
+        raw(sender, teacommontea.util.Lang.of("punish.check.reason", "reason", e.reason()));
+        raw(sender, e.permanent()
+                ? teacommontea.util.Lang.of("punish.check.duration.permanent")
+                : teacommontea.util.Lang.of("punish.check.duration.expires", "duration", SauverFormat.fancyTime(e.remaining(now))));
+        raw(sender, teacommontea.util.Lang.of("punish.check.id", "id", e.randomId()));
     }
 
-    public static String pastTense(String word) {
-        if (word.endsWith("mute")) {
-            return word + "d";
-        }
-        return word + "ned";
-    }
 
     public List<String> tabIssue(CommandSender sender, String permission, String[] args, boolean temp) {
         if (!sender.hasPermission(permission)) {

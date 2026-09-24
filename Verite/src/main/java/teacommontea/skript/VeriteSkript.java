@@ -35,7 +35,7 @@ public final class VeriteSkript {
         try {
             addon = Skript.registerAddon(plugin);
         } catch (Throwable t) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Skript is present but refused addon registration. Disabling Skript syntax.") + teacommontea.util.Trace.of(t));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("skript.addon.refused")) + teacommontea.util.Trace.of(t));
             return null;
         }
 
@@ -50,7 +50,7 @@ public final class VeriteSkript {
             instance.loadSyntax("teacommontea.skript", "elements");
             instance.registerPunishment(plugin);
         } catch (Throwable t) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to load Skript syntax. Disabling Skript syntax.") + teacommontea.util.Trace.of(t));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("skript.syntax.failed")) + teacommontea.util.Trace.of(t));
             return null;
         }
         return instance;
@@ -62,7 +62,7 @@ public final class VeriteSkript {
                     .user("(verite ?)?punishments?")
                     .name("Verite Punishment"));
         } catch (Throwable t) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to register punishments with Skript. Disabling Skript syntax.") + teacommontea.util.Trace.of(t));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("skript.punishments.failed")) + teacommontea.util.Trace.of(t));
         }
 
         Skript.registerEvent("Verite Punishment", SimpleEvent.class, VeritePunishmentEvent.class,
@@ -72,7 +72,7 @@ public final class VeriteSkript {
             eventValues.register(VeritePunishmentEvent.class, Punishment.class,
                     VeritePunishmentEvent::punishment, EventValueBridge.TIME_NOW);
         } catch (Throwable t) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Failed to register punishment events with Skript. Disabling Skript syntax.") + teacommontea.util.Trace.of(t));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("skript.events.failed")) + teacommontea.util.Trace.of(t));
         }
 
         VeriteModeration.registerListener(new ModerationListener() {
@@ -113,7 +113,7 @@ public final class VeriteSkript {
         try {
             return (EventValueBridge) Class.forName(era).getDeclaredConstructor().newInstance();
         } catch (Throwable t) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Skript " + version + " is not supported. Disabling Skript syntax.") + teacommontea.util.Trace.of(t));
+            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("skript.unsupported", "version", version)) + teacommontea.util.Trace.of(t));
             return null;
         }
     }

@@ -55,7 +55,7 @@ public final class VanishEvents {
     private static void warn(String which, Throwable t) {
         Vanish v = Vanish.instance();
         if (v != null && v.plugin() != null) {
-            v.plugin().getLogger().warning(teacommontea.util.ConsoleColours.bad("A plugin listening for vanish changes threw an exception. Consider reporting this error.") + teacommontea.util.Trace.of(t));
+            v.plugin().getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("vanish.listener.failed")) + teacommontea.util.Trace.of(t));
         }
     }
 }

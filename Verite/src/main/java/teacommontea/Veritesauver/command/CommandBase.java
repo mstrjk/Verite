@@ -48,7 +48,7 @@ public abstract class CommandBase {
     }
 
     protected void usage(CommandSender to, String syntax, String desc) {
-        send(to, Colours.BRAND_ACCENT_SECONDARY + "Usage: " + Colours.BRAND_ACCENT_SECONDARY + "/" + syntax + " " + Colours.BRAND_ACCENT_SECONDARY + "- " + desc);
+        send(to, teacommontea.util.Lang.of("moderation.usage", "syntax", syntax, "description", desc));
     }
 
     protected record Parsed(String targetName, boolean silent, List<String> rest) {}
@@ -122,7 +122,7 @@ public abstract class CommandBase {
     }
 
     protected void unknownPlayer(CommandSender sender, String name) {
-        err(sender, Colours.WARNING + "That player is unknown: " + Colours.BRAND_ACCENT_SECONDARY + name + Colours.WARNING + ".");
+        err(sender, teacommontea.util.Lang.of("moderation.player.unknown", "name", name));
     }
 
     protected UUID lookupTarget(CommandSender sender, String[] args, String cmd) {

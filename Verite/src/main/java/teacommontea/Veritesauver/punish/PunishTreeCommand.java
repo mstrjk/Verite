@@ -18,11 +18,11 @@ public final class PunishTreeCommand extends CommandBase {
 
     public void open(CommandSender sender, String[] args) {
         if (!(sender instanceof Player staff)) {
-            err(sender, Colours.WARNING + "The punishment tree can only be opened by a player.");
+            err(sender, teacommontea.util.Lang.of("punishtree.players.only"));
             return;
         }
         if (!sauver.tree().canOpen(staff)) {
-            err(sender, Colours.WARNING + "You don't have permission to do that.");
+            err(sender, teacommontea.util.Lang.of("deny.permission"));
             return;
         }
         if (args.length == 0) {
@@ -35,7 +35,7 @@ public final class PunishTreeCommand extends CommandBase {
             return;
         }
         if (target.equals(staff.getUniqueId())) {
-            err(sender, Colours.WARNING + "You cannot punish yourself.");
+            err(sender, teacommontea.util.Lang.of("punishtree.self"));
             return;
         }
         sauver.tree().open(staff, target, bestName(target, args[0]));

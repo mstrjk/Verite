@@ -1,6 +1,7 @@
 package teacommontea.veritevoiler;
 
 import teacommontea.util.Colours;
+import teacommontea.util.Lang;
 import teacommontea.util.Complete;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -25,44 +26,40 @@ public final class VanishCommand implements CommandExecutor, TabCompleter {
     }
 
     private void msg(CommandSender to, String tagged) {
-        to.spigot().sendMessage(messages.prefixed(tagged));
+        teacommontea.util.text.Send.to(to, messages.prefixed(tagged));
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!vanish.enabled()) {
-            msg(sender, Colours.WARNING + "Vanish is currently disabled.");
+            msg(sender, Lang.of("vanish.disabled"));
             return true;
         }
         if (args.length == 0) {
             if (!(sender instanceof Player p)) {
-                msg(sender, Colours.WARNING + "Console must name a player: " + Colours.BRAND_ACCENT_SECONDARY + "/vanish <player>");
+                msg(sender, Lang.of("console.name.player", "command", "vanish"));
                 return true;
             }
             if (!p.hasPermission("verite.vanish")) {
-                msg(sender, Colours.WARNING + "You may not vanish.");
+                msg(sender, Lang.of("vanish.deny.self"));
                 return true;
             }
-            boolean nowVanished = vanish.toggle(p);
-            msg(sender, nowVanished
-                    ? Colours.BRAND + "You are now " + Colours.BRAND_ACCENT_SECONDARY + "vanished" + Colours.BRAND + "."
-                    : Colours.BRAND + "You are now " + Colours.BRAND_ACCENT_SECONDARY + "visible" + Colours.BRAND + ".");
+            msg(sender, Lang.of(vanish.toggle(p) ? "vanish.now.hidden" : "vanish.now.visible"));
             return true;
         }
 
         if (!sender.hasPermission("verite.vanish.others")) {
-            msg(sender, Colours.WARNING + "You may not vanish other players.");
+            msg(sender, Lang.of("vanish.deny.others"));
             return true;
         }
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            msg(sender, Colours.BRAND_ACCENT_SECONDARY + args[0] + " " + Colours.WARNING + "is not online.");
+            msg(sender, Lang.of("player.offline.named", "name", args[0]));
             return true;
         }
-        boolean nowVanished = vanish.toggle(target);
-        msg(sender, Colours.BRAND_ACCENT_SECONDARY + target.getName() + " " + Colours.BRAND + "is now " + Colours.BRAND_ACCENT_SECONDARY
-                + (nowVanished ? "vanished" : "visible") + Colours.BRAND + ".");
+        msg(sender, Lang.of(vanish.toggle(target) ? "vanish.other.hidden" : "vanish.other.visible",
+                "name", target.getName()));
         return true;
     }
 

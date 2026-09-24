@@ -41,7 +41,7 @@ public final class Dashboard {
         } catch (Exception e) {
             keys = null;
             plugin.getLogger().warning(ConsoleColours.bad(
-                    "Failed to prepare the dashboard keys. The dashboard is unavailable.")
+                    teacommontea.util.Lang.of("dashboard.keys.failed"))
                     + Trace.of(e));
         }
     }
@@ -57,14 +57,13 @@ public final class Dashboard {
             }
             SESSIONS.remove(e.getKey());
             s.close();
-            plugin.getLogger().info(ConsoleColours.note("Dashboard session for ")
-                    + ConsoleColours.value(s.ownerName())
-                    + ConsoleColours.note(" expired and was closed."));
+            plugin.getLogger().info(ConsoleColours.note(teacommontea.util.Lang.of("dashboard.session.expired.console",
+                    "name", ConsoleColours.value(s.ownerName()))));
             teacommontea.util.sched.Sched.executeGlobal(() -> {
                 Player p = plugin.getServer().getPlayer(e.getKey());
                 if (p != null) {
                     msg(p, Colours.BRAND_ACCENT_SECONDARY
-                            + "Your dashboard session has expired.");
+                            + teacommontea.util.Lang.of("dashboard.session.expired"));
                 }
             });
         }
@@ -116,12 +115,12 @@ public final class Dashboard {
     public static void open(Plugin plugin, CommandSender sender) {
         if (keys == null) {
             msg(sender,
-                    Colours.WARNING + "Your server does not support the dashboard.");
+                    teacommontea.util.Lang.of("dashboard.unsupported"));
             return;
         }
         if (!(sender instanceof Player player)) {
             msg(sender,
-                    Colours.WARNING + "Run /verite dashboard in-game to request approval.");
+                    teacommontea.util.Lang.of("dashboard.request.ingame"));
             return;
         }
 
@@ -131,7 +130,7 @@ public final class Dashboard {
         }
 
         msg(sender,
-                Colours.BRAND_ACCENT_SECONDARY + "Preparing your dashboard...");
+                teacommontea.util.Lang.of("dashboard.preparing"));
 
         String base = base(plugin);
         String serverName = plugin.getServer().getName();
@@ -145,20 +144,11 @@ public final class Dashboard {
                 SESSIONS.put(player.getUniqueId(), session);
 
                 String url = base + "/dashboard/" + key;
-                plugin.getLogger().info(ConsoleColours.note(
-                        "Dashboard session opened by ")
-                        + ConsoleColours.value(player.getName())
-                        + ConsoleColours.note(". Waiting for approval."));
+                plugin.getLogger().info(ConsoleColours.note(teacommontea.util.Lang.of("dashboard.session.opened",
+                        "name", ConsoleColours.value(player.getName()))));
                 teacommontea.util.sched.Sched.executeGlobal(() -> {
                     msg(player,
-                            Colours.BRAND_ACCENT_SECONDARY + "Your dashboard is ready. "
-                            + "<click:open_url:'" + url + "'>"
-                            + "<hover:show_text:'" + Colours.BRAND_ACCENT_SECONDARY
-                            + "This link expires in one hour.'>"
-                            + Colours.BRAND_ACCENT + "[" + Colours.BRAND + "Click here"
-                            + Colours.BRAND_ACCENT + "]</hover></click>"
-                            + Colours.BRAND_ACCENT_SECONDARY
-                            + " to open it, or click the link below:");
+                            teacommontea.util.Lang.of("dashboard.ready", "url", url));
                     teacommontea.util.text.Text.send(player,
                             Colours.BRAND + "<click:open_url:'" + url + "'>"
                             + url + "</click>");
@@ -166,11 +156,10 @@ public final class Dashboard {
             } catch (Exception e) {
                 session.close();
                 plugin.getLogger().warning(ConsoleColours.bad(
-                        "Failed to open a dashboard session.") + Trace.of(e));
+                        teacommontea.util.Lang.of("dashboard.open.failed")) + Trace.of(e));
                 teacommontea.util.sched.Sched.executeGlobal(() ->
                         msg(player,
-                                Colours.WARNING + "Failed to connect to the dashboard. "
-                                + "Check console."));
+                                teacommontea.util.Lang.of("dashboard.connect.failed")));
             }
         });
     }
@@ -186,18 +175,17 @@ public final class Dashboard {
 
         if (session == null) {
             msg(sender,
-                    Colours.WARNING + "The dashboard is not awaiting approval.");
+                    teacommontea.util.Lang.of("dashboard.not.awaiting"));
             return;
         }
         if (session.approvalExpired()) {
             msg(sender,
-                    Colours.WARNING + "That approval request has expired. "
-                    + "Run /verite dashboard again.");
+                    teacommontea.util.Lang.of("dashboard.approval.expired"));
             return;
         }
         if (!session.nonce().equals(nonce)) {
             msg(sender,
-                    Colours.WARNING + "That approval code does not match.");
+                    teacommontea.util.Lang.of("dashboard.approval.mismatch"));
             return;
         }
 
@@ -207,15 +195,13 @@ public final class Dashboard {
                     DashboardQueries.activePunishments());
         }
         msg(sender,
-                Colours.SUCCESS + "The dashboard session has been marked as trusted. "
-                + "In the future, connections from the same browser will be trusted "
-                + "automatically.");
+                teacommontea.util.Lang.of("dashboard.trusted"));
     }
 
     public static void close(CommandSender sender) {
         if (SESSIONS.isEmpty()) {
             msg(sender,
-                    Colours.BRAND_ACCENT_SECONDARY + "No dashboard sessions are active.");
+                    teacommontea.util.Lang.of("dashboard.none.active"));
             return;
         }
         for (DashboardSession s : SESSIONS.values()) {
@@ -223,7 +209,7 @@ public final class Dashboard {
         }
         SESSIONS.clear();
         msg(sender,
-                Colours.BRAND_ACCENT_SECONDARY + "Dashboard connection closed.");
+                teacommontea.util.Lang.of("dashboard.closed"));
     }
 
     private static String base(Plugin plugin) {

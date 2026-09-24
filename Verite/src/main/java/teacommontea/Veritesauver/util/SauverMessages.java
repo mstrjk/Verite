@@ -2,8 +2,11 @@ package teacommontea.veritesauver.util;
 
 import java.util.function.Predicate;
 
-import net.md_5.bungee.api.chat.BaseComponent;
+import teacommontea.util.text.Span;
+import teacommontea.util.text.Send;
 import teacommontea.util.text.Text;
+
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,7 +20,7 @@ public final class SauverMessages {
     public SauverMessages() {}
 
     public void send(CommandSender to, String tagged) {
-        to.spigot().sendMessage(messages.prefixed(tagged));
+        Send.to(to, messages.prefixed(tagged));
     }
 
     public void info(CommandSender to, String tagged) {
@@ -47,7 +50,7 @@ public final class SauverMessages {
         }
     }
 
-    public static BaseComponent[] screen(String tagged) {
+    public static List<Span> screen(String tagged) {
         return Text.screen(tagged);
     }
 

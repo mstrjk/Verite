@@ -86,7 +86,8 @@ public final class EveSegment {
         if (LANGS.isEmpty()) {
             plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad("Segmentation disabled. No supported languages were found in the tokeniser."));
         } else {
-            plugin.getLogger().info("Loaded " + teacommontea.util.ConsoleColours.note(LANGS.size()) + " language" + (LANGS.size() == 1 ? "" : "s") + ".");
+            plugin.getLogger().info(teacommontea.util.Lang.counted("filter.segmentation.loaded", LANGS.size(),
+                    "count", teacommontea.util.ConsoleColours.note(LANGS.size())));
         }
     }
 
@@ -262,10 +263,9 @@ public final class EveSegment {
         double[][] c = new double[langCount][n + 1];
         int[][] back = new int[langCount][n + 1];
 
-        @SuppressWarnings("unchecked")
-        ArrayDeque<Integer>[] deques = new ArrayDeque[langCount];
+        java.util.List<ArrayDeque<Integer>> deques = new java.util.ArrayList<>(langCount);
         for (int l = 0; l < langCount; l++) {
-            deques[l] = new ArrayDeque<>();
+            deques.add(new ArrayDeque<>());
         }
 
         double[] best = new double[langCount];
@@ -276,7 +276,7 @@ public final class EveSegment {
             int minK = Math.max(0, end - maxWord);
 
             for (int l = 0; l < langCount; l++) {
-                ArrayDeque<Integer> dq = deques[l];
+                ArrayDeque<Integer> dq = deques.get(l);
                 double enteringValue = c[l][entering] - UNKNOWN_CHAR_COST * entering;
                 while (!dq.isEmpty()) {
                     int tail = dq.peekLast();

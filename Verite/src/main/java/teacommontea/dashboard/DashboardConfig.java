@@ -79,8 +79,7 @@ public final class DashboardConfig {
 
         if (shape(target.value) != shape(value)) {
             throw new IllegalArgumentException(
-                    "That is the wrong kind of value for " + dotted
-                    + ". It expects " + kind(target.value) + ".");
+                    teacommontea.util.Lang.of("dashboard.config.wrong.kind", "path", dotted, "kind", kind(target.value)));
         }
 
         lines.set(target.line, replaceValue(lines.get(target.line), value));

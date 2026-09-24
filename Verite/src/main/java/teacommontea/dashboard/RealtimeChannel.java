@@ -51,7 +51,7 @@ public final class RealtimeChannel {
                 .buildAsync(URI.create(url), new Listener())
                 .whenComplete((ws, err) -> {
                     if (err != null) {
-                        onProblem.accept("could not reach Supabase Realtime");
+                        onProblem.accept(teacommontea.util.Lang.of("dashboard.channel.unreachable"));
                         return;
                     }
                     socket = ws;
@@ -125,7 +125,7 @@ public final class RealtimeChannel {
             if ("ok".equals(fields.get("status"))) {
                 onJoined.run();
             } else if (fields.containsKey("status")) {
-                onProblem.accept("the channel refused the connection");
+                onProblem.accept(teacommontea.util.Lang.of("dashboard.channel.refused"));
             }
             return;
         }
@@ -160,7 +160,7 @@ public final class RealtimeChannel {
         public CompletionStage<?> onClose(WebSocket ws, int status, String reason) {
             if (!closed) {
                 closed = true;
-                onProblem.accept("the channel closed");
+                onProblem.accept(teacommontea.util.Lang.of("dashboard.channel.closed"));
             }
             return null;
         }
@@ -169,7 +169,7 @@ public final class RealtimeChannel {
         public void onError(WebSocket ws, Throwable error) {
             if (!closed) {
                 closed = true;
-                onProblem.accept("the channel failed");
+                onProblem.accept(teacommontea.util.Lang.of("dashboard.channel.failed"));
             }
         }
     }

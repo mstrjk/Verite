@@ -16,26 +16,25 @@ public final class LockdownCommands extends CommandBase {
 
     public void lockdown(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            String state = SauverLockdown.active()
-                    ? Colours.WARNING + "ACTIVE " + Colours.BRAND_ACCENT_SECONDARY + "- " + SauverLockdown.reason()
-                    : Colours.BRAND + "off";
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "Lockdown is " + state + Colours.BRAND_ACCENT_SECONDARY + ".");
+            send(sender, SauverLockdown.active()
+                    ? teacommontea.util.Lang.of("lockdown.state.active", "reason", SauverLockdown.reason())
+                    : teacommontea.util.Lang.of("lockdown.state.off"));
             usage(sender, "lockdown <reason>", "seal the server");
             usage(sender, "lockdown end", "lift the lockdown");
             return;
         }
         if (args[0].equalsIgnoreCase("end") || args[0].equalsIgnoreCase("off")) {
             if (!SauverLockdown.active()) {
-                err(sender, Colours.WARNING + "The server is not in lockdown.");
+                err(sender, teacommontea.util.Lang.of("lockdown.not.active"));
                 return;
             }
             SauverLockdown.end();
-            send(sender, Colours.BRAND + "Lockdown lifted. Players may join again.");
+            send(sender, teacommontea.util.Lang.of("lockdown.lifted"));
             return;
         }
         String reason = String.join(" ", args);
         SauverLockdown.begin(reason);
-        send(sender, Colours.WARNING + "The server is now in lockdown. " + Colours.BRAND_ACCENT_SECONDARY + "Reason: " + Colours.BRAND_ACCENT_SECONDARY + reason);
+        send(sender, teacommontea.util.Lang.of("lockdown.started", "reason", reason));
     }
 
     public List<String> lockdownTab(CommandSender sender, String[] args) {

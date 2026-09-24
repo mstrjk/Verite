@@ -48,7 +48,7 @@ public final class LookupCommands extends CommandBase {
             }
             List<String> ips = dao().ipsOf(u);
             if (ips.isEmpty()) {
-                err(sender, Colours.WARNING + "No IP on record for " + Colours.BRAND_ACCENT_SECONDARY + args[0] + Colours.WARNING + ".");
+                err(sender, teacommontea.util.Lang.of("lookup.ip.none", "name", args[0]));
                 return;
             }
             ip = ips.get(0);
@@ -56,11 +56,11 @@ public final class LookupCommands extends CommandBase {
         }
         List<UUID> users = dao().usersOfIp(ip);
         if (users.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "No accounts share that IP.");
+            send(sender, teacommontea.util.Lang.of("lookup.dupeip.none"));
             return;
         }
         long now = System.currentTimeMillis();
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Accounts sharing " + Colours.BRAND_ACCENT_SECONDARY + labelName + Colours.BRAND_ACCENT_SECONDARY + "'s IP (" + Colours.BRAND_ACCENT_SECONDARY + users.size() + Colours.BRAND_ACCENT_SECONDARY + ").");
+        send(sender, teacommontea.util.Lang.of("lookup.dupeip.header", "name", labelName, "count", users.size()));
         for (UUID u : users) {
             String name = dao().nameOf(u);
             if (name == null) {
@@ -70,11 +70,11 @@ public final class LookupCommands extends CommandBase {
             Entry m = dao().activeMute(u);
             String flag = "";
             if (b != null && b.inForce(now)) {
-                flag = " " + Colours.WARNING + "(banned)";
+                flag = " " + teacommontea.util.Lang.of("lookup.flag.banned");
             } else if (m != null && m.inForce(now)) {
-                flag = " " + Colours.BRAND_ACCENT_SECONDARY + "(muted)";
+                flag = " " + teacommontea.util.Lang.of("lookup.flag.muted");
             }
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  " + Colours.BRAND_ACCENT_SECONDARY + name + flag);
+            raw(sender, teacommontea.util.Lang.of("lookup.entry.plain", "value", name + flag));
         }
     }
 
@@ -85,12 +85,12 @@ public final class LookupCommands extends CommandBase {
         }
         List<String> ips = dao().ipsOf(u);
         if (ips.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "No IP history on record.");
+            send(sender, teacommontea.util.Lang.of("lookup.iphistory.none"));
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "IP history for " + Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0]) + Colours.BRAND_ACCENT_SECONDARY + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.iphistory.header", "name", bestName(u, args[0])));
         for (String ip : ips) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  " + Colours.BRAND_ACCENT_SECONDARY + ip);
+            raw(sender, teacommontea.util.Lang.of("lookup.entry.plain", "value", ip));
         }
     }
 
@@ -101,12 +101,12 @@ public final class LookupCommands extends CommandBase {
         }
         List<String> names = dao().namesOf(u);
         if (names.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "No name history on record.");
+            send(sender, teacommontea.util.Lang.of("lookup.namehistory.none"));
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Name history for " + Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0]) + Colours.BRAND_ACCENT_SECONDARY + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.namehistory.header", "name", bestName(u, args[0])));
         for (String n : names) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  " + Colours.BRAND_ACCENT_SECONDARY + n);
+            raw(sender, teacommontea.util.Lang.of("lookup.entry.plain", "value", n));
         }
     }
 
@@ -117,10 +117,10 @@ public final class LookupCommands extends CommandBase {
         }
         UUID u = dao().uuidByName(args[0]);
         if (u == null) {
-            err(sender, Colours.WARNING + "No UUID on record for " + Colours.BRAND_ACCENT_SECONDARY + args[0] + Colours.WARNING + ".");
+            err(sender, teacommontea.util.Lang.of("lookup.uuid.none", "name", args[0]));
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + args[0] + " " + Colours.BRAND_ACCENT_SECONDARY + "-> " + Colours.BRAND_ACCENT_SECONDARY + u);
+        send(sender, teacommontea.util.Lang.of("lookup.lastuuid.result", "name", args[0], "uuid", u));
     }
 
     public void listActive(CommandSender sender, String[] args, Entry.Type type) {
@@ -128,7 +128,7 @@ public final class LookupCommands extends CommandBase {
         long now = System.currentTimeMillis();
         List<Entry> all = dao().activeOfType(type, now);
         if (all.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "There are no active " + word + "s.");
+            send(sender, teacommontea.util.Lang.of("lookup.active.none." + word + "s"));
             return;
         }
         int page = args.length > 0 ? Math.max(1, parseIntOr(args[0], 1)) : 1;
@@ -136,14 +136,15 @@ public final class LookupCommands extends CommandBase {
         page = Math.min(page, pages);
         int from = (page - 1) * PAGE_SIZE;
         int to = Math.min(from + PAGE_SIZE, all.size());
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Active " + word + "s (" + Colours.BRAND_ACCENT_SECONDARY + all.size()
-                + Colours.BRAND_ACCENT_SECONDARY + ") - page " + Colours.BRAND_ACCENT_SECONDARY + page + Colours.BRAND_ACCENT_SECONDARY + "/" + Colours.BRAND_ACCENT_SECONDARY + pages + Colours.BRAND_ACCENT_SECONDARY + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.active.header." + word + "s",
+                "count", all.size(), "page", page, "pages", pages));
         for (int i = from; i < to; i++) {
             Entry e = all.get(i);
             String tname = e.uuid() != null ? bestName(e.uuid(), "?") : e.ip();
-            String when = e.permanent() ? Colours.WARNING + "perm" : Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(e.remaining(now));
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  #" + e.randomId() + " " + Colours.BRAND_ACCENT_SECONDARY + tname + " " + Colours.BRAND_ACCENT_SECONDARY + "by " + Colours.BRAND_ACCENT_SECONDARY
-                    + e.executorName() + " " + Colours.BRAND_ACCENT_SECONDARY + "(" + when + Colours.BRAND_ACCENT_SECONDARY + ") " + e.reason());
+            String when = e.permanent() ? teacommontea.util.Lang.of("lookup.duration.permanent")
+                    : SauverFormat.fancyTime(e.remaining(now));
+            raw(sender, teacommontea.util.Lang.of("lookup.active.entry", "id", e.randomId(), "name", tname,
+                    "issuer", e.executorName(), "duration", when, "reason", e.reason()));
         }
     }
 
@@ -161,7 +162,7 @@ public final class LookupCommands extends CommandBase {
         }
         List<Entry> hist = new java.util.ArrayList<>(dao().history(u, 500));
         if (hist.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0]) + " " + Colours.BRAND_ACCENT_SECONDARY + "has no punishment history.");
+            send(sender, teacommontea.util.Lang.of("lookup.history.none", "name", bestName(u, args[0])));
             return;
         }
         long now = System.currentTimeMillis();
@@ -174,11 +175,10 @@ public final class LookupCommands extends CommandBase {
         int from = (page - 1) * HISTORY_PAGE_SIZE;
         int to = Math.min(from + HISTORY_PAGE_SIZE, hist.size());
 
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Punishment history for " + Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0])
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "(" + Colours.BRAND_ACCENT_SECONDARY + hist.size() + Colours.BRAND_ACCENT_SECONDARY + ") - page "
-                + Colours.BRAND_ACCENT_SECONDARY + page + Colours.BRAND_ACCENT_SECONDARY + "/" + Colours.BRAND_ACCENT_SECONDARY + pages + Colours.BRAND_ACCENT_SECONDARY + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.history.header", "name", bestName(u, args[0]),
+                "count", hist.size(), "page", page, "pages", pages));
         for (int i = from; i < to; i++) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  " + historyLine(hist.get(i), now, args[0]));
+            raw(sender, teacommontea.util.Lang.of("lookup.entry.plain", "value", historyLine(hist.get(i), now, args[0])));
         }
         raw(sender, "  <italic>" + Colours.BRAND_ACCENT_SECONDARY
                 + "Hover a punishment for details, or click it to open the full record.</italic>");
@@ -202,13 +202,12 @@ public final class LookupCommands extends CommandBase {
             found = findById(dao().history(self.getUniqueId(), 500), id);
         }
         if (found == null) {
-            err(sender, Colours.WARNING + "No punishment found with ID " + Colours.BRAND_ACCENT_SECONDARY + "#" + id + Colours.WARNING + ".");
+            err(sender, teacommontea.util.Lang.of("lookup.punishment.missing", "id", id));
             return;
         }
         long now = System.currentTimeMillis();
         String target = found.uuid() != null ? bestName(found.uuid(), "?") : found.ip();
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Punishment " + Colours.WARNING + "#" + found.randomId()
-                + Colours.BRAND_ACCENT_SECONDARY + " against " + Colours.BRAND_ACCENT_SECONDARY + target + Colours.BRAND_ACCENT_SECONDARY + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.punishment.header", "id", found.randomId(), "name", target));
         for (String line : compendium(found, now).split("<newline>")) {
             raw(sender, "  " + line);
         }
@@ -254,11 +253,11 @@ public final class LookupCommands extends CommandBase {
 
     private String pageButton(String label, String target, int toPage, String sort, boolean live) {
         if (!live) {
-            return "<reset>" + Colours.BRAND_ACCENT + "[" + label + "]";
+            return teacommontea.util.Lang.of("lookup.nav.button", "label", label);
         }
         return "<reset><click:run_command:'/history " + target + " " + toPage + " " + sort + "'>"
-                + "<hover:show_text:'" + Colours.BRAND_ACCENT_SECONDARY + "Go to page " + toPage + "'>"
-                + Colours.BRAND + "[" + label + "]</hover></click>";
+                + "<hover:show_text:'" + teacommontea.util.Lang.of("lookup.nav.page.hint", "page", toPage) + "'>"
+                + teacommontea.util.Lang.of("lookup.nav.button.active", "label", label) + "</hover></click>";
     }
 
     private String sortButton(String label, String target, String toSort, boolean current) {
@@ -268,7 +267,7 @@ public final class LookupCommands extends CommandBase {
                 : SORT_TYPE.equals(toSort) ? "grouped by punishment"
                 : "longest first";
         return "<reset><click:run_command:'/history " + target + " 1 " + toSort + "'>"
-                + "<hover:show_text:'" + Colours.BRAND_ACCENT_SECONDARY + "Sort by " + hint + "'>"
+                + "<hover:show_text:'" + teacommontea.util.Lang.of("lookup.nav.sort.hint", "sort", hint) + "'>"
                 + colour + "[Sort by " + label + "]</hover></click>";
     }
 
@@ -279,22 +278,21 @@ public final class LookupCommands extends CommandBase {
         }
         List<Entry> hist = dao().byStaff(u, 40);
         if (hist.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0]) + " " + Colours.BRAND_ACCENT_SECONDARY + "has issued no punishments.");
+            send(sender, teacommontea.util.Lang.of("lookup.staffhistory.none", "name", bestName(u, args[0])));
             return;
         }
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Punishments issued by " + Colours.BRAND_ACCENT_SECONDARY + bestName(u, args[0])
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "(" + Colours.BRAND_ACCENT_SECONDARY + hist.size() + Colours.BRAND_ACCENT_SECONDARY + ").");
+        send(sender, teacommontea.util.Lang.of("lookup.staffhistory.header", "name", bestName(u, args[0]), "count", hist.size()));
         long now = System.currentTimeMillis();
         for (Entry e : hist) {
             String tname = e.uuid() != null ? bestName(e.uuid(), "?") : e.ip();
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  [" + e.type().id() + "] " + Colours.BRAND_ACCENT_SECONDARY + tname + " " + statusWord(e, now)
+            raw(sender, teacommontea.util.Lang.of("lookup.staffhistory.entry", "type", e.type().id(), "name", tname, "status", statusWord(e, now))
                     + " " + Colours.BRAND_ACCENT_SECONDARY + e.reason());
         }
     }
 
     private String historyLine(Entry e, long now, String owner) {
         String body = Colours.WARNING + e.type().id().toUpperCase(Locale.ROOT) + " " + statusWord(e, now)
-                + Colours.WARNING + " by " + e.executorName() + " " + e.reason() + " (#" + e.randomId() + ")";
+                + teacommontea.util.Lang.of("lookup.history.line", "issuer", e.executorName(), "reason", e.reason(), "id", e.randomId());
         return "<reset><click:run_command:'/punishment " + e.randomId() + " " + owner + "'>"
                 + "<hover:show_text:'" + compendium(e, now) + "'>" + body + "</hover></click>";
     }
@@ -349,15 +347,15 @@ public final class LookupCommands extends CommandBase {
 
     private String statusWord(Entry e, long now) {
         if (e.removedByName() != null) {
-            return Colours.BRAND_ACCENT + "(removed by " + e.removedByName() + ")";
+            return teacommontea.util.Lang.of("lookup.status.removed", "name", e.removedByName());
         }
         if (e.type() == Entry.Type.KICK || e.type() == Entry.Type.WARNING) {
-            return e.expired(now) ? Colours.BRAND_ACCENT + "(expired)" : Colours.SUCCESS + "(active)";
+            return teacommontea.util.Lang.of(e.expired(now) ? "lookup.status.expired" : "lookup.status.active");
         }
         if (!e.active()) {
-            return Colours.BRAND_ACCENT + "(expired)";
+            return teacommontea.util.Lang.of("lookup.status.expired");
         }
-        return e.inForce(now) ? Colours.SUCCESS + "(active)" : Colours.BRAND_ACCENT + "(expired)";
+        return teacommontea.util.Lang.of(e.inForce(now) ? "lookup.status.active" : "lookup.status.expired");
     }
 
     public void staffrollback(CommandSender sender, String[] args) {
@@ -375,14 +373,14 @@ public final class LookupCommands extends CommandBase {
         if (args.length > 1) {
             long window = SauverDuration.parse(args[1]);
             if (window == -1 || window == Entry.PERMANENT) {
-                err(sender, Colours.WARNING + "That duration is invalid: " + Colours.BRAND_ACCENT_SECONDARY + args[1] + Colours.WARNING + ".");
+                err(sender, teacommontea.util.Lang.of("duration.invalid", "duration", args[1]));
                 return;
             }
             cutoff = now - window;
         }
         List<Entry> toLift = dao().activeByStaffSince(staff, cutoff, now);
         if (toLift.isEmpty()) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + "No active punishments by " + Colours.BRAND_ACCENT_SECONDARY + bestName(staff, args[0]) + " " + Colours.BRAND_ACCENT_SECONDARY + "to roll back.");
+            send(sender, teacommontea.util.Lang.of("lookup.rollback.none", "name", bestName(staff, args[0])));
             return;
         }
         int lifted = 0;
@@ -394,8 +392,7 @@ public final class LookupCommands extends CommandBase {
                 lifted++;
             }
         }
-        send(sender, Colours.BRAND + "You rolled back " + Colours.BRAND_ACCENT_SECONDARY + lifted + " " + Colours.BRAND + "punishments by " + Colours.BRAND_ACCENT_SECONDARY
-                + bestName(staff, args[0]) + Colours.BRAND + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.rollback.done", "count", lifted, "name", bestName(staff, args[0])));
     }
 
     public void prunehistory(CommandSender sender, String[] args) {
@@ -413,14 +410,13 @@ public final class LookupCommands extends CommandBase {
         if (args.length > 1) {
             long window = SauverDuration.parse(args[1]);
             if (window == -1 || window == Entry.PERMANENT) {
-                err(sender, Colours.WARNING + "That duration is invalid: " + Colours.BRAND_ACCENT_SECONDARY + args[1] + Colours.WARNING + ".");
+                err(sender, teacommontea.util.Lang.of("duration.invalid", "duration", args[1]));
                 return;
             }
             cutoff = now - window;
         }
         int removed = dao().pruneHistory(u, cutoff, now);
-        send(sender, Colours.BRAND + "You pruned " + Colours.BRAND_ACCENT_SECONDARY + removed + " " + Colours.BRAND + "inactive records for " + Colours.BRAND_ACCENT_SECONDARY
-                + bestName(u, args[0]) + Colours.BRAND + ".");
+        send(sender, teacommontea.util.Lang.of("lookup.prune.done", "count", removed, "name", bestName(u, args[0])));
     }
 
     public void whois(CommandSender sender, String[] args) {
@@ -441,7 +437,7 @@ public final class LookupCommands extends CommandBase {
             return;
         }
 
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Resolving " + Colours.BRAND_ACCENT_SECONDARY + query + " " + Colours.BRAND_ACCENT_SECONDARY + "via Mojang...");
+        send(sender, teacommontea.util.Lang.of("lookup.whois.resolving", "query", query));
         teacommontea.util.sched.Sched.executeAsync(() -> {
             SauverMojang.Profile prof = SauverMojang.lookup(query);
             Runnable render = () -> {
@@ -450,16 +446,13 @@ public final class LookupCommands extends CommandBase {
                         if (dao().hasProfile(prof.uuid())) {
                             renderWhois(sender, prof.uuid(), prof.name());
                         } else {
-                            send(sender, Colours.BRAND_ACCENT_SECONDARY + "Whois " + Colours.BRAND_ACCENT_SECONDARY + prof.name()
-                                    + " " + Colours.BRAND_ACCENT_SECONDARY + "(never joined this server).");
-                            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  UUID: " + Colours.BRAND_ACCENT_SECONDARY + prof.uuid());
-                            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Source: " + Colours.BRAND_ACCENT_SECONDARY + "Mojang " + Colours.BRAND_ACCENT_SECONDARY + "(no local history)");
+                            send(sender, teacommontea.util.Lang.of("lookup.whois.never.joined", "name", prof.name()));
+                            raw(sender, teacommontea.util.Lang.of("lookup.whois.uuid", "uuid", prof.uuid()));
+                            raw(sender, teacommontea.util.Lang.of("lookup.whois.source.mojang"));
                         }
                     }
-                    case NOT_FOUND -> err(sender, Colours.WARNING + "No Minecraft account exists with the name " + Colours.BRAND_ACCENT_SECONDARY
-                            + query + Colours.WARNING + ".");
-                    case UNKNOWN -> err(sender, Colours.WARNING + "Could not reach Mojang to resolve " + Colours.BRAND_ACCENT_SECONDARY
-                            + query + Colours.WARNING + ". Try again shortly.");
+                    case NOT_FOUND -> err(sender, teacommontea.util.Lang.of("lookup.whois.no.account", "query", query));
+                    case UNKNOWN -> err(sender, teacommontea.util.Lang.of("lookup.whois.mojang.unreachable", "query", query));
                 }
             };
             if (sender instanceof org.bukkit.entity.Player p) {
@@ -475,62 +468,65 @@ public final class LookupCommands extends CommandBase {
         String name = pr.name() != null ? pr.name() : fallbackName;
         long now = System.currentTimeMillis();
 
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + "Whois " + Colours.BRAND_ACCENT_SECONDARY + name + (pr.online() ? " " + Colours.BRAND + "(online)" : "") + Colours.BRAND_ACCENT_SECONDARY + ".");
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  UUID: " + Colours.BRAND_ACCENT_SECONDARY + u);
+        send(sender, teacommontea.util.Lang.of(pr.online() ? "lookup.whois.header.online" : "lookup.whois.header", "name", name));
+        raw(sender, teacommontea.util.Lang.of("lookup.whois.uuid", "uuid", u));
 
         if (pr.names().size() > 1) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Known names: " + Colours.BRAND_ACCENT_SECONDARY + String.join(Colours.BRAND_ACCENT_SECONDARY + ", " + Colours.BRAND_ACCENT_SECONDARY, pr.names()));
+            raw(sender, teacommontea.util.Lang.of("lookup.whois.known.names", "names", String.join(", ", pr.names())));
         }
 
         String version = SauverProtocol.versionName(pr.protocol());
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Version: " + Colours.BRAND_ACCENT_SECONDARY + (version != null ? version : "unknown")
-                + (pr.protocol() > 0 ? " " + Colours.BRAND_ACCENT_SECONDARY + "(protocol " + pr.protocol() + ")" : ""));
+        String versionLabel = version != null ? version : teacommontea.util.Lang.of("lookup.value.unknown");
+        raw(sender, pr.protocol() > 0
+                ? teacommontea.util.Lang.of("lookup.whois.version.protocol", "version", versionLabel, "protocol", pr.protocol())
+                : teacommontea.util.Lang.of("lookup.whois.version", "version", versionLabel));
 
-        String client = pr.lastClient() != null ? pr.lastClient() : "unknown";
+        String client = pr.lastClient() != null ? pr.lastClient() : teacommontea.util.Lang.of("lookup.value.unknown");
         if (pr.clients().size() > 1) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Client: " + Colours.BRAND_ACCENT_SECONDARY + client
-                    + " " + Colours.BRAND_ACCENT_SECONDARY + "(all: " + Colours.BRAND_ACCENT_SECONDARY + String.join(Colours.BRAND_ACCENT_SECONDARY + ", " + Colours.BRAND_ACCENT_SECONDARY, pr.clients()) + Colours.BRAND_ACCENT_SECONDARY + ")");
+            raw(sender, teacommontea.util.Lang.of("lookup.whois.client.all", "client", client,
+                    "clients", String.join(", ", pr.clients())));
         } else {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Client: " + Colours.BRAND_ACCENT_SECONDARY + client);
+            raw(sender, teacommontea.util.Lang.of("lookup.whois.client", "client", client));
         }
 
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Referrer: " + Colours.BRAND_ACCENT_SECONDARY + (pr.referrer() != null ? pr.referrer() : "unknown"));
+        raw(sender, teacommontea.util.Lang.of("lookup.whois.referrer", "referrer",
+                pr.referrer() != null ? pr.referrer() : teacommontea.util.Lang.of("lookup.value.unknown")));
 
         String lastIp = pr.lastIp();
         if (lastIp != null) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Country: " + Colours.BRAND_ACCENT_SECONDARY + countryLabel(lastIp));
+            raw(sender, teacommontea.util.Lang.of("lookup.whois.country", "country", countryLabel(lastIp)));
             if (sender.hasPermission("veritesauver.whois.ip")) {
-                raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Last IP: " + Colours.BRAND_ACCENT_SECONDARY + lastIp
-                        + " " + Colours.BRAND_ACCENT_SECONDARY + "(" + Colours.BRAND_ACCENT_SECONDARY + pr.ips().size() + " " + Colours.BRAND_ACCENT_SECONDARY + "on record)");
+                raw(sender, teacommontea.util.Lang.of("lookup.whois.last.ip", "ip", lastIp, "count", pr.ips().size()));
             }
         }
 
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Playtime: " + Colours.BRAND_ACCENT_SECONDARY + (pr.playtimeMs() > 0
-                ? SauverFormat.fancyTime(pr.playtimeMs()) : "none")
-                + " " + Colours.BRAND_ACCENT_SECONDARY + "over " + Colours.BRAND_ACCENT_SECONDARY + pr.joinCount() + " " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.pluralize(pr.joinCount(), "join"));
+        raw(sender, teacommontea.util.Lang.counted("lookup.whois.playtime", pr.joinCount(),
+                "playtime", pr.playtimeMs() > 0 ? SauverFormat.fancyTime(pr.playtimeMs())
+                        : teacommontea.util.Lang.of("lookup.whois.playtime.none"),
+                "count", pr.joinCount()));
 
         if (pr.firstJoin() > 0) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  First joined: " + Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(now - pr.firstJoin()) + " " + Colours.BRAND_ACCENT_SECONDARY + "ago");
+            raw(sender, teacommontea.util.Lang.of("lookup.whois.first.joined", "duration", SauverFormat.fancyTime(now - pr.firstJoin())));
         }
         if (pr.lastSeen() > 0) {
-            raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Last seen: " + (pr.online() ? Colours.BRAND + "now"
-                    : Colours.BRAND_ACCENT_SECONDARY + SauverFormat.fancyTime(now - pr.lastSeen()) + " " + Colours.BRAND_ACCENT_SECONDARY + "ago"));
+            raw(sender, pr.online() ? teacommontea.util.Lang.of("lookup.whois.last.seen.now")
+                    : teacommontea.util.Lang.of("lookup.whois.last.seen", "duration", SauverFormat.fancyTime(now - pr.lastSeen())));
         }
 
-        String punishColor = pr.punishments() > 0 ? Colours.WARNING : Colours.BRAND_ACCENT_SECONDARY;
-        raw(sender, Colours.BRAND_ACCENT_SECONDARY + "  Punishments: " + punishColor + pr.punishments()
-                + (pr.punishments() > 0 ? " " + Colours.BRAND_ACCENT_SECONDARY + "(see " + Colours.BRAND_ACCENT_SECONDARY + "/history " + name + Colours.BRAND_ACCENT_SECONDARY + ")" : ""));
+        raw(sender, pr.punishments() > 0
+                ? teacommontea.util.Lang.of("lookup.whois.punishments.some", "count", pr.punishments(), "name", name)
+                : teacommontea.util.Lang.of("lookup.whois.punishments", "count", pr.punishments()));
     }
 
     private String countryLabel(String ip) {
         if (!SauverGeoIp.available()) {
-            return "geoip off " + Colours.BRAND_ACCENT_SECONDARY + "(no GeoLite2 database)";
+            return teacommontea.util.Lang.of("lookup.geoip.off");
         }
         if (SauverGeoIp.isPrivate(ip)) {
-            return "unknown " + Colours.BRAND_ACCENT_SECONDARY + "(local/proxy IP, enable IP forwarding)";
+            return teacommontea.util.Lang.of("lookup.geoip.unknown");
         }
         String country = SauverGeoIp.country(ip);
-        return country != null ? country : "unknown";
+        return country != null ? country : teacommontea.util.Lang.of("lookup.value.unknown");
     }
 
     public void seen(CommandSender sender, String[] args) {
@@ -540,18 +536,17 @@ public final class LookupCommands extends CommandBase {
         }
         Player online = Bukkit.getPlayerExact(args[0]);
         if (online != null) {
-            send(sender, Colours.BRAND_ACCENT_SECONDARY + online.getName() + " " + Colours.BRAND_ACCENT_SECONDARY + "is online now.");
+            send(sender, teacommontea.util.Lang.of("lookup.seen.online", "name", online.getName()));
             return;
         }
         OfflinePlayer off = Bukkit.getOfflinePlayer(args[0]);
         long lastSeen = lastSeenMillis(off);
         if (lastSeen <= 0 && !off.hasPlayedBefore()) {
-            err(sender, Colours.WARNING + "That player has never joined the server.");
+            err(sender, teacommontea.util.Lang.of("lookup.seen.never"));
             return;
         }
         long ago = System.currentTimeMillis() - lastSeen;
-        send(sender, Colours.BRAND_ACCENT_SECONDARY + args[0] + " " + Colours.BRAND_ACCENT_SECONDARY + "was last seen " + Colours.BRAND_ACCENT_SECONDARY
-                + SauverFormat.fancyTime(ago) + " " + Colours.BRAND_ACCENT_SECONDARY + "ago.");
+        send(sender, teacommontea.util.Lang.of("lookup.seen.ago", "name", args[0], "duration", SauverFormat.fancyTime(ago)));
     }
 
     @SuppressWarnings("deprecation")

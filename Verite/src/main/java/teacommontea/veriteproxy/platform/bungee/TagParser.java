@@ -1,4 +1,4 @@
-package teacommontea.util.text;
+package teacommontea.veriteproxy.platform.bungee;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -74,7 +74,9 @@ public final class TagParser {
         boolean quoted = false;
         for (int i = open + 1; i < tagged.length(); i++) {
             char c = tagged.charAt(i);
-            if (c == '\'') {
+            if (c == '\\' && i + 1 < tagged.length()) {
+                i++;
+            } else if (c == '\'') {
                 quoted = !quoted;
             } else if (c == '>' && !quoted) {
                 return i;
@@ -176,9 +178,23 @@ public final class TagParser {
     private static String unquote(String s) {
         String t = s.trim();
         if (t.length() >= 2 && t.charAt(0) == '\'' && t.charAt(t.length() - 1) == '\'') {
-            return t.substring(1, t.length() - 1);
+            t = t.substring(1, t.length() - 1);
         }
-        return t;
+        return unescape(t);
+    }
+
+    private static String unescape(String s) {
+        if (s.indexOf('\\') < 0) return s;
+        StringBuilder sb = new StringBuilder(s.length());
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' && i + 1 < s.length()) {
+                sb.append(s.charAt(++i));
+                continue;
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     private static void flush(List<BaseComponent> out, StringBuilder run, Style style) {

@@ -156,14 +156,14 @@ public final class VanishFeatures {
         @EventHandler(priority = EventPriority.LOWEST)
         public void onJoin(PlayerJoinEvent e) {
             if (vanish.settings().fakeMessage && v(vanish, e.getPlayer().getUniqueId())) {
-                e.setJoinMessage(null);
+                teacommontea.util.text.Server.joinMessage(e, null);
             }
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
         public void onQuit(PlayerQuitEvent e) {
             if (vanish.settings().fakeMessage && v(vanish, e.getPlayer().getUniqueId())) {
-                e.setQuitMessage(null);
+                teacommontea.util.text.Server.quitMessage(e, null);
             }
         }
     }
