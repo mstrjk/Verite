@@ -11,7 +11,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-
 final class InvSeeMenuRoles {
 
     final Method clicked;
@@ -154,12 +153,6 @@ final class InvSeeMenuRoles {
     }
 
     private static Method findMove(Class<?> menu, Class<?> item) {
-        // The call sites invoke moveItemStackTo with four arguments
-        // (ItemStack, startIndex, endIndex, reverseDirection). That four-argument overload exists on
-        // both mappings; the Mojang class additionally carries a five-argument overload that plain
-        // CraftBukkit does not, so match the four-argument form by structure to stay mapping-agnostic.
-        // The method is inherited from the menu base, so walk the hierarchy rather than only the
-        // declared methods of the resolved class.
         for (Class<?> c = menu; c != null && c != Object.class; c = c.getSuperclass()) {
             for (Method m : c.getDeclaredMethods()) {
                 Class<?>[] p = m.getParameterTypes();

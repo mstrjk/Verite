@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-
 public final class TagParser {
 
     private TagParser() {}
@@ -58,7 +57,6 @@ public final class TagParser {
             String tag = tagged.substring(i + 1, close);
             String handled = applyTag(tag, out, run, stack);
             if (handled == null) {
-                // not a recognised tag: keep the literal text
                 run.append('<');
                 i++;
             } else {

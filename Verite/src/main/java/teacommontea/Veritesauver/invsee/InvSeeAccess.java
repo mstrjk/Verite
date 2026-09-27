@@ -249,7 +249,6 @@ public final class InvSeeAccess {
         return fromBukkit(b);
     }
 
-
     public Object asNmsCopy(org.bukkit.inventory.ItemStack bukkit) throws Throwable {
         return asNmsCopy.invoke(bukkit);
     }
@@ -658,9 +657,6 @@ public final class InvSeeAccess {
             }
             emptyItemStack = emptyField;
 
-            // Paper adds no-arg convenience methods on the NMS ItemStack (asBukkitCopy / fromBukkitCopy);
-            // plain CraftBukkit has neither, so fall back to the universal CraftItemStack statics that
-            // every server has (asBukkitCopy(nms) and asNMSCopy(bukkit)) already resolved above.
             MethodHandle toBukkit;
             try {
                 toBukkit = handle(itemStackClass.getMethod("asBukkitCopy"));

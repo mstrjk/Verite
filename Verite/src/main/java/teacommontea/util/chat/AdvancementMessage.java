@@ -4,7 +4,6 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import java.lang.reflect.Method;
 
-
 public final class AdvancementMessage {
 
     private AdvancementMessage() {}
@@ -23,7 +22,6 @@ public final class AdvancementMessage {
         try {
             m.invoke(event, new Object[] { null });
         } catch (Throwable ignored) {
-            // a server that rejects a null message here keeps its default broadcast
         }
     }
 

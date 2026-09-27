@@ -12,7 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import com.destroystokyo.paper.ParticleBuilder;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
@@ -276,15 +275,8 @@ public final class ShowMarkers implements CommandExecutor, TabCompleter, Listene
     }
 
     private void emitForced(Player player, double x, double y, double z, BlockData shownAs) {
-        new ParticleBuilder(Particle.BLOCK_MARKER)
-                .location(player.getWorld(), x, y, z)
-                .count(1)
-                .offset(0.0D, 0.0D, 0.0D)
-                .extra(0.0D)
-                .data(shownAs)
-                .receivers(player)
-                .force(true)
-                .spawn();
+        player.getWorld().spawnParticle(Particle.BLOCK_MARKER, List.of(player), null,
+                x, y, z, 1, 0.0D, 0.0D, 0.0D, 0.0D, shownAs, true);
     }
 
     @Override

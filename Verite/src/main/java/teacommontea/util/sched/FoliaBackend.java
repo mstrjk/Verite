@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-
 final class FoliaBackend implements Sched.Backend {
 
     private final Plugin plugin;
@@ -20,13 +19,9 @@ final class FoliaBackend implements Sched.Backend {
 
     private final Class<?> scheduledTaskClass;
 
-    // global region scheduler
     private final Method gRun, gRunDelayed, gRunAtFixedRate;
-    // region scheduler (Location-based)
     private final Method rRun, rRunDelayed, rRunAtFixedRate;
-    // async scheduler
     private final Method aRunNow, aRunDelayed, aRunAtFixedRate;
-    // entity scheduler
     private final Method entityGetScheduler;
     private final Method eRun, eRunDelayed, eRunAtFixedRate;
     private final Method taskCancel;
@@ -69,7 +64,6 @@ final class FoliaBackend implements Sched.Backend {
         return m;
     }
 
-    // adapt a Runnable into the scheduler's Consumer<ScheduledTask> callback
     private Consumer<Object> cb(Runnable task) {
         return ignored -> task.run();
     }
@@ -89,7 +83,6 @@ final class FoliaBackend implements Sched.Backend {
         }
     }
 
-    // ---- entity ----
     @Override public TaskHandle forEntity(Entity entity, Runnable task) {
         Object es = entityScheduler(entity);
         return es == null ? TaskHandle.NONE : invokeWrap(eRun, es, plugin, cb(task), (Runnable) null);
@@ -108,7 +101,6 @@ final class FoliaBackend implements Sched.Backend {
         try { return entityGetScheduler.invoke(entity); } catch (Throwable t) { return null; }
     }
 
-    // ---- location / region ----
     @Override public TaskHandle at(Location location, Runnable task) {
         return invokeWrap(rRun, regionScheduler, plugin, location, cb(task));
     }
@@ -120,7 +112,6 @@ final class FoliaBackend implements Sched.Backend {
         return invokeWrap(rRunAtFixedRate, regionScheduler, plugin, location, cb(task), Math.max(1L, delayTicks), periodTicks);
     }
 
-    // ---- global ----
     @Override public TaskHandle global(Runnable task) {
         return invokeWrap(gRun, globalScheduler, plugin, cb(task));
     }
@@ -132,7 +123,6 @@ final class FoliaBackend implements Sched.Backend {
         return invokeWrap(gRunAtFixedRate, globalScheduler, plugin, cb(task), Math.max(1L, delayTicks), periodTicks);
     }
 
-    // ---- async ----
     @Override public TaskHandle async(Runnable task) {
         return invokeWrap(aRunNow, asyncScheduler, plugin, cb(task));
     }

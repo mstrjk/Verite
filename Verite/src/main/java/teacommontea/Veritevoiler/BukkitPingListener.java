@@ -8,7 +8,6 @@ import org.bukkit.event.server.ServerListPingEvent;
 
 import java.util.Iterator;
 
-
 public final class BukkitPingListener implements Listener {
 
     private final Vanish vanish;
@@ -25,7 +24,6 @@ public final class BukkitPingListener implements Listener {
                 if (p != null && vanish.isVanished(p.getUniqueId())) it.remove();
             }
         } catch (UnsupportedOperationException ignored) {
-            // this build's ping event does not allow roster iteration; leave the sample as is
         }
     }
 }

@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-
 public final class PingHider {
 
     private PingHider() {}
@@ -17,7 +16,6 @@ public final class PingHider {
                 Bukkit.getPluginManager().registerEvents((Listener) listener, plugin);
                 return;
             } catch (Throwable ignored) {
-                // fall through to the core hider
             }
         }
         Bukkit.getPluginManager().registerEvents(new BukkitPingListener(vanish), plugin);

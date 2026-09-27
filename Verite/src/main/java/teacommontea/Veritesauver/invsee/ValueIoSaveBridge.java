@@ -48,14 +48,6 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
                 "net.minecraft.nbt.NBTTagCompound");
         Class<?> valueInputType = InvSeeAccess.classOrNull("net.minecraft.world.level.storage.ValueInput");
 
-        // Resolve the player-data load by SHAPE, never by method name: plain CraftBukkit is
-        // Spigot-mapped at every version so the method name is obfuscated to a single letter, while
-        // Paper keeps the Mojang name. The parameter and generic-return shapes fully identify each
-        // load variant across the whole range. Preference order matches capability: NameAndId
-        // (1.21.9+), Player+ProblemReporter yielding a ValueInput directly (1.21.6+), String pair +
-        // ProblemReporter yielding a CompoundTag (1.21.6+), the plain String pair (1.21.5), then the
-        // single Player argument (1.21.5). A variant that returns a ValueInput is used as-is; one that
-        // returns a CompoundTag is wrapped through TagValueInput.create.
         Method load = null;
         int keyKind = -1;
         boolean yieldsValueInput = false;
@@ -102,8 +94,6 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
         load.setAccessible(true);
         this.storageLoad = LOOKUP.unreflect(load);
 
-        // save is the sole void method taking a single player-assignable argument; resolve by that
-        // shape rather than the name, which CraftBukkit obfuscates.
         Method save = null;
         for (Method m : storageClass.getDeclaredMethods()) {
             if (m.isSynthetic() || m.isBridge()) continue;
@@ -119,9 +109,6 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
         save.setAccessible(true);
         this.storageSave = LOOKUP.unreflect(save);
 
-        // These value-io shape classes drift by mapping: TagValueInput and ProblemReporter keep their
-        // name, but CompoundTag is NBTTagCompound and HolderLookup.Provider is HolderLookup.a on
-        // Spigot-mapped servers (all CraftBukkit versions), so list both names.
         Class<?> tagValueInput = InvSeeAccess.firstExisting(
                 "net.minecraft.world.level.storage.TagValueInput");
         Class<?> problemReporterClass = InvSeeAccess.firstExisting(
@@ -136,9 +123,6 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
                 || registryClass == null || compoundTag == null) {
             throw new InvSeeAccess.Unsupported("value-io save shapes missing");
         }
-        // TagValueInput.create is the static factory taking (ProblemReporter, registry, CompoundTag);
-        // resolve by that shape rather than the name. When the load variant already yields a ValueInput
-        // there is nothing to wrap, so the factory is optional in that case.
         Method create = null;
         for (Method m : tagValueInput.getDeclaredMethods()) {
             if (!java.lang.reflect.Modifier.isStatic(m.getModifiers())) continue;
@@ -189,7 +173,6 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
             return Optional.empty();
         }
         if (loadYieldsValueInput) {
-            // the load already produced a ValueInput; hand it straight back
             return Optional.of(tag.get());
         }
         Object input = tagValueInputCreate.invoke(problemReporter, registry, tag.get());
