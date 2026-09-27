@@ -40,7 +40,7 @@ fakeconnect.leave = &#FFFF55%player% ha abbandonato il gioco
 # ---- Flag ----
 flag.list.header = Flag modificabili {BRAND_ACCENT}(%count%):
 flag.list.entry =   {BRAND_ACCENT}- {BRAND_ACCENT_SECONDARY}%name%
-flag.usage = {BRAND_ACCENT_SECONDARY}Uso: {BRAND_ACCENT}/veriteflag <flag> [value]
+flag.usage = {BRAND_ACCENT_SECONDARY}Uso: {BRAND_ACCENT}/verite config <flag> [value]
 flag.unknown = {WARNING}Flag {BRAND_ACCENT_SECONDARY}%name%{WARNING} sconosciuta.
 flag.value = {BRAND_ACCENT_SECONDARY}%name% {BRAND_ACCENT}= {SUCCESS}%value%
 flag.value.unset = {BRAND_ACCENT_SECONDARY}%name% {BRAND_ACCENT}= {WARNING}non impostata

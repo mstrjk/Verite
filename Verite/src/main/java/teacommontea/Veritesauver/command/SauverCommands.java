@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,7 +49,17 @@ public final class SauverCommands implements CommandExecutor, TabCompleter {
         switch (cmd) {
             case "ban"          -> punish.issueBanOrMute(sender, args, Entry.Type.BAN, false);
             case "tempban"      -> punish.issueBanOrMute(sender, args, Entry.Type.BAN, true);
-            case "mute"         -> punish.issueBanOrMute(sender, args, Entry.Type.MUTE, false);
+            case "mute"         -> {
+                if (args.length == 1 && args[0].equals("*")) {
+                    if (!sender.hasPermission("veritesauver.chatmute")) {
+                        sauver.messages().err(sender, teacommontea.util.Lang.of("deny.permission"));
+                    } else {
+                        sauver.chat().chatMute(sender);
+                    }
+                } else {
+                    punish.issueBanOrMute(sender, args, Entry.Type.MUTE, false);
+                }
+            }
             case "tempmute"     -> punish.issueBanOrMute(sender, args, Entry.Type.MUTE, true);
             case "ipban"        -> punish.issueIp(sender, args, Entry.Type.BAN);
             case "ipmute"       -> punish.issueIp(sender, args, Entry.Type.MUTE);
@@ -91,7 +102,15 @@ public final class SauverCommands implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         String cmd = command.getName().toLowerCase(Locale.ROOT);
         return switch (cmd) {
-            case "ban", "mute"      -> punish.tabIssue(sender, "veritesauver." + cmd, args, false);
+            case "ban"              -> punish.tabIssue(sender, "veritesauver.ban", args, false);
+            case "mute"             -> {
+                List<String> out = new ArrayList<>(punish.tabIssue(sender, "veritesauver.mute", args, false));
+                if (args.length == 1 && "*".startsWith(args[0])
+                        && sender.hasPermission("veritesauver.chatmute")) {
+                    out.add("*");
+                }
+                yield out;
+            }
             case "tempban"          -> punish.tabIssue(sender, "veritesauver.ban", args, true);
             case "tempmute"         -> punish.tabIssue(sender, "veritesauver.mute", args, true);
             case "ipban"            -> punish.tabTargetAll(sender, "veritesauver.ipban", args);

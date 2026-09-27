@@ -6,20 +6,26 @@ import java.util.List;
 public final class Span {
 
     public enum Click {
-        RUN_COMMAND("run_command"),
-        SUGGEST_COMMAND("suggest_command"),
-        OPEN_URL("open_url"),
-        COPY_TO_CLIPBOARD("copy_to_clipboard"),
-        CHANGE_PAGE("change_page");
+        RUN_COMMAND("run_command", "command"),
+        SUGGEST_COMMAND("suggest_command", "command"),
+        OPEN_URL("open_url", "url"),
+        COPY_TO_CLIPBOARD("copy_to_clipboard", "value"),
+        CHANGE_PAGE("change_page", "page");
 
         private final String id;
+        private final String field;
 
-        Click(String id) {
+        Click(String id, String field) {
             this.id = id;
+            this.field = field;
         }
 
         public String id() {
             return id;
+        }
+
+        public String field() {
+            return field;
         }
 
         public static Click of(String action) {

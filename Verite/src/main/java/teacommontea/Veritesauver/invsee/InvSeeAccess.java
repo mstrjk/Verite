@@ -641,7 +641,7 @@ public final class InvSeeAccess {
 
             Class<?> craftItemStack = obc("inventory.CraftItemStack");
             asNmsCopy = handle(craftItemStack.getMethod("asNMSCopy", org.bukkit.inventory.ItemStack.class));
-            asBukkitCopy = handle(craftItemStack.getMethod("asBukkitCopy", itemStackClass));
+            asBukkitCopy = handle(asBukkitCopyMethod(craftItemStack, itemStackClass));
 
             Class<?> craftChat = obc("util.CraftChatMessage");
             fromStringOrNull = handle(craftChat.getMethod("fromStringOrNull", String.class));
@@ -776,6 +776,22 @@ public final class InvSeeAccess {
             }
         }
         throw new Unsupported("no method among " + java.util.Arrays.toString(names) + " on " + c.getName());
+    }
+
+    static Method asBukkitCopyMethod(Class<?> craftItemStack, Class<?> itemStackClass) throws Unsupported {
+        try {
+            return craftItemStack.getMethod("asBukkitCopy", itemStackClass);
+        } catch (NoSuchMethodException ignored) {
+        }
+        for (Method m : craftItemStack.getMethods()) {
+            if (!m.getName().equals("asBukkitCopy")) continue;
+            if (m.getParameterCount() != 1) continue;
+            if (!m.getParameterTypes()[0].isAssignableFrom(itemStackClass)) continue;
+            if (!org.bukkit.inventory.ItemStack.class.isAssignableFrom(m.getReturnType())) continue;
+            return m;
+        }
+        throw new Unsupported("no asBukkitCopy accepting " + itemStackClass.getName()
+                + " on " + craftItemStack.getName());
     }
 
     static Method methodByParams(Class<?> c, Class<?> ret, Class<?>[] params, String... names)

@@ -28,6 +28,10 @@ public final class FlagCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return run(sender, args);
+    }
+
+    public boolean run(CommandSender sender, String[] args) {
         Messages m = messages;
         if (!sender.hasPermission(PERMISSION)) {
             teacommontea.util.text.Send.to(sender, m.prefixed(Lang.of("deny.permission")));
@@ -80,6 +84,10 @@ public final class FlagCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return complete(args);
+    }
+
+    public static List<String> complete(String[] args) {
         if (args.length == 1) {
             return Complete.prefix(VeriteFlags.names(), args[0]);
         }

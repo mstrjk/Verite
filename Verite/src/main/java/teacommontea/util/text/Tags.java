@@ -9,6 +9,8 @@ public final class Tags {
 
     private Tags() {}
 
+    private enum Mark { NONE, CLICK, HOVER }
+
     private static final class Style {
         String colour = "white";
         boolean bold;
@@ -16,6 +18,7 @@ public final class Tags {
         Span.Click click;
         String clickValue;
         List<Span> hover;
+        Mark mark = Mark.NONE;
 
         Style copy() {
             Style s = new Style();
@@ -26,6 +29,13 @@ public final class Tags {
             s.clickValue = clickValue;
             s.hover = hover;
             return s;
+        }
+    }
+
+    private static void unwind(Deque<Style> stack, Mark mark) {
+        while (stack.size() > 1) {
+            Style top = stack.pop();
+            if (top.mark == mark) return;
         }
     }
 
@@ -112,10 +122,19 @@ public final class Tags {
             return true;
         }
         if (lower.equals("/italic") || lower.equals("/i")
-                || lower.equals("/bold") || lower.equals("/b")
-                || lower.equals("/click") || lower.equals("/hover")) {
+                || lower.equals("/bold") || lower.equals("/b")) {
             flush(out, run, stack.peek());
             if (stack.size() > 1) stack.pop();
+            return true;
+        }
+        if (lower.equals("/click")) {
+            flush(out, run, stack.peek());
+            unwind(stack, Mark.CLICK);
+            return true;
+        }
+        if (lower.equals("/hover")) {
+            flush(out, run, stack.peek());
+            unwind(stack, Mark.HOVER);
             return true;
         }
         if (lower.equals("newline") || lower.equals("br")) {
@@ -130,6 +149,7 @@ public final class Tags {
             int colon = spec.indexOf(':');
             s.click = Span.Click.of(colon < 0 ? spec : spec.substring(0, colon));
             s.clickValue = colon < 0 ? "" : unquote(spec.substring(colon + 1));
+            s.mark = Mark.CLICK;
             stack.push(s);
             return true;
         }
@@ -137,6 +157,7 @@ public final class Tags {
             flush(out, run, stack.peek());
             Style s = stack.peek().copy();
             s.hover = parse(unquote(tag.substring("hover:show_text:".length())));
+            s.mark = Mark.HOVER;
             stack.push(s);
             return true;
         }

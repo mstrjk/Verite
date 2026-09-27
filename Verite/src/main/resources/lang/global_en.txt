@@ -40,7 +40,7 @@ fakeconnect.leave = &#FFFF55%player% left the game
 # ---- Flags ----
 flag.list.header = Editable flags {BRAND_ACCENT}(%count%):
 flag.list.entry =   {BRAND_ACCENT}- {BRAND_ACCENT_SECONDARY}%name%
-flag.usage = {BRAND_ACCENT_SECONDARY}Usage: {BRAND_ACCENT}/veriteflag <flag> [value]
+flag.usage = {BRAND_ACCENT_SECONDARY}Usage: {BRAND_ACCENT}/verite config <flag> [value]
 flag.unknown = {WARNING}Unknown flag {BRAND_ACCENT_SECONDARY}%name%{WARNING}.
 flag.value = {BRAND_ACCENT_SECONDARY}%name% {BRAND_ACCENT}= {SUCCESS}%value%
 flag.value.unset = {BRAND_ACCENT_SECONDARY}%name% {BRAND_ACCENT}= {WARNING}unset
@@ -497,8 +497,8 @@ bundle.tokenisers.incomplete = The bundle did not contain .tokenizers/tokenizer.
 bundle.tokenisers.installed = Tokenisers installed.
 bundle.tokenisers.extract.failed = Failed to extract tokenisers. Consider reporting this error.
 bundle.extract.failed = Failed to extract %name%. Consider reporting this error.
+bundle.release.using = Using release %version% (supported by build %build%).
 bundle.release.supported = %version% (supported by build %build%).
-bundle.release.using = Using release %version%%supported%
 bundle.release.unsupported = No published release supports build %build%.
 bundle.release.fetch.failed = Failed to fetch releases.
 bundle.http.release.api = HTTP %code% from the release API.

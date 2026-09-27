@@ -69,6 +69,7 @@ public final class Send {
         Method decode = fromJson;
         Constructor<?> ctor = packetCtor;
         if (handle == null || conn == null || send == null || decode == null || ctor == null) {
+            report(null);
             return false;
         }
         try {
@@ -77,10 +78,35 @@ public final class Send {
             Object packet = ctor.newInstance(component, packetFlag);
             send.invoke(conn.get(handle.invoke(player)), packet);
             return true;
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            report(t);
             return false;
         }
     }
+
+    private static volatile boolean reported;
+
+    private static synchronized void report(Throwable cause) {
+        if (reported) return;
+        reported = true;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Rich chat is unavailable, so hover and click text will not work. ");
+        sb.append("Verite has fallen back to plain coloured messages. Missing: ");
+        if (fromJson == null) sb.append("[component decoder] ");
+        if (packetCtor == null) sb.append("[chat packet] ");
+        if (getHandle == null) sb.append("[player handle] ");
+        if (connectionField == null) sb.append("[player connection] ");
+        if (sendPacket == null) sb.append("[packet sender] ");
+        if (resolveFailure != null) {
+            sb.append("Resolution failed: ").append(resolveFailure);
+        }
+        Bukkit.getLogger().warning(sb.toString());
+        if (cause != null) {
+            Bukkit.getLogger().warning("Chat delivery failed: " + cause);
+        }
+    }
+
+    private static volatile String resolveFailure;
 
     private static synchronized void resolve(Player player) {
         if (resolved) return;
@@ -112,7 +138,8 @@ public final class Send {
             sendPacket = packetSender(conn.getType());
             actionBarCtor = singleComponentCtor(
                     "net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket", component);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            resolveFailure = String.valueOf(t);
             getHandle = null;
         }
     }
@@ -146,7 +173,7 @@ public final class Send {
                 if (m.getParameterCount() != 1) continue;
                 if (m.getParameterTypes()[0] != packet) continue;
                 if (m.getReturnType() != void.class) continue;
-                if (m.getName().equals("sendPacket")) {
+                if (m.getName().equals("sendPacket") || m.getName().equals("send")) {
                     named = m;
                 } else if (fallback == null) {
                     fallback = m;

@@ -99,12 +99,104 @@ public final class VeriteFlags {
 
     private VeriteFlags() {}
 
+    private static volatile Map<String, Flag> discovered = new LinkedHashMap<>();
+
+    public static void discover(Plugin plugin) {
+        Map<String, Flag> found = new LinkedHashMap<>();
+        java.io.File f = new java.io.File(plugin.getDataFolder(), CFG);
+        if (!f.isFile()) {
+            discovered = found;
+            return;
+        }
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(f.toPath(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            discovered = found;
+            return;
+        }
+        for (Map.Entry<String, String> e : scalars(lines).entrySet()) {
+            String dotted = e.getKey();
+            Type type = inferType(e.getValue());
+            if (type == null) continue;
+            String name = dotted.toLowerCase(Locale.ROOT);
+            if (FLAGS.containsKey(name)) continue;
+            found.put(name, new Flag(name, CFG, dotted, type,
+                    type == Type.BOOLEAN ? BOOL : List.of(kindHint(type))));
+        }
+        discovered = found;
+    }
+
+    private static Type inferType(String value) {
+        String t = value.trim();
+        if (t.isEmpty()) return null;
+        if (t.startsWith("{") || t.startsWith("[")) return null;
+        if (t.startsWith("\"") || t.startsWith("'")) return null;
+        String low = t.toLowerCase(Locale.ROOT);
+        if (low.equals("true") || low.equals("false")) return Type.BOOLEAN;
+        if (t.indexOf('.') >= 0 && isNumeric(t)) return Type.DECIMAL;
+        if (isNumeric(t)) return Type.INTEGER;
+        return null;
+    }
+
+    private static boolean isNumeric(String t) {
+        boolean digit = false;
+        boolean dot = false;
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            if (i == 0 && (c == '-' || c == '+')) continue;
+            if (c == '.') {
+                if (dot) return false;
+                dot = true;
+                continue;
+            }
+            if (c < '0' || c > '9') return false;
+            digit = true;
+        }
+        return digit;
+    }
+
+    private static String kindHint(Type type) {
+        return type == Type.DECIMAL ? "<decimal>" : "<integer>";
+    }
+
+    private static Map<String, String> scalars(List<String> lines) {
+        Map<String, String> out = new LinkedHashMap<>();
+        List<String> names = new ArrayList<>();
+        List<Integer> indents = new ArrayList<>();
+        for (String line : lines) {
+            String trimmed = line.trim();
+            if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.startsWith("-")) continue;
+            int colon = Yaml.keyColon(line);
+            if (colon < 0) continue;
+            int indent = Yaml.indentOf(line);
+            String key = line.substring(indent, colon).trim();
+            if (key.isEmpty()) continue;
+            while (!indents.isEmpty() && indents.get(indents.size() - 1) >= indent) {
+                indents.remove(indents.size() - 1);
+                names.remove(names.size() - 1);
+            }
+            names.add(key);
+            indents.add(indent);
+            String value = Yaml.valueOf(line);
+            if (value != null && !value.isEmpty()) {
+                out.put(String.join(".", names), value);
+            }
+        }
+        return out;
+    }
+
     public static List<String> names() {
-        return new ArrayList<>(FLAGS.keySet());
+        List<String> out = new ArrayList<>(FLAGS.keySet());
+        out.addAll(discovered.keySet());
+        return out;
     }
 
     public static Flag flag(String name) {
-        return name == null ? null : FLAGS.get(name.toLowerCase(Locale.ROOT));
+        if (name == null) return null;
+        String key = name.toLowerCase(Locale.ROOT);
+        Flag f = FLAGS.get(key);
+        return f != null ? f : discovered.get(key);
     }
 
     public static List<String> suggest(Flag flag) {

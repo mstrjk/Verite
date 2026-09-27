@@ -12,14 +12,9 @@ libraries:
 
 commands:
   verite:
-    description: "Verité admin: status, reload, count <player>."
-    usage: "/<command> [status|reload|count <player>]"
+    description: "Verité admin: status, reload, count <player>, config <flag> [value], dashboard."
+    usage: "/<command> [status|reload|count <player>|config <flag> [value]|dashboard [trust <code>|close]]"
     aliases: [vt]
-
-  veriteflag:
-    description: "Read and edit Verité config flags in-game."
-    usage: "/<command> <flag> [value]"
-    permission: veritedoux.flag
 
   vanish:
     description: "Toggle your vanish, or another player's with permission."

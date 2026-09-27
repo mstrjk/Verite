@@ -79,6 +79,8 @@ public final class VeritePlugin extends JavaPlugin
 
     private final Messages messages = new Messages();
 
+    private teacommontea.util.FlagCommand flagCommand;
+
     private void msg(CommandSender to, String tagged) {
         teacommontea.util.text.Send.to(to, messages.prefixed(tagged));
     }
@@ -160,7 +162,7 @@ public final class VeritePlugin extends JavaPlugin
         registerCommand("fakeleave", fakeConnect);
 
         if (douxLoaded) {
-            registerCommand("veriteflag", new teacommontea.util.FlagCommand(this, this::reloadAll));
+            flagCommand = new teacommontea.util.FlagCommand(this, this::reloadAll);
         }
 
         if (sauverLoaded && sauverCommands != null) {
@@ -295,6 +297,7 @@ public final class VeritePlugin extends JavaPlugin
             YamlConfiguration y = teacommontea.util.Yaml.loadYaml(f);
             Messages.setPrefix(y.getString("general.prefix", Messages.DEFAULT_PREFIX));
         }
+        teacommontea.util.VeriteFlags.discover(this);
     }
 
     public void reloadAll() {
@@ -869,6 +872,10 @@ public final class VeritePlugin extends JavaPlugin
                     teacommontea.dashboard.Dashboard.open(this, sender);
                 }
             }
+            case "config" -> {
+                if (flagCommand == null) { msg(sender, teacommontea.util.Lang.of("command.filter.unavailable")); return true; }
+                flagCommand.run(sender, java.util.Arrays.copyOfRange(args, 1, args.length));
+            }
             case "count" -> {
                 if (!douxLoaded) { msg(sender, teacommontea.util.Lang.of("command.filter.unavailable")); return true; }
                 if (args.length < 2) { msg(sender, teacommontea.util.Lang.of("command.count.usage")); return true; }
@@ -888,11 +895,14 @@ public final class VeritePlugin extends JavaPlugin
         if (cmd.equals("verite")) {
             if (args.length == 1) {
                 return teacommontea.util.Complete.prefix(
-                        List.of("status", "reload", "count", "dashboard"), args[0]);
+                        List.of("status", "reload", "count", "config", "dashboard"), args[0]);
             } else if (args.length == 2 && args[0].equalsIgnoreCase("count")) {
                 return teacommontea.util.Complete.onlineNames(args[1]);
             } else if (args.length == 2 && args[0].equalsIgnoreCase("dashboard")) {
                 return teacommontea.util.Complete.prefix(List.of("trust", "close"), args[1]);
+            } else if (args[0].equalsIgnoreCase("config") && flagCommand != null) {
+                return teacommontea.util.FlagCommand.complete(
+                        java.util.Arrays.copyOfRange(args, 1, args.length));
             }
             return new ArrayList<>();
         }
