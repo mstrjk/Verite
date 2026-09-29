@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Map;
@@ -321,13 +320,13 @@ public final class DashboardSession {
     }
 
     private String post(String url, String body) throws Exception {
-        HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection c = (HttpURLConnection) java.net.URI.create(url).toURL().openConnection();
         c.setRequestMethod("POST");
         c.setConnectTimeout(TIMEOUT_MS);
         c.setReadTimeout(TIMEOUT_MS);
         c.setDoOutput(true);
         c.setRequestProperty("Content-Type", "application/json");
-        c.setRequestProperty("User-Agent", "Verite/" + plugin.getDescription().getVersion());
+        c.setRequestProperty("User-Agent", "Verite/" + teacommontea.util.PluginVersion.get());
         try (OutputStream out = c.getOutputStream()) {
             out.write(body.getBytes(StandardCharsets.UTF_8));
         }
@@ -339,10 +338,10 @@ public final class DashboardSession {
     }
 
     private String get(String url) throws Exception {
-        HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection c = (HttpURLConnection) java.net.URI.create(url).toURL().openConnection();
         c.setConnectTimeout(TIMEOUT_MS);
         c.setReadTimeout(TIMEOUT_MS);
-        c.setRequestProperty("User-Agent", "Verite/" + plugin.getDescription().getVersion());
+        c.setRequestProperty("User-Agent", "Verite/" + teacommontea.util.PluginVersion.get());
         int code = c.getResponseCode();
         if (code < 200 || code > 299) {
             throw new IllegalStateException("The dashboard returned HTTP " + code + ".");

@@ -13,12 +13,17 @@ val pluginVersion = Regex("""(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$""")
 group = "teacommontea"
 version = pluginVersion
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 val srcRoot = file("Verite/src/main/java")
 val resRoot = file("Verite/src/main/resources")
 
-val skript264 = files(".buildlibs/.papercache/skript/2.6.4/Skript.jar")
 val skript2102 = files(".buildlibs/.papercache/skript/2.10.2/Skript.jar")
-val skript2160 = files(".buildlibs/.papercache/skript/2.16.0/Skript.jar")
+val skript2162 = files(".buildlibs/.papercache/skript/2.16.2/Skript.jar")
 
 repositories {
     mavenCentral()
@@ -30,11 +35,12 @@ val proxyCompile: Configuration by configurations.creating
 val velocityAp: Configuration by configurations.creating
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT") {
+    compileOnly("io.papermc.paper:paper-api:1.21.6-R0.1-SNAPSHOT") {
         exclude(group = "net.md-5", module = "bungeecord-chat")
     }
     compileOnly("net.md-5:bungeecord-chat:1.20-R0.2")
     compileOnly("net.luckperms:api:5.4")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:4.8.6")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
 
@@ -67,19 +73,24 @@ dependencies {
     velocityAp("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
 }
 
-val jdk17 = javaToolchains.compilerFor { languageVersion.set(JavaLanguageVersion.of(17)) }
 val jdk21 = javaToolchains.compilerFor { languageVersion.set(JavaLanguageVersion.of(21)) }
 
-val skriptShimNames = listOf("GetterEventValues.java", "ConverterEventValues.java", "RegistryEventValues.java")
-val proxyPkgDir = file("Verite/src/main/java/teacommontea/veriteproxy")
+val skriptShimNames = listOf("ConverterEventValues.java", "RegistryEventValues.java")
+val spigotPathFiles = listOf(
+    "teacommontea/util/chat/StringChatListener.java",
+    "teacommontea/Veritevoiler/BukkitPingListener.java"
+)
+val spigotApi = files(".buildlibs/.serverjars/spigot/1.21.6/spigot-api-1.21.6-R0.1-SNAPSHOT.jar")
+val proxyPkgDir = file("Verite/src/main/java/teacommontea/Veriteproxy")
 
 val mainOut = layout.buildDirectory.dir("verite-classes/main")
 
 val compileMain by tasks.registering(JavaCompile::class) {
-    javaCompiler.set(jdk17)
+    javaCompiler.set(jdk21)
     source = fileTree(srcRoot) {
         exclude(skriptShimNames.map { "**/$it" })
-        exclude("teacommontea/veriteproxy/**")
+        exclude("teacommontea/Veriteproxy/**")
+        exclude(spigotPathFiles)
     }
     classpath = configurations.compileClasspath.get() + skript2102
     destinationDirectory.set(mainOut)
@@ -88,10 +99,10 @@ val compileMain by tasks.registering(JavaCompile::class) {
     options.isFork = true
 }
 
-fun skriptShimTask(name: String, shim: String, skriptJar: FileCollection, useJdk21: Boolean) =
+fun skriptShimTask(name: String, shim: String, skriptJar: FileCollection) =
     tasks.register<JavaCompile>(name) {
         dependsOn(compileMain)
-        javaCompiler.set(if (useJdk21) jdk21 else jdk17)
+        javaCompiler.set(jdk21)
         source = fileTree(srcRoot) { include("**/$shim") }
         classpath = files(mainOut) + configurations.compileClasspath.get() + skriptJar
         destinationDirectory.set(layout.buildDirectory.dir("verite-classes/$name"))
@@ -100,15 +111,25 @@ fun skriptShimTask(name: String, shim: String, skriptJar: FileCollection, useJdk
         options.isFork = true
     }
 
-val compileGetter = skriptShimTask("compileGetter", "GetterEventValues.java", skript264, false)
-val compileConverter = skriptShimTask("compileConverter", "ConverterEventValues.java", skript2102, false)
-val compileRegistry = skriptShimTask("compileRegistry", "RegistryEventValues.java", skript2160, true)
+val compileConverter = skriptShimTask("compileConverter", "ConverterEventValues.java", skript2102)
+val compileRegistry = skriptShimTask("compileRegistry", "RegistryEventValues.java", skript2162)
+
+val compileSpigot by tasks.registering(JavaCompile::class) {
+    dependsOn(compileMain)
+    javaCompiler.set(jdk21)
+    source = fileTree(srcRoot) { include(spigotPathFiles) }
+    classpath = spigotApi + files(mainOut) + configurations.compileClasspath.get()
+    destinationDirectory.set(layout.buildDirectory.dir("verite-classes/spigot"))
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:all")
+    options.isFork = true
+}
 
 val proxyOut = layout.buildDirectory.dir("verite-classes/proxy")
 
 val compileProxy by tasks.registering(JavaCompile::class) {
     dependsOn(compileMain)
-    javaCompiler.set(jdk17)
+    javaCompiler.set(jdk21)
     source = fileTree(proxyPkgDir)
     classpath = files(mainOut) + configurations.compileClasspath.get() + proxyCompile
     destinationDirectory.set(proxyOut)
@@ -120,7 +141,7 @@ val compileProxy by tasks.registering(JavaCompile::class) {
 }
 
 val assembleClasses by tasks.registering {
-    dependsOn(compileMain, compileGetter, compileConverter, compileRegistry, compileProxy)
+    dependsOn(compileMain, compileSpigot, compileConverter, compileRegistry, compileProxy)
 }
 
 tasks.named<Jar>("jar") {
@@ -175,7 +196,7 @@ tasks.register<org.gradle.jvm.tasks.Jar>("veriteJar") {
     destinationDirectory.set(layout.projectDirectory)
 
     from(compileMain.map { it.destinationDirectory })
-    from(compileGetter.map { it.destinationDirectory })
+    from(compileSpigot.map { it.destinationDirectory })
     from(compileConverter.map { it.destinationDirectory })
     from(compileRegistry.map { it.destinationDirectory })
     from(compileProxy.map { it.destinationDirectory })

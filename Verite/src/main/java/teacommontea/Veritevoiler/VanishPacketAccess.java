@@ -21,11 +21,11 @@ final class VanishPacketAccess {
     private final Field rawConnectionField;
     private final Field channelField;
 
-    private final Positioned[] sound;
+    private final Positioned sound;
     private final Positioned particle;
 
     private VanishPacketAccess(Method getHandle, Field connectionField, Field rawConnectionField,
-                               Field channelField, Positioned[] sound, Positioned particle) {
+                               Field channelField, Positioned sound, Positioned particle) {
         this.getHandle = getHandle;
         this.connectionField = connectionField;
         this.rawConnectionField = rawConnectionField;
@@ -67,11 +67,7 @@ final class VanishPacketAccess {
     }
 
     boolean isSound(Object packet) {
-        if (packet == null) return false;
-        for (Positioned p : sound) {
-            if (p.type.isInstance(packet)) return true;
-        }
-        return false;
+        return packet != null && sound.type.isInstance(packet);
     }
 
     boolean isParticle(Object packet) {
@@ -80,9 +76,7 @@ final class VanishPacketAccess {
 
     double[] positionOf(Object packet) {
         try {
-            for (Positioned p : sound) {
-                if (p.type.isInstance(packet)) return p.read(packet);
-            }
+            if (sound.type.isInstance(packet)) return sound.read(packet);
             if (particle.type.isInstance(packet)) return particle.read(packet);
         } catch (Throwable ignored) {
         }
@@ -113,12 +107,10 @@ final class VanishPacketAccess {
             if (chan == null) throw new Unsupported("no netty Channel field on " + rawConn.getType().getName());
             chan.setAccessible(true);
 
-            java.util.List<Positioned> sounds = new java.util.ArrayList<>();
-            addPositioned(sounds, int.class, true,
+            Positioned sound = firstPositioned(int.class, true,
                     "net.minecraft.network.protocol.game.ClientboundSoundPacket",
-                    "net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect",
-                    "net.minecraft.network.protocol.game.PacketPlayOutCustomSoundEffect");
-            if (sounds.isEmpty()) throw new Unsupported("no positioned sound packet class on this server");
+                    "net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect");
+            if (sound == null) throw new Unsupported("no positioned sound packet class on this server");
 
             Positioned particle = firstPositioned(double.class, false,
                     "net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket",
@@ -126,7 +118,7 @@ final class VanishPacketAccess {
             if (particle == null) throw new Unsupported("no positioned particle packet class on this server");
 
             return new VanishPacketAccess(getHandle, connField, rawConn, chan,
-                    sounds.toArray(new Positioned[0]), particle);
+                    sound, particle);
         } catch (Unsupported u) {
             throw u;
         } catch (Throwable t) {
@@ -134,20 +126,14 @@ final class VanishPacketAccess {
         }
     }
 
-    private static void addPositioned(java.util.List<Positioned> out, Class<?> primitive,
-                                      boolean fixedPoint, String... classNames) {
+    private static Positioned firstPositioned(Class<?> primitive, boolean fixedPoint, String... classNames) {
         for (String n : classNames) {
             Class<?> c = classOrNull(n);
             if (c == null) continue;
             Field[] xyz = firstTriple(c, primitive);
-            if (xyz != null) out.add(new Positioned(c, xyz[0], xyz[1], xyz[2], fixedPoint));
+            if (xyz != null) return new Positioned(c, xyz[0], xyz[1], xyz[2], fixedPoint);
         }
-    }
-
-    private static Positioned firstPositioned(Class<?> primitive, boolean fixedPoint, String... classNames) {
-        java.util.List<Positioned> out = new java.util.ArrayList<>();
-        addPositioned(out, primitive, fixedPoint, classNames);
-        return out.isEmpty() ? null : out.get(0);
+        return null;
     }
 
     private static Field[] firstTriple(Class<?> c, Class<?> primitive) {

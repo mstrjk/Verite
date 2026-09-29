@@ -99,9 +99,14 @@ public final class VeritePlugin extends JavaPlugin
     public void onEnable() {
         getDataFolder().mkdirs();
 
-        teacommontea.util.sched.Sched.install(this);
-
         extractResource("config.yml", "config.yml");
+        loadLanguage();
+
+        if (!supportedServer()) {
+            return;
+        }
+
+        teacommontea.util.sched.Sched.install(this);
 
         try {
             teacommontea.util.VeriteH2.open(databaseMode());
@@ -111,7 +116,6 @@ public final class VeritePlugin extends JavaPlugin
             return;
         }
 
-        loadLanguage();
         teacommontea.util.SelfHeal.migrate(this);
 
         for (String legacy : new String[] {"config/sieve_settings.yml",
@@ -154,6 +158,7 @@ public final class VeritePlugin extends JavaPlugin
         bringUpFilter();
         bringUpModeration();
         bringUpVanish();
+        bringUpMaison();
 
         registerCommand("verite", this);
 
@@ -210,6 +215,17 @@ public final class VeritePlugin extends JavaPlugin
         } catch (Throwable t) {
             getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.skript.failed")) + teacommontea.util.Trace.of(t));
             this.skript = null;
+        }
+    }
+
+    private void bringUpMaison() {
+        if (!gear("maison.enabled", true) || !gear("maison.teleport", true)) {
+            return;
+        }
+        try {
+            teacommontea.veritemaison.Teleport.install(this);
+        } catch (RuntimeException | LinkageError e) {
+            getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.maison.failed")) + teacommontea.util.Trace.of(e));
         }
     }
 
@@ -430,7 +446,7 @@ public final class VeritePlugin extends JavaPlugin
     private void resolveChannel() {
         try {
             String json = fetchText(RELEASE_API_LIST);
-            String version = getDescription().getVersion();
+            String version = teacommontea.util.PluginVersion.get();
             channel = teacommontea.util.ReleaseChannel.resolve(json, version, this::fetchText);
             if (channel != null) {
                 getLogger().info(teacommontea.util.Lang.of("bundle.release.using",
@@ -453,11 +469,11 @@ public final class VeritePlugin extends JavaPlugin
     }
 
     private String fetchText(String url) throws Exception {
-        java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+        java.net.HttpURLConnection c = (java.net.HttpURLConnection) java.net.URI.create(url).toURL().openConnection();
         c.setConnectTimeout((int) CONFIG_DOWNLOAD_TIMEOUT_MS);
         c.setReadTimeout((int) CONFIG_DOWNLOAD_TIMEOUT_MS);
         c.setInstanceFollowRedirects(true);
-        c.setRequestProperty("User-Agent", "Verite/" + getDescription().getVersion());
+        c.setRequestProperty("User-Agent", "Verite/" + teacommontea.util.PluginVersion.get());
         c.setRequestProperty("Accept", "application/vnd.github+json");
         int code = c.getResponseCode();
         if (code != 200) {
@@ -583,6 +599,23 @@ public final class VeritePlugin extends JavaPlugin
         }
     }
 
+    private boolean supportedServer() {
+        String key;
+        if (teacommontea.util.ServerVersion.belowMinimum()) {
+            key = "plugin.version.too.old";
+        } else if (teacommontea.util.ServerVersion.aboveMaximum()) {
+            key = "plugin.version.too.new";
+        } else {
+            return true;
+        }
+        getLogger().severe(teacommontea.util.ConsoleColours.fatal(teacommontea.util.Lang.of(key,
+                "version", teacommontea.util.ServerVersion.running(),
+                "min", teacommontea.util.ServerVersion.MINIMUM,
+                "max", teacommontea.util.ServerVersion.MAXIMUM)));
+        getServer().getPluginManager().disablePlugin(this);
+        return false;
+    }
+
     private void loadLanguage() {
         File deployed = new File(getDataFolder(), "config.yml");
         String code = teacommontea.util.ConfigLang.DEFAULT;
@@ -611,11 +644,11 @@ public final class VeritePlugin extends JavaPlugin
     }
 
     private void downloadTo(String url, File dest) throws Exception {
-        java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+        java.net.HttpURLConnection c = (java.net.HttpURLConnection) java.net.URI.create(url).toURL().openConnection();
         c.setConnectTimeout((int) CONFIG_DOWNLOAD_TIMEOUT_MS);
         c.setReadTimeout((int) CONFIG_DOWNLOAD_TIMEOUT_MS);
         c.setInstanceFollowRedirects(true);
-        c.setRequestProperty("User-Agent", "Verite/" + getDescription().getVersion());
+        c.setRequestProperty("User-Agent", "Verite/" + teacommontea.util.PluginVersion.get());
         int code = c.getResponseCode();
         if (code != 200) throw new java.io.IOException("HTTP " + code + " from bundle host");
         long total = 0;

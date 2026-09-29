@@ -6,25 +6,6 @@ public final class Json {
 
     private Json() {}
 
-    private static volatile Boolean sealedEvents;
-
-    static boolean sealedEvents() {
-        Boolean known = sealedEvents;
-        if (known != null) return known;
-        boolean detected = detect();
-        sealedEvents = detected;
-        return detected;
-    }
-
-    private static boolean detect() {
-        try {
-            Class.forName("net.minecraft.network.chat.ClickEvent$OpenUrl");
-            return true;
-        } catch (Throwable ignored) {
-            return false;
-        }
-    }
-
     public static String of(List<Span> spans) {
         StringBuilder sb = new StringBuilder(64);
         sb.append("{\"text\":\"\",\"extra\":[");
@@ -48,12 +29,11 @@ public final class Json {
         }
         if (s.bold()) sb.append(",\"bold\":true");
         if (s.italic()) sb.append(",\"italic\":true");
-        boolean sealed = sealedEvents();
         if (s.clickAction() != null) {
-            sb.append(sealed ? ",\"click_event\":{\"action\":\"" : ",\"clickEvent\":{\"action\":\"");
+            sb.append(",\"click_event\":{\"action\":\"");
             sb.append(s.clickAction().id()).append("\",\"");
-            sb.append(sealed ? s.clickAction().field() : "value").append("\":");
-            if (sealed && s.clickAction() == Span.Click.CHANGE_PAGE) {
+            sb.append(s.clickAction().field()).append("\":");
+            if (s.clickAction() == Span.Click.CHANGE_PAGE) {
                 sb.append(pageNumber(s.clickValue()));
             } else {
                 quote(sb, s.clickValue());
@@ -61,8 +41,7 @@ public final class Json {
             sb.append('}');
         }
         if (s.hover() != null) {
-            sb.append(sealed ? ",\"hover_event\":{\"action\":\"show_text\",\"" : ",\"hoverEvent\":{\"action\":\"show_text\",\"");
-            sb.append(sealed ? "value" : "contents").append("\":");
+            sb.append(",\"hover_event\":{\"action\":\"show_text\",\"value\":");
             sb.append(of(s.hover()));
             sb.append('}');
         }

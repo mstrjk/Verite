@@ -1,7 +1,7 @@
 name: Verite
-version: 1.2.8
+version: 1.3.0
 main: teacommontea.VeritePlugin
-api-version: '1.19'
+api-version: '1.21.6'
 folia-supported: true
 author: teacommontea
 description: "Privacy-centred Minecraft moderation and chat management plugin with 6 supported languages."
@@ -387,6 +387,14 @@ permissions:
   veritesauver.notify.captcha:
     description: See captcha pass/fail announcements.
     default: false
+  veritemaison.teleport:
+    description: Teleport yourself to a player or position.
+    default: op
+  veritemaison.teleport.others:
+    description: Teleport other players and entities.
+    default: op
+    children:
+      veritemaison.teleport: true
   drigz.staff.invsee:
     description: View a player's inventory.
     default: op

@@ -26,6 +26,8 @@ public final class Sauver {
     private final SauverChat chat;
     private final PunishTree tree;
 
+    private teacommontea.veritesauver.client.ClientDetect clientDetect;
+
     private teacommontea.util.sched.TaskHandle sweepTask;
     private teacommontea.util.sched.TaskHandle playtimeTask;
 
@@ -47,10 +49,15 @@ public final class Sauver {
         pl.getServer().getPluginManager().registerEvents(s.tree, pl);
         SauverConfig.load(pl.getDataFolder());
         SauverGeoIp.load(pl.getDataFolder());
+        s.clientDetect = teacommontea.veritesauver.client.ClientDetect.install(pl);
 
         s.sweepTask = teacommontea.util.sched.Sched.executeGlobalRepeating(s::sweepExpired, 600L, 600L);
         s.playtimeTask = teacommontea.util.sched.Sched.executeGlobalRepeating(s::flushPlaytime, 1200L, 1200L);
         return s;
+    }
+
+    public teacommontea.veritesauver.client.ClientDetect clientDetect() {
+        return clientDetect;
     }
 
     public void disable() {
@@ -61,6 +68,11 @@ public final class Sauver {
         if (playtimeTask != null) {
             playtimeTask.cancel();
             playtimeTask = null;
+        }
+
+        if (clientDetect != null) {
+            clientDetect.shutdown();
+            clientDetect = null;
         }
 
         long now = System.currentTimeMillis();

@@ -26,7 +26,6 @@ public final class PaperPingListener implements Listener {
         if (vanishedOnline > 0) {
             e.setNumPlayers(Math.max(0, e.getNumPlayers() - vanishedOnline));
         }
-        e.getPlayerSample().removeIf(profile ->
-                profile.getId() != null && vanish.isVanished(profile.getId()));
+        e.getListedPlayers().removeIf(listed -> vanish.isVanished(listed.id()));
     }
 }

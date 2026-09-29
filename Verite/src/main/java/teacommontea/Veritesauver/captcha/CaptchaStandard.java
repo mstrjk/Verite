@@ -89,8 +89,8 @@ public final class CaptchaStandard implements Listener {
         UUID u = player.getUniqueId();
 
         List<Material> pool = new ArrayList<>(ITEMS);
-        int answerIndex = random.nextInt(pool.size());
-        Material answer = pool.remove(answerIndex);
+        Material answer = pool.remove(random.nextInt(pool.size()));
+        int answerIndex = random.nextInt(SLOTS.length);
 
         Session s = new Session();
         s.source = source;
@@ -100,7 +100,8 @@ public final class CaptchaStandard implements Listener {
         String readable = titleCase(answer.name());
 
         Inventory inv = teacommontea.util.text.Server.inventory(holder, SIZE,
-                teacommontea.util.text.Text.toLegacy(Colours.INVENTORY_NAME + "Click the " + readable));
+                teacommontea.util.text.Text.toLegacy(Colours.INVENTORY_NAME
+                        + scatter("Click the " + readable, random)));
         holder.inventory = inv;
         s.inventory = inv;
 
@@ -112,14 +113,13 @@ public final class CaptchaStandard implements Listener {
         List<Material> decoys = new ArrayList<>(pool);
         for (int i = 0; i < SLOTS.length; i++) {
             int slot = SLOTS[i];
-            if (i == answerIndex) {
-                inv.setItem(slot, named(answer, Colours.BRAND + "Click to confirm you are here."));
-            } else {
-                Material decoy = decoys.isEmpty()
+            Material shown = answer;
+            if (i != answerIndex) {
+                shown = decoys.isEmpty()
                         ? Material.STONE
                         : decoys.remove(random.nextInt(decoys.size()));
-                inv.setItem(slot, named(decoy, Colours.BRAND_ACCENT));
             }
+            inv.setItem(slot, named(shown, Colours.BRAND_ACCENT));
         }
 
         s.anchor = player.getLocation();
@@ -239,6 +239,20 @@ teacommontea.util.sched.Sched.executeFor(p, () -> {
         if (s.task != null) {
             s.task.cancel();
         }
+    }
+
+    private static final char JOINER_BLOCKER = '‌';
+
+    static String scatter(String text, java.util.Random random) {
+        StringBuilder sb = new StringBuilder(text.length() * 2);
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            sb.append(c);
+            if (c != ' ' && i < text.length() - 1 && random.nextInt(3) == 0) {
+                sb.append(JOINER_BLOCKER);
+            }
+        }
+        return sb.toString();
     }
 
     private static String titleCase(String materialName) {

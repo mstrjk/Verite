@@ -20,7 +20,6 @@ public final class Send {
     private static volatile Method sendPacket;
     private static volatile Method fromJson;
     private static volatile Constructor<?> packetCtor;
-    private static volatile Object packetFlag;
     private static volatile Constructor<?> actionBarCtor;
 
     public static void to(CommandSender target, List<Span> spans) {
@@ -75,7 +74,7 @@ public final class Send {
         try {
             Object component = decode.invoke(null, json);
             if (component == null) return false;
-            Object packet = ctor.newInstance(component, packetFlag);
+            Object packet = ctor.newInstance(component, false);
             send.invoke(conn.get(handle.invoke(player)), packet);
             return true;
         } catch (Throwable t) {
@@ -120,8 +119,6 @@ public final class Send {
 
             packetCtor = systemChatCtor(component);
             if (packetCtor == null) return;
-            Class<?> flagType = packetCtor.getParameterTypes()[1];
-            packetFlag = flagType == boolean.class ? Boolean.FALSE : Integer.valueOf(1);
 
             Method handle = player.getClass().getMethod("getHandle");
             handle.setAccessible(true);
@@ -196,8 +193,7 @@ public final class Send {
         for (Constructor<?> c : packet.getConstructors()) {
             if (c.getParameterCount() != 2) continue;
             if (c.getParameterTypes()[0] != component) continue;
-            Class<?> second = c.getParameterTypes()[1];
-            if (second != boolean.class && second != int.class) continue;
+            if (c.getParameterTypes()[1] != boolean.class) continue;
             c.setAccessible(true);
             return c;
         }

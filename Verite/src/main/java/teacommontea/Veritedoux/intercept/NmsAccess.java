@@ -25,7 +25,6 @@ final class NmsAccess {
     private final Field channelField;
     private final Class<?> chatPacketClass;
     private final Field packetComponentField;
-    private final boolean componentIsString;
     private final ComponentDecoder decoder;
 
     interface ComponentDecoder {
@@ -34,14 +33,13 @@ final class NmsAccess {
 
     private NmsAccess(MethodHandle getHandle, Field connectionField, Field rawConnectionField,
                       Field channelField, Class<?> chatPacketClass, Field packetComponentField,
-                      boolean componentIsString, ComponentDecoder decoder) {
+                      ComponentDecoder decoder) {
         this.getHandle = getHandle;
         this.connectionField = connectionField;
         this.rawConnectionField = rawConnectionField;
         this.channelField = channelField;
         this.chatPacketClass = chatPacketClass;
         this.packetComponentField = packetComponentField;
-        this.componentIsString = componentIsString;
         this.decoder = decoder;
     }
 
@@ -55,7 +53,6 @@ final class NmsAccess {
         try {
             Object value = packetComponentField.get(packet);
             if (value == null) return null;
-            if (componentIsString) return (String) value;
             return decoder.toPlain(value);
         } catch (Throwable t) {
             return null;
@@ -78,23 +75,13 @@ final class NmsAccess {
             MethodHandle getHandle = LOOKUP.unreflect(gh);
             Class<?> serverPlayer = gh.getReturnType();
 
-            Class<?> packetClass = firstExisting(
-                    "net.minecraft.network.protocol.game.ClientboundSystemChatPacket",
-                    "net.minecraft.network.protocol.game.ClientboundChatPacket");
-            if (packetClass == null) {
-                throw new Unsupported("no known outbound chat packet class on this server");
-            }
+            Class<?> packetClass = Class.forName(
+                    "net.minecraft.network.protocol.game.ClientboundSystemChatPacket");
 
-            boolean componentIsString = false;
             Field componentField = firstComponentField(packetClass);
             if (componentField == null) {
-                componentField = firstStringField(packetClass);
-                if (componentField == null) {
-                    throw new Unsupported("no Component or String content field on " + packetClass.getName());
-                }
-                componentIsString = true;
+                throw new Unsupported("no Component content field on " + packetClass.getName());
             }
-            componentField.setAccessible(true);
 
             Field connField = NmsFields.firstFieldOfAnyType(serverPlayer,
                     "net.minecraft.server.network.ServerGamePacketListenerImpl",
@@ -106,7 +93,7 @@ final class NmsAccess {
             connField.setAccessible(true);
             Class<?> listenerType = connField.getType();
 
-            Field rawConn = NmsFields.firstFieldOfAnyType(deepestListener(listenerType),
+            Field rawConn = NmsFields.firstFieldOfAnyType(listenerType,
                     "net.minecraft.network.Connection",
                     "net.minecraft.network.NetworkManager");
             if (rawConn == null) {
@@ -123,7 +110,7 @@ final class NmsAccess {
             ComponentDecoder decoder = ComponentDecoders.resolve();
 
             return new NmsAccess(getHandle, connField, rawConn, chan, packetClass, componentField,
-                    componentIsString, decoder);
+                    decoder);
         } catch (Unsupported u) {
             throw u;
         } catch (Throwable t) {
@@ -131,39 +118,15 @@ final class NmsAccess {
         }
     }
 
-    private static Class<?> deepestListener(Class<?> listenerType) {
-        return listenerType;
-    }
-
-    private static Field firstStringField(Class<?> c) {
-        Field firstAny = null;
-        for (Field f : c.getDeclaredFields()) {
-            if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) continue;
-            if (f.getType() != String.class) continue;
-            if (f.getName().equals("content")) { f.setAccessible(true); return f; }
-            if (firstAny == null && !f.getName().startsWith("adventure")) firstAny = f;
-        }
-        if (firstAny != null) firstAny.setAccessible(true);
-        return firstAny;
-    }
-
     private static Field firstComponentField(Class<?> c) {
         Class<?> comp = classOrNull("net.minecraft.network.chat.Component");
-        Class<?> compLegacy = classOrNull("net.minecraft.network.chat.IChatBaseComponent");
+        Class<?> compSpigot = classOrNull("net.minecraft.network.chat.IChatBaseComponent");
         for (Field f : c.getDeclaredFields()) {
             Class<?> t = f.getType();
-            if ((comp != null && t == comp) || (compLegacy != null && t == compLegacy)) {
+            if ((comp != null && t == comp) || (compSpigot != null && t == compSpigot)) {
                 f.setAccessible(true);
                 return f;
             }
-        }
-        return null;
-    }
-
-    private static Class<?> firstExisting(String... names) {
-        for (String n : names) {
-            Class<?> c = classOrNull(n);
-            if (c != null) return c;
         }
         return null;
     }

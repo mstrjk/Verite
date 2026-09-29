@@ -33,22 +33,22 @@ final class InvSeeIcons {
     }
 
     static ItemStack heldLabel() {
-        Material pane = mat("LIGHT_BLUE_STAINED_GLASS_PANE", Material.PAPER);
+        Material pane = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
         return named(pane, teacommontea.util.Colours.INVSEE_BLUE + "Held Item Slot");
     }
 
     static ItemStack offhandLabel() {
-        Material pane = mat("RED_STAINED_GLASS_PANE", Material.PAPER);
+        Material pane = Material.RED_STAINED_GLASS_PANE;
         return named(pane, teacommontea.util.Colours.WARNING + "Off-hand Slot");
     }
 
     static ItemStack vehicleLabel() {
-        Material pane = mat("YELLOW_STAINED_GLASS_PANE", Material.PAPER);
+        Material pane = Material.YELLOW_STAINED_GLASS_PANE;
         return named(pane, teacommontea.util.Colours.WARN + "Vehicle Slot");
     }
 
     static ItemStack armourLabel(String piece) {
-        return namedWithLore(mat("GRAY_STAINED_GLASS_PANE", Material.PAPER),
+        return namedWithLore(Material.GRAY_STAINED_GLASS_PANE,
                 teacommontea.util.Colours.BRAND_ACCENT + "Armour Slot",
                 teacommontea.util.Colours.BRAND + piece);
     }
@@ -79,10 +79,5 @@ final class InvSeeIcons {
     private static void mark(ItemMeta meta) {
         meta.getPersistentDataContainer().set(markerKey(),
                 org.bukkit.persistence.PersistentDataType.BYTE, (byte) 1);
-    }
-
-    private static Material mat(String name, Material fallback) {
-        Material found = Material.getMaterial(name);
-        return found != null ? found : fallback;
     }
 }

@@ -37,6 +37,25 @@ fakeconnect.deny.others = You may not fake a message for another player.
 fakeconnect.join = &#FFFF55%player% joined the game
 fakeconnect.leave = &#FFFF55%player% left the game
 
+maison.teleport.description = Teleport yourself or other entities to a player or position.
+maison.teleport.usage = {WARNING}Usage: {BRAND_ACCENT_SECONDARY}/%command% [<targets>] <location> [<rotation>] {WARNING}or {BRAND_ACCENT_SECONDARY}/%command% [<targets>] <destination>
+maison.teleport.console = {WARNING}Console must name who to teleport: {BRAND_ACCENT_SECONDARY}/%command% <targets> <location|destination>
+maison.teleport.deny.self = You may not teleport.
+maison.teleport.deny.others = You may not teleport other players.
+maison.teleport.none = {WARNING}No entity was found.
+maison.teleport.destination.single = {WARNING}Only one entity may be the destination.
+maison.teleport.position.invalid = {WARNING}Invalid position: {BRAND_ACCENT_SECONDARY}%input%
+maison.teleport.position.bounds = {WARNING}That position is outside the world.
+maison.teleport.selector.invalid = {WARNING}Invalid selector: {BRAND_ACCENT_SECONDARY}%input%
+maison.teleport.entity.one = Teleported {BRAND_ACCENT_SECONDARY}%name% {BRAND}to {BRAND_ACCENT_SECONDARY}%destination%{BRAND}.
+maison.teleport.entity.many = Teleported {BRAND_ACCENT_SECONDARY}%count% {BRAND}entities to {BRAND_ACCENT_SECONDARY}%destination%{BRAND}.
+maison.teleport.position.one = Teleported {BRAND_ACCENT_SECONDARY}%name% {BRAND}to {BRAND_ACCENT_SECONDARY}%x%, %y%, %z%{BRAND}.
+maison.teleport.position.many = Teleported {BRAND_ACCENT_SECONDARY}%count% {BRAND}entities to {BRAND_ACCENT_SECONDARY}%x%, %y%, %z%{BRAND}.
+maison.teleport.failed = {WARNING}Could not teleport {BRAND_ACCENT_SECONDARY}%name%{WARNING}.
+maison.teleport.paper.failed = The Paper command API could not register /teleport, so the Bukkit command is used instead. Consider reporting this error.
+maison.teleport.tree.failed = Could not give /teleport typed arguments on this server. It still works, but the chat bar will not colour its fields. Consider reporting this error.
+maison.teleport.register.failed = Could not register /teleport. Consider reporting this error.
+
 # ---- Flags ----
 flag.list.header = Editable flags {BRAND_ACCENT}(%count%):
 flag.list.entry =   {BRAND_ACCENT}- {BRAND_ACCENT_SECONDARY}%name%
@@ -151,6 +170,14 @@ login.locale = {BRAND_ACCENT_SECONDARY}Locale: {BRAND}%locale%
 login.dupeip.notice = {BRAND_ACCENT_SECONDARY}%name% shares an IP with: %alts%
 login.dupeip.notice.flagged = {WARNING}⚠ {BRAND_ACCENT_SECONDARY}%name% shares an IP with: %alts%
 login.client.brand = {BRAND_ACCENT_SECONDARY}%name% joined using {BRAND}%client%{BRAND_ACCENT_SECONDARY}.
+client.confidence = {BRAND_ACCENT_SECONDARY}Confidence: {BRAND}%percent%%
+client.reported = {BRAND_ACCENT_SECONDARY}Self-reported: {BRAND}%brand%
+client.detected = {BRAND_ACCENT_SECONDARY}Detected: {BRAND}%list%
+client.unknown.channels = {BRAND_ACCENT_SECONDARY}Unknown channels: {BRAND}%list%
+client.anomalies = {BRAND_ACCENT_SECONDARY}Anomalies: {WARN}%list%
+client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% reports vanilla, but appears to be using %client%{BRAND_ACCENT_SECONDARY}.
+client.probe.signs.unavailable = Sign-based client probing is unavailable on this server: 
+client.probe.packs.unavailable = Known-pack client probing could not attach to the server's connection listener.
 login.blacklist.failed = Failed to parse the mute command blacklist. Consider reporting this error.
 
 # ---- Moderation ----
@@ -368,6 +395,7 @@ lookup.whois.never.joined = Whois {BRAND_ACCENT_SECONDARY}%name% (never joined t
 lookup.whois.source.mojang =   Source: {BRAND_ACCENT_SECONDARY}Mojang (no local history)
 lookup.whois.no.account = {WARNING}No Minecraft account exists with the name {BRAND_ACCENT_SECONDARY}%query%{WARNING}.
 lookup.whois.mojang.unreachable = {WARNING}Could not reach Mojang to resolve {BRAND_ACCENT_SECONDARY}%query%{WARNING}. Try again shortly.
+lookup.whois.mojang.ratelimited = {WARNING}Mojang is rate limiting lookups. Try %query% again shortly.
 lookup.whois.header = {BRAND_ACCENT_SECONDARY}Whois %name%.
 lookup.whois.header.online = {BRAND_ACCENT_SECONDARY}Whois %name% {BRAND}(online){BRAND_ACCENT_SECONDARY}.
 lookup.whois.uuid =   UUID: {BRAND_ACCENT_SECONDARY}%uuid%
@@ -375,6 +403,8 @@ lookup.whois.known.names =   Known names: {BRAND_ACCENT_SECONDARY}%names%
 lookup.whois.version =   Version: {BRAND_ACCENT_SECONDARY}%version%
 lookup.whois.version.protocol =   Version: {BRAND_ACCENT_SECONDARY}%version% (protocol %protocol%)
 lookup.whois.client =   Client: {BRAND_ACCENT_SECONDARY}%client%
+lookup.whois.client.detected =   {BRAND_ACCENT_SECONDARY}Detected client: {BRAND}%client% {BRAND_ACCENT_SECONDARY}(%percent%% confidence)
+lookup.whois.client.mods =   {BRAND_ACCENT_SECONDARY}Detected mods: {BRAND}%list%
 lookup.whois.client.all =   Client: {BRAND_ACCENT_SECONDARY}%client% (all: %clients%)
 lookup.whois.referrer =   Referrer: {BRAND_ACCENT_SECONDARY}%referrer%
 lookup.whois.country =   Country: {BRAND_ACCENT_SECONDARY}%country%
@@ -454,11 +484,14 @@ punishdialogue.response.failed = Punishment dialogue response handling failed.
 
 # ---- Plugin lifecycle ----
 plugin.database.failed = The H2 database could not be opened. Disabling the plugin. Consider reporting this error.
+plugin.version.too.old = This server runs Minecraft %version%, which is older than Verité supports (%min% through %max%). Disabling the plugin. Verité 1.2.8 is the last release for Minecraft 1.19 through 1.21.5.
+plugin.version.too.new = This server runs Minecraft %version%, which is newer than this build of Verité supports (%min% through %max%). Disabling the plugin. Update Verité to a release that supports %version%.
 plugin.filter.missing = Failed to locate filter boards. Disabling the plugin. The download will be retried on next start.
 plugin.native.missing = Failed to locate the native library. Disabling the plugin. The download will be retried on next start.
 plugin.tokenisers.missing = Failed to locate the tokenisers. Disabling the plugin. The download will be retried on next start.
 plugin.skript.failed = Skript integration failed to initialise. Consider reporting this error.
 plugin.vanish.failed = The vanish module failed to initialise. Consider reporting this error.
+plugin.maison.failed = The Veritémaison module failed to initialise. Consider reporting this error.
 plugin.moderation.failed = The moderation module failed to initialise. Consider reporting this error.
 plugin.flagstore.failed = Failed to open the flag store. Player flag counts will read 0. Consider reporting this error.
 plugin.filter.interrupted = Filter loading was interrupted during boot. Consider reporting this error.

@@ -112,6 +112,7 @@ public final class ApiBridge {
             case FOUND:     return MojangStatus.FOUND;
             case NOT_FOUND: return MojangStatus.NOT_FOUND;
             case UNKNOWN:   return MojangStatus.UNKNOWN;
+            case RATE_LIMITED: return MojangStatus.RATE_LIMITED;
             default:        return null;
         }
     }

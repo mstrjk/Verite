@@ -358,6 +358,44 @@ public final class SauverDAO {
         }
     }
 
+    public void recordClientProfile(UUID u, teacommontea.veritesauver.client.ClientProfile profile, long now) {
+        if (profile == null) {
+            return;
+        }
+        Scope p = player(u);
+        String reported = profile.reportedBrand();
+        if (reported != null && !reported.isBlank()) {
+            String lower = reported.toLowerCase(java.util.Locale.ROOT);
+            p.set("client." + lower, now);
+            p.set("lastclient", lower);
+        }
+        String identity = profile.identity();
+        if (identity != null && !identity.isBlank()) {
+            p.set("clientidentity", identity);
+            p.set("clientconfidence", profile.confidence());
+        }
+        java.util.List<String> mods = teacommontea.veritesauver.client.ClientVerdict.mods(profile);
+        if (!mods.isEmpty()) {
+            p.set("clientmods", String.join(",", mods));
+        }
+        java.util.List<String> anomalies = teacommontea.veritesauver.client.ClientVerdict.anomalies(profile);
+        if (!anomalies.isEmpty()) {
+            p.set("clientanomalies", String.join(",", anomalies));
+        }
+    }
+
+    public String clientIdentity(UUID u) {
+        return player(u).getString("clientidentity", null);
+    }
+
+    public int clientConfidence(UUID u) {
+        return player(u).getInt("clientconfidence", 0);
+    }
+
+    public String clientMods(UUID u) {
+        return player(u).getString("clientmods", null);
+    }
+
     public void flushSession(UUID u, long now) {
         Scope p = player(u);
         long start = p.getLong("sessionstart", 0L);

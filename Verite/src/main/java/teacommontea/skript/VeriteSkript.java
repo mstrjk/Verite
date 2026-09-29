@@ -18,7 +18,6 @@ import teacommontea.api.VeriteModeration;
 
 public final class VeriteSkript {
 
-    private static final String ERA_GETTER = "teacommontea.skript.GetterEventValues";
     private static final String ERA_CONVERTER = "teacommontea.skript.ConverterEventValues";
     private static final String ERA_REGISTRY = "teacommontea.skript.RegistryEventValues";
 
@@ -102,14 +101,7 @@ public final class VeriteSkript {
 
     private static EventValueBridge selectBridge(JavaPlugin plugin) {
         Version version = Skript.getVersion();
-        String era;
-        if (version.compareTo(2, 10, 0) < 0) {
-            era = ERA_GETTER;
-        } else if (version.compareTo(2, 15, 0) < 0) {
-            era = ERA_CONVERTER;
-        } else {
-            era = ERA_REGISTRY;
-        }
+        String era = version.compareTo(2, 15, 0) < 0 ? ERA_CONVERTER : ERA_REGISTRY;
         try {
             return (EventValueBridge) Class.forName(era).getDeclaredConstructor().newInstance();
         } catch (Throwable t) {

@@ -95,6 +95,10 @@ public final class EveDialect {
         }
         if (voted == 0) return null;
 
+        for (int i = 0; i < L; i++) {
+            logp[i] /= voted;
+        }
+
         double[] p = softmax(logp);
         int best = 0, second = -1;
         for (int i = 1; i < L; i++) if (p[i] > p[best]) best = i;

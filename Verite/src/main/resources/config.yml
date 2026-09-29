@@ -311,6 +311,10 @@ fake.connect:
   join.message: "&#FFFF55%player% joined the game"
   leave.message: "&#FFFF55%player% left the game"
 
+maison:
+  enabled: true
+  teleport: true
+
 # By changing the value below to en, es, it, fr, pt or de, you change the
 # language in which the plugin operates. You can switch back at any time.
 # Changing languages requires a full restart (not a reload) of your server

@@ -46,7 +46,13 @@ public final class ChatRouter {
             } catch (Throwable ignored) {
             }
         }
-        Bukkit.getPluginManager().registerEvents(new StringChatListener(), plugin);
+        try {
+            Class<?> c = Class.forName("teacommontea.util.chat.StringChatListener");
+            Object listener = c.getConstructor().newInstance();
+            Bukkit.getPluginManager().registerEvents((org.bukkit.event.Listener) listener, plugin);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("no chat listener could be installed", e);
+        }
     }
 
     private static boolean classPresent(String name) {

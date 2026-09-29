@@ -18,7 +18,13 @@ public final class PingHider {
             } catch (Throwable ignored) {
             }
         }
-        Bukkit.getPluginManager().registerEvents(new BukkitPingListener(vanish), plugin);
+        try {
+            Class<?> c = Class.forName("teacommontea.veritevoiler.BukkitPingListener");
+            Object listener = c.getConstructor(Vanish.class).newInstance(vanish);
+            Bukkit.getPluginManager().registerEvents((Listener) listener, plugin);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("no server list ping listener could be installed", e);
+        }
     }
 
     private static boolean classPresent(String name) {

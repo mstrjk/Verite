@@ -5,5 +5,6 @@ public enum MojangStatus {
 
     FOUND,
     NOT_FOUND,
-    UNKNOWN
+    UNKNOWN,
+    RATE_LIMITED
 }

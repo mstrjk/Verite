@@ -105,7 +105,7 @@ public final class EveStore {
 
     private static void skipString(DataInputStream in) throws Exception {
         int len = in.readUnsignedShort();
-        int skipped = 0;
+        long skipped = 0;
         while (skipped < len) {
             long s = in.skip(len - skipped);
             if (s <= 0) { in.readByte(); s = 1; }

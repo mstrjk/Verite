@@ -24,8 +24,6 @@ public final class InvSeeAccess {
 
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    private final boolean mojangMapped;
-    private final boolean valueIoSaves;
 
     private final Class<?> serverPlayerClass;
     private final Class<?> playerClass;
@@ -33,7 +31,6 @@ public final class InvSeeAccess {
     private final Class<?> menuClass;
     private final Class<?> slotClass;
     private final Class<?> itemStackClass;
-    private final Class<?> inventoryClass;
     private final Class<?> enderContainerClass;
 
     private final MethodHandle craftPlayerGetHandle;
@@ -65,15 +62,12 @@ public final class InvSeeAccess {
     private SaveBridge saveBridgeRef;
 
     private InvSeeAccess(Builder b) {
-        this.mojangMapped = b.mojangMapped;
-        this.valueIoSaves = b.valueIoSaves;
         this.serverPlayerClass = b.serverPlayerClass;
         this.playerClass = b.playerClass;
         this.containerClass = b.containerClass;
         this.menuClass = b.menuClass;
         this.slotClass = b.slotClass;
         this.itemStackClass = b.itemStackClass;
-        this.inventoryClass = b.inventoryClass;
         this.enderContainerClass = b.enderContainerClass;
         this.craftPlayerGetHandle = b.craftPlayerGetHandle;
         this.getInventory = b.getInventory;
@@ -99,8 +93,6 @@ public final class InvSeeAccess {
         this.playerDataDir = b.playerDataDir;
     }
 
-    public boolean mojangMapped() { return mojangMapped; }
-    public boolean valueIoSaves() { return valueIoSaves; }
 
     public Class<?> serverPlayerClass() { return serverPlayerClass; }
     public Class<?> playerClass() { return playerClass; }
@@ -392,87 +384,68 @@ public final class InvSeeAccess {
         try {
             Class<?> nbtIo = firstExisting("net.minecraft.nbt.NbtIo",
                     "net.minecraft.nbt.NBTCompressedStreamTools");
-            Class<?> accounter = firstExisting("net.minecraft.nbt.NbtAccounter");
+            Class<?> accounter = firstExisting("net.minecraft.nbt.NbtAccounter",
+                    "net.minecraft.nbt.NBTReadLimiter");
             Class<?> compoundTag = firstExisting("net.minecraft.nbt.CompoundTag",
                     "net.minecraft.nbt.NBTTagCompound");
-            if (nbtIo == null || compoundTag == null) {
+            if (nbtIo == null || accounter == null || compoundTag == null) {
                 return null;
             }
-            Object tag = readCompressed(nbtIo, accounter, datFile);
+            Object tag = readCompressed(nbtIo, accounter, compoundTag, datFile);
             if (tag == null) {
                 return null;
             }
-            Object bukkit = getCompound(compoundTag, tag, "bukkit");
-            Object holder = bukkit != null ? bukkit : tag;
-            return getString(compoundTag, holder, "lastKnownName");
+            Object bukkit = compoundOrEmpty(compoundTag).invoke(tag, "bukkit");
+            Object name = optionalString(compoundTag).invoke(bukkit, "lastKnownName");
+            return name instanceof Optional<?> opt ? (String) opt.orElse(null) : null;
         } catch (Throwable t) {
             return null;
         }
     }
 
-    private static Object readCompressed(Class<?> nbtIo, Class<?> accounter, java.io.File f)
-            throws Throwable {
-        if (accounter != null) {
-            java.lang.reflect.Method unlimited = null;
-            for (Method m : accounter.getMethods()) {
-                if (java.lang.reflect.Modifier.isStatic(m.getModifiers())
-                        && m.getParameterCount() == 0 && accounter.isAssignableFrom(m.getReturnType())) {
-                    unlimited = m;
-                    break;
-                }
-            }
-            for (Method m : nbtIo.getMethods()) {
-                if (!java.lang.reflect.Modifier.isStatic(m.getModifiers())) continue;
-                Class<?>[] p = m.getParameterTypes();
-                if (p.length == 2 && p[1] == accounter
-                        && (p[0] == java.nio.file.Path.class || p[0] == java.io.File.class
-                            || java.io.InputStream.class.isAssignableFrom(p[0]))) {
-                    Object acc = unlimited != null ? unlimited.invoke(null) : null;
-                    Object arg0 = p[0] == java.nio.file.Path.class ? f.toPath()
-                            : p[0] == java.io.File.class ? f
-                            : new java.io.FileInputStream(f);
-                    return m.invoke(null, arg0, acc);
-                }
+    private static Object readCompressed(Class<?> nbtIo, Class<?> accounter, Class<?> compoundTag,
+                                         java.io.File f) throws Throwable {
+        Method create = null;
+        for (Method m : accounter.getMethods()) {
+            if (java.lang.reflect.Modifier.isStatic(m.getModifiers()) && m.getReturnType() == accounter
+                    && java.util.Arrays.equals(m.getParameterTypes(), new Class<?>[]{ long.class })) {
+                create = m;
+                break;
             }
         }
+        if (create == null) {
+            return null;
+        }
         for (Method m : nbtIo.getMethods()) {
-            if (!java.lang.reflect.Modifier.isStatic(m.getModifiers())) continue;
-            Class<?>[] p = m.getParameterTypes();
-            if (p.length == 1 && (p[0] == java.io.File.class
-                    || java.io.InputStream.class.isAssignableFrom(p[0]))) {
-                Object arg0 = p[0] == java.io.File.class ? f : new java.io.FileInputStream(f);
-                return m.invoke(null, arg0);
+            if (java.lang.reflect.Modifier.isStatic(m.getModifiers()) && m.getReturnType() == compoundTag
+                    && java.util.Arrays.equals(m.getParameterTypes(),
+                            new Class<?>[]{ java.nio.file.Path.class, accounter })) {
+                return m.invoke(null, f.toPath(), create.invoke(null, Long.MAX_VALUE));
             }
         }
         return null;
     }
 
-    private static Object getCompound(Class<?> compoundTag, Object tag, String key) {
-        try {
-            try {
-                Method m = compoundTag.getMethod("getCompoundOrEmpty", String.class);
-                return m.invoke(tag, key);
-            } catch (NoSuchMethodException e) {
-                Method m = compoundTag.getMethod("getCompound", String.class);
-                return m.invoke(tag, key);
+    private static Method compoundOrEmpty(Class<?> compoundTag) throws Unsupported {
+        for (Method m : compoundTag.getMethods()) {
+            if (m.getReturnType() == compoundTag
+                    && java.util.Arrays.equals(m.getParameterTypes(), new Class<?>[]{ String.class })) {
+                return m;
             }
-        } catch (Throwable t) {
-            return null;
         }
+        throw new Unsupported("no getCompoundOrEmpty on " + compoundTag.getName());
     }
 
-    @SuppressWarnings("unchecked")
-    private static String getString(Class<?> compoundTag, Object tag, String key) {
-        try {
-            Method m = compoundTag.getMethod("getString", String.class);
-            Object r = m.invoke(tag, key);
-            if (r instanceof Optional<?> opt) {
-                return (String) opt.orElse(null);
+    private static Method optionalString(Class<?> compoundTag) throws Unsupported {
+        for (Method m : compoundTag.getMethods()) {
+            if (m.getReturnType() == Optional.class
+                    && java.util.Arrays.equals(m.getParameterTypes(), new Class<?>[]{ String.class })
+                    && m.getGenericReturnType() instanceof java.lang.reflect.ParameterizedType pt
+                    && pt.getActualTypeArguments()[0] == String.class) {
+                return m;
             }
-            return (String) r;
-        } catch (Throwable t) {
-            return null;
         }
+        throw new Unsupported("no getString on " + compoundTag.getName());
     }
 
     public Object rawServer() throws Throwable {
@@ -549,8 +522,6 @@ public final class InvSeeAccess {
     }
 
     private static final class Builder {
-        boolean mojangMapped;
-        boolean valueIoSaves;
 
         Class<?> serverPlayerClass;
         Class<?> playerClass;
@@ -610,30 +581,23 @@ public final class InvSeeAccess {
                     "net.minecraft.world.inventory.PlayerEnderChestContainer",
                     "net.minecraft.world.inventory.InventoryEnderChest");
 
-            mojangMapped = classOrNull("net.minecraft.world.entity.player.Inventory") != null;
             inventoryClass = require(
                     "net.minecraft.world.entity.player.Inventory",
                     "net.minecraft.world.entity.player.PlayerInventory");
 
-            valueIoSaves = classOrNull("net.minecraft.world.level.storage.ValueInput") != null;
-
-            getInventory = handle(method(playerClass, containerClass == null,
-                    "getInventory", "fq", "gk", "getInventory"));
+            getInventory = handle(firstMethodReturning(playerClass, inventoryClass));
             getEnderChest = handle(firstMethodReturning(playerClass, enderContainerClass));
 
-            inventoryGetItem = handle(methodByParams(containerClass, itemStackClass,
-                    new Class<?>[]{ int.class }, "getItem", "a"));
+            inventoryGetItem = handle(containerItemAccessor(containerClass, itemStackClass));
             inventorySetItem = handle(methodByParams(containerClass, void.class,
-                    new Class<?>[]{ int.class, itemStackClass }, "setItem", "a"));
-            inventorySize = handle(methodByParams(containerClass, int.class,
-                    new Class<?>[]{}, "getContainerSize", "getSize", "b"));
-            inventoryMaxStack = handle(methodByParams(containerClass, int.class,
-                    new Class<?>[]{}, "getMaxStackSize", "getMaxStackSize"));
+                    new Class<?>[]{ int.class, itemStackClass }, "setItem"));
+            inventorySize = handle(containerSize(containerClass));
+            inventoryMaxStack = handle(containerMaxStack(containerClass));
 
             containerGetCarried = handle(methodByParams(menuClass, itemStackClass,
-                    new Class<?>[]{}, "getCarried", "getCarried"));
+                    new Class<?>[]{}, "getCarried"));
             containerSetCarried = handle(methodByParams(menuClass, void.class,
-                    new Class<?>[]{ itemStackClass }, "setCarried", "setCarried"));
+                    new Class<?>[]{ itemStackClass }, "setCarried"));
 
             personalContents = resolvePersonalContents();
             enderContents = handle(firstMethodReturning(enderContainerClass, List.class));
@@ -691,7 +655,7 @@ public final class InvSeeAccess {
             Class<?> storageClass = require(
                     "net.minecraft.world.level.storage.PlayerDataStorage",
                     "net.minecraft.world.level.storage.WorldNBTStorage");
-            playerIoField = NmsFields.firstFieldOfAnyType(deepest(dedicatedServer),
+            playerIoField = NmsFields.firstFieldOfAnyType(dedicatedServer,
                     "net.minecraft.world.level.storage.PlayerDataStorage",
                     "net.minecraft.world.level.storage.WorldNBTStorage");
             if (playerIoField == null) {
@@ -701,11 +665,7 @@ public final class InvSeeAccess {
             playerDataDir = handle(firstMethodReturning(storageClass, java.io.File.class));
 
             InvSeeAccess access = new InvSeeAccess(this);
-            if (valueIoSaves) {
-                access.saveBridgeRef = new ValueIoSaveBridge(access);
-            } else {
-                access.saveBridgeRef = new CompoundTagSaveBridge(access);
-            }
+            access.saveBridgeRef = new ValueIoSaveBridge(access);
             return access;
         }
 
@@ -760,18 +720,67 @@ public final class InvSeeAccess {
         return LOOKUP.unreflect(m);
     }
 
-    static Method method(Class<?> c, boolean ignore, String... names) throws Unsupported {
-        for (String n : names) {
-            try {
-                return c.getMethod(n);
-            } catch (NoSuchMethodException ignored) {
+
+    private static java.util.List<String> declarationOrder(Class<?> owner, String descriptor)
+            throws Unsupported {
+        String res = owner.getName().replace('.', '/') + ".class";
+        java.util.List<String> out = new java.util.ArrayList<>();
+        try (java.io.InputStream in = owner.getClassLoader().getResourceAsStream(res)) {
+            if (in == null) {
+                throw new Unsupported("cannot read class bytes for " + owner.getName());
             }
-            try {
-                return c.getDeclaredMethod(n);
-            } catch (NoSuchMethodException ignored) {
-            }
+            org.objectweb.asm.ClassReader cr = new org.objectweb.asm.ClassReader(in);
+            cr.accept(new org.objectweb.asm.ClassVisitor(org.objectweb.asm.Opcodes.ASM9) {
+                @Override
+                public org.objectweb.asm.MethodVisitor visitMethod(int access, String name,
+                                                                   String desc, String signature,
+                                                                   String[] exceptions) {
+                    if (desc.equals(descriptor)) {
+                        out.add(name);
+                    }
+                    return null;
+                }
+            }, org.objectweb.asm.ClassReader.SKIP_CODE | org.objectweb.asm.ClassReader.SKIP_DEBUG
+                    | org.objectweb.asm.ClassReader.SKIP_FRAMES);
+        } catch (Unsupported u) {
+            throw u;
+        } catch (Exception e) {
+            throw new Unsupported("failed reading bytes for " + owner.getName() + ": " + e);
         }
-        throw new Unsupported("no method among " + java.util.Arrays.toString(names) + " on " + c.getName());
+        return out;
+    }
+
+    private static Method nthDeclared(Class<?> owner, String descriptor, int ordinal,
+                                      Class<?>[] params, String mojangName) throws Unsupported {
+        try {
+            return owner.getMethod(mojangName, params);
+        } catch (NoSuchMethodException ignored) {
+        }
+        java.util.List<String> ordered = declarationOrder(owner, descriptor);
+        if (ordinal >= ordered.size()) {
+            throw new Unsupported("no method " + ordinal + " with " + descriptor
+                    + " on " + owner.getName());
+        }
+        try {
+            return owner.getMethod(ordered.get(ordinal), params);
+        } catch (NoSuchMethodException e) {
+            throw new Unsupported("declared method " + ordered.get(ordinal)
+                    + " missing on " + owner.getName());
+        }
+    }
+
+    static Method containerSize(Class<?> containerClass) throws Unsupported {
+        return nthDeclared(containerClass, "()I", 0, new Class<?>[]{}, "getContainerSize");
+    }
+
+    static Method containerMaxStack(Class<?> containerClass) throws Unsupported {
+        return nthDeclared(containerClass, "()I", 1, new Class<?>[]{}, "getMaxStackSize");
+    }
+
+    static Method containerItemAccessor(Class<?> containerClass, Class<?> itemStackClass)
+            throws Unsupported {
+        String desc = "(I)L" + itemStackClass.getName().replace('.', '/') + ";";
+        return nthDeclared(containerClass, desc, 0, new Class<?>[]{ int.class }, "getItem");
     }
 
     static Method asBukkitCopyMethod(Class<?> craftItemStack, Class<?> itemStackClass) throws Unsupported {
@@ -842,10 +851,6 @@ public final class InvSeeAccess {
             if (m != null) return m;
         }
         return null;
-    }
-
-    static Class<?> deepest(Class<?> c) {
-        return c;
     }
 
     static Class<?> firstExisting(String... names) {

@@ -71,7 +71,7 @@ public final class DashboardState {
         return Json.object(
                 "name", plugin.getServer().getName(),
                 "minecraft", plugin.getServer().getVersion(),
-                "verite", plugin.getDescription().getVersion(),
+                "verite", teacommontea.util.PluginVersion.get(),
                 "online", online,
                 "max", Bukkit.getMaxPlayers(),
                 "vanished", vanishedCount(leaving),

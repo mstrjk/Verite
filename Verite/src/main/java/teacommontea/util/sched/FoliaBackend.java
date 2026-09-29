@@ -1,136 +1,87 @@
 package teacommontea.util.sched;
 
+import io.papermc.paper.threadedregions.scheduler.AsyncScheduler;
+import io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler;
+import io.papermc.paper.threadedregions.scheduler.RegionScheduler;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 final class FoliaBackend implements Sched.Backend {
 
     private final Plugin plugin;
+    private final GlobalRegionScheduler globalScheduler;
+    private final RegionScheduler regionScheduler;
+    private final AsyncScheduler asyncScheduler;
 
-    private final Object globalScheduler;
-    private final Object regionScheduler;
-    private final Object asyncScheduler;
-
-    private final Class<?> scheduledTaskClass;
-
-    private final Method gRun, gRunDelayed, gRunAtFixedRate;
-    private final Method rRun, rRunDelayed, rRunAtFixedRate;
-    private final Method aRunNow, aRunDelayed, aRunAtFixedRate;
-    private final Method entityGetScheduler;
-    private final Method eRun, eRunDelayed, eRunAtFixedRate;
-    private final Method taskCancel;
-
-    FoliaBackend(Plugin plugin) throws Throwable {
+    FoliaBackend(Plugin plugin) {
         this.plugin = plugin;
-
-        this.globalScheduler = Bukkit.class.getMethod("getGlobalRegionScheduler").invoke(null);
-        this.regionScheduler = Bukkit.class.getMethod("getRegionScheduler").invoke(null);
-        this.asyncScheduler = Bukkit.class.getMethod("getAsyncScheduler").invoke(null);
-
-        this.scheduledTaskClass = Class.forName("io.papermc.paper.threadedregions.scheduler.ScheduledTask");
-        this.taskCancel = scheduledTaskClass.getMethod("cancel");
-
-        Class<?> global = globalScheduler.getClass();
-        this.gRun = method(global, "run", Plugin.class, Consumer.class);
-        this.gRunDelayed = method(global, "runDelayed", Plugin.class, Consumer.class, long.class);
-        this.gRunAtFixedRate = method(global, "runAtFixedRate", Plugin.class, Consumer.class, long.class, long.class);
-
-        Class<?> region = regionScheduler.getClass();
-        this.rRun = method(region, "run", Plugin.class, Location.class, Consumer.class);
-        this.rRunDelayed = method(region, "runDelayed", Plugin.class, Location.class, Consumer.class, long.class);
-        this.rRunAtFixedRate = method(region, "runAtFixedRate", Plugin.class, Location.class, Consumer.class, long.class, long.class);
-
-        Class<?> async = asyncScheduler.getClass();
-        this.aRunNow = method(async, "runNow", Plugin.class, Consumer.class);
-        this.aRunDelayed = method(async, "runDelayed", Plugin.class, Consumer.class, long.class, TimeUnit.class);
-        this.aRunAtFixedRate = method(async, "runAtFixedRate", Plugin.class, Consumer.class, long.class, long.class, TimeUnit.class);
-
-        this.entityGetScheduler = Entity.class.getMethod("getScheduler");
-        Class<?> entitySched = Class.forName("io.papermc.paper.threadedregions.scheduler.EntityScheduler");
-        this.eRun = method(entitySched, "run", Plugin.class, Consumer.class, Runnable.class);
-        this.eRunDelayed = method(entitySched, "runDelayed", Plugin.class, Consumer.class, Runnable.class, long.class);
-        this.eRunAtFixedRate = method(entitySched, "runAtFixedRate", Plugin.class, Consumer.class, Runnable.class, long.class, long.class);
+        this.globalScheduler = Bukkit.getGlobalRegionScheduler();
+        this.regionScheduler = Bukkit.getRegionScheduler();
+        this.asyncScheduler = Bukkit.getAsyncScheduler();
     }
 
-    private static Method method(Class<?> owner, String name, Class<?>... params) throws NoSuchMethodException {
-        Method m = owner.getMethod(name, params);
-        m.setAccessible(true);
-        return m;
-    }
-
-    private Consumer<Object> cb(Runnable task) {
+    private static Consumer<ScheduledTask> cb(Runnable task) {
         return ignored -> task.run();
     }
 
-    private TaskHandle wrap(Object scheduledTask) {
-        if (scheduledTask == null) return TaskHandle.NONE;
-        return () -> {
-            try { taskCancel.invoke(scheduledTask); } catch (Throwable ignored) { }
-        };
-    }
-
-    private TaskHandle invokeWrap(Method m, Object receiver, Object... args) {
+    private static TaskHandle wrap(Supplier<ScheduledTask> schedule) {
         try {
-            return wrap(m.invoke(receiver, args));
-        } catch (Throwable t) {
+            ScheduledTask scheduledTask = schedule.get();
+            return scheduledTask == null ? TaskHandle.NONE : scheduledTask::cancel;
+        } catch (RuntimeException e) {
             return TaskHandle.NONE;
         }
     }
 
     @Override public TaskHandle forEntity(Entity entity, Runnable task) {
-        Object es = entityScheduler(entity);
-        return es == null ? TaskHandle.NONE : invokeWrap(eRun, es, plugin, cb(task), (Runnable) null);
+        return wrap(() -> entity.getScheduler().run(plugin, cb(task), null));
     }
     @Override public TaskHandle forEntityLater(Entity entity, Runnable task, long delayTicks) {
-        Object es = entityScheduler(entity);
-        return es == null ? TaskHandle.NONE : invokeWrap(eRunDelayed, es, plugin, cb(task), (Runnable) null, Math.max(1L, delayTicks));
+        return wrap(() -> entity.getScheduler().runDelayed(plugin, cb(task), null, Math.max(1L, delayTicks)));
     }
     @Override public TaskHandle forEntityTimer(Entity entity, Runnable task, long delayTicks, long periodTicks) {
         if (periodTicks <= 0) return forEntityLater(entity, task, delayTicks);
-        Object es = entityScheduler(entity);
-        return es == null ? TaskHandle.NONE : invokeWrap(eRunAtFixedRate, es, plugin, cb(task), (Runnable) null, Math.max(1L, delayTicks), periodTicks);
-    }
-
-    private Object entityScheduler(Entity entity) {
-        try { return entityGetScheduler.invoke(entity); } catch (Throwable t) { return null; }
+        return wrap(() -> entity.getScheduler().runAtFixedRate(plugin, cb(task), null, Math.max(1L, delayTicks), periodTicks));
     }
 
     @Override public TaskHandle at(Location location, Runnable task) {
-        return invokeWrap(rRun, regionScheduler, plugin, location, cb(task));
+        return wrap(() -> regionScheduler.run(plugin, location, cb(task)));
     }
     @Override public TaskHandle atLater(Location location, Runnable task, long delayTicks) {
-        return invokeWrap(rRunDelayed, regionScheduler, plugin, location, cb(task), Math.max(1L, delayTicks));
+        return wrap(() -> regionScheduler.runDelayed(plugin, location, cb(task), Math.max(1L, delayTicks)));
     }
     @Override public TaskHandle atTimer(Location location, Runnable task, long delayTicks, long periodTicks) {
         if (periodTicks <= 0) return atLater(location, task, delayTicks);
-        return invokeWrap(rRunAtFixedRate, regionScheduler, plugin, location, cb(task), Math.max(1L, delayTicks), periodTicks);
+        return wrap(() -> regionScheduler.runAtFixedRate(plugin, location, cb(task), Math.max(1L, delayTicks), periodTicks));
     }
 
     @Override public TaskHandle global(Runnable task) {
-        return invokeWrap(gRun, globalScheduler, plugin, cb(task));
+        return wrap(() -> globalScheduler.run(plugin, cb(task)));
     }
     @Override public TaskHandle globalLater(Runnable task, long delayTicks) {
-        return invokeWrap(gRunDelayed, globalScheduler, plugin, cb(task), Math.max(1L, delayTicks));
+        return wrap(() -> globalScheduler.runDelayed(plugin, cb(task), Math.max(1L, delayTicks)));
     }
     @Override public TaskHandle globalTimer(Runnable task, long delayTicks, long periodTicks) {
         if (periodTicks <= 0) return globalLater(task, delayTicks);
-        return invokeWrap(gRunAtFixedRate, globalScheduler, plugin, cb(task), Math.max(1L, delayTicks), periodTicks);
+        return wrap(() -> globalScheduler.runAtFixedRate(plugin, cb(task), Math.max(1L, delayTicks), periodTicks));
     }
 
     @Override public TaskHandle async(Runnable task) {
-        return invokeWrap(aRunNow, asyncScheduler, plugin, cb(task));
+        return wrap(() -> asyncScheduler.runNow(plugin, cb(task)));
     }
     @Override public TaskHandle asyncLater(Runnable task, long delayMillis) {
-        return invokeWrap(aRunDelayed, asyncScheduler, plugin, cb(task), Math.max(1L, delayMillis), TimeUnit.MILLISECONDS);
+        return wrap(() -> asyncScheduler.runDelayed(plugin, cb(task), Math.max(1L, delayMillis), TimeUnit.MILLISECONDS));
     }
     @Override public TaskHandle asyncTimer(Runnable task, long delayMillis, long periodMillis) {
         if (periodMillis <= 0) return asyncLater(task, delayMillis);
-        return invokeWrap(aRunAtFixedRate, asyncScheduler, plugin, cb(task), Math.max(1L, delayMillis), Math.max(1L, periodMillis), TimeUnit.MILLISECONDS);
+        return wrap(() -> asyncScheduler.runAtFixedRate(plugin, cb(task), Math.max(1L, delayMillis),
+                Math.max(1L, periodMillis), TimeUnit.MILLISECONDS));
     }
 }

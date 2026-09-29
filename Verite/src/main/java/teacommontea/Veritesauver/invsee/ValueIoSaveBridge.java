@@ -1,106 +1,75 @@
 package teacommontea.veritesauver.invsee;
 
-import org.bukkit.Bukkit;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.UUID;
-
-import teacommontea.util.NmsFields;
 
 final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
 
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-    private static final int KEY_NAMEANDID = 0;
-    private static final int KEY_STRING_PAIR = 1;
-    private static final int KEY_PLAYER = 2;
-    private static final int KEY_STRING_PAIR_PR = 3;
-    private static final int KEY_PLAYER_PR = 4;
-
+    private final InvSeeAccess access;
     private final MethodHandle storageLoad;
     private final MethodHandle storageSave;
     private final MethodHandle tagValueInputCreate;
     private final Object problemReporter;
-    private final Class<?> nameAndIdClass;
-    private final java.lang.reflect.Constructor<?> nameAndIdCtor;
-    private final int loadKeyKind;
-    private final boolean loadYieldsValueInput;
-    private final InvSeeAccess access;
+    private final Constructor<?> nameAndIdCtor;
 
     ValueIoSaveBridge(InvSeeAccess access) throws Throwable {
         this.access = access;
         Class<?> storageClass = InvSeeAccess.firstExisting(
                 "net.minecraft.world.level.storage.PlayerDataStorage",
                 "net.minecraft.world.level.storage.WorldNBTStorage");
-        if (storageClass == null) {
-            throw new InvSeeAccess.Unsupported("no PlayerDataStorage class");
-        }
-
-        Class<?> nameAndId = InvSeeAccess.classOrNull("net.minecraft.server.players.NameAndId");
-        Class<?> playerClass = access.playerClass();
-        Class<?> problemReporterType = InvSeeAccess.classOrNull("net.minecraft.util.ProblemReporter");
-        Class<?> compoundTagType = InvSeeAccess.firstExisting(
+        Class<?> problemReporterClass = InvSeeAccess.firstExisting("net.minecraft.util.ProblemReporter");
+        Class<?> valueInputClass = InvSeeAccess.firstExisting("net.minecraft.world.level.storage.ValueInput");
+        Class<?> tagValueInputClass = InvSeeAccess.firstExisting("net.minecraft.world.level.storage.TagValueInput");
+        Class<?> compoundTagClass = InvSeeAccess.firstExisting(
                 "net.minecraft.nbt.CompoundTag",
                 "net.minecraft.nbt.NBTTagCompound");
-        Class<?> valueInputType = InvSeeAccess.classOrNull("net.minecraft.world.level.storage.ValueInput");
+        Class<?> registryClass = InvSeeAccess.firstExisting(
+                "net.minecraft.core.HolderLookup$Provider",
+                "net.minecraft.core.HolderLookup$a");
+        if (storageClass == null || problemReporterClass == null || valueInputClass == null
+                || tagValueInputClass == null || compoundTagClass == null || registryClass == null) {
+            throw new InvSeeAccess.Unsupported("value-io save shapes missing");
+        }
+        Class<?> nameAndIdClass = InvSeeAccess.classOrNull("net.minecraft.server.players.NameAndId");
+        Class<?> playerClass = access.playerClass();
 
         Method load = null;
-        int keyKind = -1;
-        boolean yieldsValueInput = false;
         for (Method m : storageClass.getDeclaredMethods()) {
-            if (m.isSynthetic() || m.isBridge()) continue;
-            if (m.getReturnType() != Optional.class) continue;
+            if (m.isSynthetic() || m.isBridge() || m.getReturnType() != Optional.class) continue;
             Class<?>[] p = m.getParameterTypes();
-            boolean retValueInput = valueInputType != null
-                    && m.getGenericReturnType().getTypeName().contains(valueInputType.getName());
-            boolean retCompound = compoundTagType != null
-                    && m.getGenericReturnType().getTypeName().contains(compoundTagType.getName());
-            if (nameAndId != null && p.length == 1 && p[0] == nameAndId) {
-                load = m; keyKind = KEY_NAMEANDID; yieldsValueInput = retValueInput; break;
-            }
-            if (problemReporterType != null && p.length == 2
-                    && playerClass.isAssignableFrom(p[0]) && p[0] != Object.class
-                    && p[1] == problemReporterType && retValueInput) {
-                if (keyKind != KEY_NAMEANDID) { load = m; keyKind = KEY_PLAYER_PR; yieldsValueInput = true; }
-            } else if (problemReporterType != null && p.length == 3
-                    && p[0] == String.class && p[1] == String.class && p[2] == problemReporterType
-                    && retCompound) {
-                if (keyKind != KEY_NAMEANDID && keyKind != KEY_PLAYER_PR) {
-                    load = m; keyKind = KEY_STRING_PAIR_PR; yieldsValueInput = false;
+            if (nameAndIdClass != null) {
+                if (p.length == 1 && p[0] == nameAndIdClass) {
+                    load = m;
+                    break;
                 }
-            } else if (p.length == 2 && p[0] == String.class && p[1] == String.class && retCompound) {
-                if (keyKind == -1 || keyKind == KEY_STRING_PAIR || keyKind == KEY_PLAYER) {
-                    load = m; keyKind = KEY_STRING_PAIR; yieldsValueInput = false;
-                }
-            } else if (p.length == 1 && playerClass.isAssignableFrom(p[0]) && p[0] != Object.class) {
-                if (keyKind == -1 || keyKind == KEY_PLAYER) {
-                    load = m; keyKind = KEY_PLAYER; yieldsValueInput = retValueInput;
-                }
+            } else if (p.length == 2 && p[0] == playerClass && p[1] == problemReporterClass) {
+                load = m;
+                break;
             }
         }
         if (load == null) {
             throw new InvSeeAccess.Unsupported("no PlayerDataStorage.load on this server");
         }
-        this.loadKeyKind = keyKind;
-        this.loadYieldsValueInput = yieldsValueInput;
-        this.nameAndIdClass = nameAndId;
-        this.nameAndIdCtor = nameAndId != null
-                ? nameAndId.getConstructor(UUID.class, String.class)
-                : null;
         load.setAccessible(true);
         this.storageLoad = LOOKUP.unreflect(load);
+        this.nameAndIdCtor = nameAndIdClass == null ? null
+                : nameAndIdClass.getConstructor(UUID.class, String.class);
 
         Method save = null;
         for (Method m : storageClass.getDeclaredMethods()) {
-            if (m.isSynthetic() || m.isBridge()) continue;
-            if (m.getReturnType() != void.class) continue;
+            if (m.isSynthetic() || m.isBridge() || m.getReturnType() != void.class) continue;
             Class<?>[] p = m.getParameterTypes();
-            if (p.length == 1 && playerClass.isAssignableFrom(p[0]) && p[0] != Object.class) {
-                save = m; break;
+            if (p.length == 1 && p[0] == playerClass) {
+                save = m;
+                break;
             }
         }
         if (save == null) {
@@ -109,44 +78,28 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
         save.setAccessible(true);
         this.storageSave = LOOKUP.unreflect(save);
 
-        Class<?> tagValueInput = InvSeeAccess.firstExisting(
-                "net.minecraft.world.level.storage.TagValueInput");
-        Class<?> problemReporterClass = InvSeeAccess.firstExisting(
-                "net.minecraft.util.ProblemReporter");
-        Class<?> registryClass = InvSeeAccess.firstExisting(
-                "net.minecraft.core.HolderLookup$Provider",
-                "net.minecraft.core.HolderLookup$a");
-        Class<?> compoundTag = InvSeeAccess.firstExisting(
-                "net.minecraft.nbt.CompoundTag",
-                "net.minecraft.nbt.NBTTagCompound");
-        if (tagValueInput == null || problemReporterClass == null
-                || registryClass == null || compoundTag == null) {
-            throw new InvSeeAccess.Unsupported("value-io save shapes missing");
-        }
         Method create = null;
-        for (Method m : tagValueInput.getDeclaredMethods()) {
-            if (!java.lang.reflect.Modifier.isStatic(m.getModifiers())) continue;
+        for (Method m : tagValueInputClass.getDeclaredMethods()) {
+            if (!Modifier.isStatic(m.getModifiers())) continue;
             Class<?>[] p = m.getParameterTypes();
-            if (p.length == 3 && p[2] == compoundTag && valueInputType != null
-                    && valueInputType.isAssignableFrom(m.getReturnType())) {
-                create = m; break;
+            if (p.length == 3 && p[0] == problemReporterClass && p[1] == registryClass
+                    && p[2] == compoundTagClass
+                    && valueInputClass.isAssignableFrom(m.getReturnType())) {
+                create = m;
+                break;
             }
         }
-        if (create == null && !loadYieldsValueInput) {
-            throw new InvSeeAccess.Unsupported("no TagValueInput.create(_,_,CompoundTag)");
+        if (create == null) {
+            throw new InvSeeAccess.Unsupported("no TagValueInput.create(ProblemReporter, _, CompoundTag)");
         }
-        if (create != null) {
-            create.setAccessible(true);
-            this.tagValueInputCreate = LOOKUP.unreflect(create);
-        } else {
-            this.tagValueInputCreate = null;
-        }
+        create.setAccessible(true);
+        this.tagValueInputCreate = LOOKUP.unreflect(create);
 
         Field discarding = null;
         for (Field f : problemReporterClass.getDeclaredFields()) {
-            if (java.lang.reflect.Modifier.isStatic(f.getModifiers())
-                    && problemReporterClass.isAssignableFrom(f.getType())) {
-                discarding = f; break;
+            if (Modifier.isStatic(f.getModifiers()) && problemReporterClass.isAssignableFrom(f.getType())) {
+                discarding = f;
+                break;
             }
         }
         if (discarding == null) {
@@ -158,33 +111,20 @@ final class ValueIoSaveBridge implements InvSeeAccess.SaveBridge {
 
     @Override
     public Optional<Object> read(UUID uuid, String name, Object registry, Object entity) throws Throwable {
-        Object loaded;
-        switch (loadKeyKind) {
-            case KEY_NAMEANDID -> loaded = storageLoad.invoke(storageArg(), nameAndIdCtor.newInstance(uuid, name));
-            case KEY_STRING_PAIR -> loaded = storageLoad.invoke(storageArg(), uuid.toString(), name);
-            case KEY_STRING_PAIR_PR -> loaded = storageLoad.invoke(storageArg(), uuid.toString(), name, problemReporter);
-            case KEY_PLAYER_PR -> loaded = storageLoad.invoke(storageArg(), entity, problemReporter);
-            case KEY_PLAYER -> loaded = storageLoad.invoke(storageArg(), entity);
-            default -> { return Optional.empty(); }
+        Object storage = access.rawPlayerStorage();
+        if (nameAndIdCtor == null) {
+            Optional<?> input = (Optional<?>) storageLoad.invoke(storage, entity, problemReporter);
+            return input == null || input.isEmpty() ? Optional.empty() : Optional.of(input.get());
         }
-        @SuppressWarnings("unchecked")
-        Optional<Object> tag = (Optional<Object>) loaded;
+        Optional<?> tag = (Optional<?>) storageLoad.invoke(storage, nameAndIdCtor.newInstance(uuid, name));
         if (tag == null || tag.isEmpty()) {
             return Optional.empty();
         }
-        if (loadYieldsValueInput) {
-            return Optional.of(tag.get());
-        }
-        Object input = tagValueInputCreate.invoke(problemReporter, registry, tag.get());
-        return Optional.of(input);
+        return Optional.of(tagValueInputCreate.invoke(problemReporter, registry, tag.get()));
     }
 
     @Override
     public void save(Object nmsServerPlayer) throws Throwable {
-        storageSave.invoke(storageArg(), nmsServerPlayer);
-    }
-
-    private Object storageArg() throws Throwable {
-        return access.rawPlayerStorage();
+        storageSave.invoke(access.rawPlayerStorage(), nmsServerPlayer);
     }
 }

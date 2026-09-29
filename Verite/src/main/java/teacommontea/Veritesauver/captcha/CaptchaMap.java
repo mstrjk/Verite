@@ -45,16 +45,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class CaptchaMap implements Listener {
 
-    private static final PotionEffectType SLOWNESS_EFFECT = resolveSlowness();
-
-    private static PotionEffectType resolveSlowness() {
-        PotionEffectType t = PotionEffectType.getByName("SLOWNESS");
-        if (t == null) {
-            t = PotionEffectType.getByName("SLOW");
-        }
-        return t;
-    }
-
     private static final String CHARSET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
     private static final int CODE_LENGTH = 5;
     private static final int MAX_TRIES = 3;
@@ -182,7 +172,7 @@ public final class CaptchaMap implements Listener {
         player.getInventory().setItem(0, mapItem(view));
         player.getInventory().setHeldItemSlot(0);
 
-        player.addPotionEffect(new PotionEffect(SLOWNESS_EFFECT, LIMIT_SECONDS * 20, 255, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, LIMIT_SECONDS * 20, 255, false, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, LIMIT_SECONDS * 20, 1, false, false));
         player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
         teacommontea.util.text.Send.to(player, messages.prefixed(
@@ -261,7 +251,7 @@ public final class CaptchaMap implements Listener {
             s.task.cancel();
         }
         if (player.isOnline()) {
-            player.removePotionEffect(SLOWNESS_EFFECT);
+            player.removePotionEffect(PotionEffectType.SLOWNESS);
             player.removePotionEffect(PotionEffectType.BLINDNESS);
             if (s.inventory != null) {
                 player.getInventory().clear();

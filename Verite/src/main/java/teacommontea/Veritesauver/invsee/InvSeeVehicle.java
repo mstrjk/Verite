@@ -160,35 +160,6 @@ final class InvSeeVehicle {
             return null;
         }
         Material material = RIDEABLE.get(ridden.getType());
-        if (material == null) {
-            material = legacyBoat(ridden);
-        }
         return material == null ? null : new ItemStack(material);
-    }
-
-    private static Material legacyBoat(Entity ridden) {
-        String typeName = ridden.getType() == null ? "" : ridden.getType().name();
-        if (!typeName.equals("BOAT") && !typeName.equals("CHEST_BOAT")) {
-            return null;
-        }
-        boolean chest = typeName.equals("CHEST_BOAT");
-        String wood = boatWood(ridden);
-        if (wood == null) {
-            return null;
-        }
-        if (wood.equals("BAMBOO")) {
-            return Material.getMaterial(chest ? "BAMBOO_CHEST_RAFT" : "BAMBOO_RAFT");
-        }
-        return Material.getMaterial(chest ? wood + "_CHEST_BOAT" : wood + "_BOAT");
-    }
-
-    private static String boatWood(Entity ridden) {
-        try {
-            java.lang.reflect.Method m = ridden.getClass().getMethod("getBoatType");
-            Object type = m.invoke(ridden);
-            return type instanceof Enum<?> e ? e.name() : null;
-        } catch (Throwable t) {
-            return null;
-        }
     }
 }

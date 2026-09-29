@@ -20,7 +20,6 @@ final class VanishGhost {
     private static Method sendMethod;
     private static Constructor<?> infoCtor;
     private static Object updateGameModeAction;
-    private static boolean varargsCtor;
     private static Field gameModeField;
     private static Field gameTypeField;
     private static Object spectatorGameType;
@@ -36,9 +35,7 @@ final class VanishGhost {
             gameTypeField.set(gameModeObj, spectatorGameType);
             Object packet;
             try {
-                packet = varargsCtor
-                        ? infoCtor.newInstance(updateGameModeAction, arrayOf(serverPlayer))
-                        : infoCtor.newInstance(updateGameModeAction, serverPlayer);
+                packet = infoCtor.newInstance(updateGameModeAction, serverPlayer);
             } finally {
                 gameTypeField.set(gameModeObj, realType);
             }
@@ -46,13 +43,6 @@ final class VanishGhost {
         } catch (Throwable ignored) {
 
         }
-    }
-
-    private static Object[] arrayOf(Object serverPlayer) {
-
-        Object arr = java.lang.reflect.Array.newInstance(serverPlayer.getClass(), 1);
-        java.lang.reflect.Array.set(arr, 0, serverPlayer);
-        return new Object[]{arr};
     }
 
     private static void send(Player viewer, Object packet) throws Exception {
@@ -72,34 +62,14 @@ final class VanishGhost {
             Class<?> serverPlayer = craftGetHandle.getReturnType();
 
             Class<?> infoClass = firstClass(
-                    "net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket",
-                    "net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket",
-                    "net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo");
+                    "net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket");
             if (infoClass == null) return fail();
 
-            Class<?> actionClass = firstClass(
-                    "net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$Action",
-                    "net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket$Action",
-                    "net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
-            updateGameModeAction = actionClass == null ? null
-                    : enumConst(actionClass, "UPDATE_GAME_MODE", "UPDATE_GAMEMODE");
-            if (updateGameModeAction == null) {
-                Object[] found = findActionByConstant(infoClass, "UPDATE_GAME_MODE", "UPDATE_GAMEMODE");
-                if (found != null) {
-                    actionClass = (Class<?>) found[0];
-                    updateGameModeAction = found[1];
-                }
-            }
-            if (actionClass == null || updateGameModeAction == null) return fail();
-
-            try {
-                infoCtor = infoClass.getConstructor(actionClass, serverPlayer);
-                varargsCtor = false;
-            } catch (NoSuchMethodException e) {
-                Class<?> arr = java.lang.reflect.Array.newInstance(serverPlayer, 0).getClass();
-                infoCtor = infoClass.getConstructor(actionClass, arr);
-                varargsCtor = true;
-            }
+            Object[] found = findActionByConstant(infoClass, "UPDATE_GAME_MODE");
+            if (found == null) return fail();
+            Class<?> actionClass = (Class<?>) found[0];
+            updateGameModeAction = found[1];
+            infoCtor = infoClass.getConstructor(actionClass, serverPlayer);
 
             connectionField = NmsFields.firstFieldOfAnyType(serverPlayer,
                     "net.minecraft.server.network.ServerGamePacketListenerImpl",

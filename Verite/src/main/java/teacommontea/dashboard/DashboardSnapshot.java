@@ -35,7 +35,7 @@ public final class DashboardSnapshot {
 
         return Json.object(
                 "server", serverName,
-                "version", plugin.getDescription().getVersion(),
+                "version", teacommontea.util.PluginVersion.get(),
                 "generatedAt", now,
                 "punishments", Json.raw(Json.array(punishments)),
                 "config", Json.raw(config(plugin)),

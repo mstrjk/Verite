@@ -23,6 +23,18 @@ public final class SauverConfig {
         return v;
     }
 
+    public static boolean clientBool(String path, boolean def) {
+        return yml.getBoolean(path, def);
+    }
+
+    public static int clientInt(String path, int def) {
+        return yml.getInt(path, def);
+    }
+
+    public static String clientString(String path, String def) {
+        return yml.getString(path, def);
+    }
+
     public static boolean moderationEnabled() {
         return yml.getBoolean("moderation.enabled", true);
     }

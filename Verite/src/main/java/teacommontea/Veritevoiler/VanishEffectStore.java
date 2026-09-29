@@ -1,11 +1,14 @@
 package teacommontea.veritevoiler;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import teacommontea.util.Scope;
@@ -27,7 +30,7 @@ final class VanishEffectStore {
             PotionEffect e = p.getPotionEffect(type);
             if (e == null) continue;
             if (sb.length() > 0) sb.append(';');
-            sb.append(type.getName()).append('=')
+            sb.append(type.getKey()).append('=')
               .append(e.getAmplifier()).append(',')
               .append(e.getDuration()).append(',')
               .append(e.isAmbient() ? 1 : 0).append(',')
@@ -42,7 +45,8 @@ final class VanishEffectStore {
         scope.delete(p.getUniqueId().toString());
         if (blob == null) return false;
         for (Saved s : parse(blob)) {
-            PotionEffectType type = PotionEffectType.getByName(s.type);
+            NamespacedKey key = NamespacedKey.fromString(s.type.toLowerCase(Locale.ROOT));
+            PotionEffectType type = key == null ? null : Registry.EFFECT.get(key);
             if (type == null) continue;
 
             int duration = s.duration;

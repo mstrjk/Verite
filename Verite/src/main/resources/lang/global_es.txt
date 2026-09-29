@@ -37,6 +37,25 @@ fakeconnect.deny.others = No puedes falsear un mensaje para otro jugador.
 fakeconnect.join = &#FFFF55%player% se ha unido al juego
 fakeconnect.leave = &#FFFF55%player% ha abandonado el juego
 
+maison.teleport.description = Teletranspórtate a ti o a otras entidades hasta un jugador o una posición.
+maison.teleport.usage = {WARNING}Uso: {BRAND_ACCENT_SECONDARY}/%command% [<targets>] <location> [<rotation>] {WARNING}o {BRAND_ACCENT_SECONDARY}/%command% [<targets>] <destination>
+maison.teleport.console = {WARNING}La consola debe indicar a quién teletransportar: {BRAND_ACCENT_SECONDARY}/%command% <targets> <location|destination>
+maison.teleport.deny.self = No puedes teletransportarte.
+maison.teleport.deny.others = No puedes teletransportar a otros jugadores.
+maison.teleport.none = {WARNING}No se ha encontrado ninguna entidad.
+maison.teleport.destination.single = {WARNING}Solo una entidad puede ser el destino.
+maison.teleport.position.invalid = {WARNING}Posición no válida: {BRAND_ACCENT_SECONDARY}%input%
+maison.teleport.position.bounds = {WARNING}Esa posición está fuera del mundo.
+maison.teleport.selector.invalid = {WARNING}Selector no válido: {BRAND_ACCENT_SECONDARY}%input%
+maison.teleport.entity.one = {BRAND_ACCENT_SECONDARY}%name% {BRAND}teletransportado a {BRAND_ACCENT_SECONDARY}%destination%{BRAND}.
+maison.teleport.entity.many = {BRAND_ACCENT_SECONDARY}%count% {BRAND}entidades teletransportadas a {BRAND_ACCENT_SECONDARY}%destination%{BRAND}.
+maison.teleport.position.one = {BRAND_ACCENT_SECONDARY}%name% {BRAND}teletransportado a {BRAND_ACCENT_SECONDARY}%x%, %y%, %z%{BRAND}.
+maison.teleport.position.many = {BRAND_ACCENT_SECONDARY}%count% {BRAND}entidades teletransportadas a {BRAND_ACCENT_SECONDARY}%x%, %y%, %z%{BRAND}.
+maison.teleport.failed = {WARNING}No se pudo teletransportar a {BRAND_ACCENT_SECONDARY}%name%{WARNING}.
+maison.teleport.paper.failed = La API de comandos de Paper no pudo registrar /teleport, así que se usa el comando de Bukkit. Considera informar de este error.
+maison.teleport.tree.failed = No se pudieron dar argumentos tipados a /teleport en este servidor. Sigue funcionando, pero la barra de chat no coloreará sus campos. Considera informar de este error.
+maison.teleport.register.failed = No se pudo registrar /teleport. Considera informar de este error.
+
 # ---- Opciones ----
 flag.list.header = Opciones editables {BRAND_ACCENT}(%count%):
 flag.list.entry =   {BRAND_ACCENT}- {BRAND_ACCENT_SECONDARY}%name%
@@ -151,6 +170,14 @@ login.locale = {BRAND_ACCENT_SECONDARY}Idioma: {BRAND}%locale%
 login.dupeip.notice = {BRAND_ACCENT_SECONDARY}%name% comparte IP con: %alts%
 login.dupeip.notice.flagged = {WARNING}⚠ {BRAND_ACCENT_SECONDARY}%name% comparte IP con: %alts%
 login.client.brand = {BRAND_ACCENT_SECONDARY}%name% entró usando {BRAND}%client%{BRAND_ACCENT_SECONDARY}.
+client.confidence = {BRAND_ACCENT_SECONDARY}Confianza: {BRAND}%percent%%
+client.reported = {BRAND_ACCENT_SECONDARY}Declarado: {BRAND}%brand%
+client.detected = {BRAND_ACCENT_SECONDARY}Detectado: {BRAND}%list%
+client.unknown.channels = {BRAND_ACCENT_SECONDARY}Canales desconocidos: {BRAND}%list%
+client.anomalies = {BRAND_ACCENT_SECONDARY}Anomalías: {WARN}%list%
+client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% declara vanilla, pero parece estar usando %client%{BRAND_ACCENT_SECONDARY}.
+client.probe.signs.unavailable = El sondeo de cliente mediante carteles no está disponible en este servidor: 
+client.probe.packs.unavailable = El sondeo de paquetes conocidos no pudo conectarse al escucha de conexiones del servidor.
 login.blacklist.failed = No se pudo analizar la lista negra de comandos para silenciados. Considera informar de este error.
 
 # ---- Moderación ----
@@ -368,6 +395,7 @@ lookup.whois.never.joined = Whois de {BRAND_ACCENT_SECONDARY}%name% (nunca ha en
 lookup.whois.source.mojang =   Fuente: {BRAND_ACCENT_SECONDARY}Mojang (sin historial local)
 lookup.whois.no.account = {WARNING}No existe ninguna cuenta de Minecraft con el nombre {BRAND_ACCENT_SECONDARY}%query%{WARNING}.
 lookup.whois.mojang.unreachable = {WARNING}No se pudo contactar con Mojang para resolver {BRAND_ACCENT_SECONDARY}%query%{WARNING}. Inténtalo de nuevo en breve.
+lookup.whois.mojang.ratelimited = {WARNING}Mojang está limitando las consultas. Vuelve a intentar %query% en breve.
 lookup.whois.header = {BRAND_ACCENT_SECONDARY}Whois de %name%.
 lookup.whois.header.online = {BRAND_ACCENT_SECONDARY}Whois de %name% {BRAND}(conectado){BRAND_ACCENT_SECONDARY}.
 lookup.whois.uuid =   UUID: {BRAND_ACCENT_SECONDARY}%uuid%
@@ -375,6 +403,8 @@ lookup.whois.known.names =   Nombres conocidos: {BRAND_ACCENT_SECONDARY}%names%
 lookup.whois.version =   Versión: {BRAND_ACCENT_SECONDARY}%version%
 lookup.whois.version.protocol =   Versión: {BRAND_ACCENT_SECONDARY}%version% (protocolo %protocol%)
 lookup.whois.client =   Cliente: {BRAND_ACCENT_SECONDARY}%client%
+lookup.whois.client.detected =   {BRAND_ACCENT_SECONDARY}Cliente detectado: {BRAND}%client% {BRAND_ACCENT_SECONDARY}(%percent%% de confianza)
+lookup.whois.client.mods =   {BRAND_ACCENT_SECONDARY}Mods detectados: {BRAND}%list%
 lookup.whois.client.all =   Cliente: {BRAND_ACCENT_SECONDARY}%client% (todos: %clients%)
 lookup.whois.referrer =   Procedencia: {BRAND_ACCENT_SECONDARY}%referrer%
 lookup.whois.country =   País: {BRAND_ACCENT_SECONDARY}%country%
@@ -454,11 +484,14 @@ punishdialogue.response.failed = Falló el tratamiento de la respuesta del diál
 
 # ---- Ciclo de vida del plugin ----
 plugin.database.failed = No se pudo abrir la base de datos H2. Desactivando el plugin. Considera informar de este error.
+plugin.version.too.old = Este servidor ejecuta Minecraft %version%, una versión anterior a las que admite Verité (%min% a %max%). Desactivando el plugin. Verité 1.2.8 es la última versión para Minecraft 1.19 a 1.21.5.
+plugin.version.too.new = Este servidor ejecuta Minecraft %version%, una versión posterior a las que admite esta compilación de Verité (%min% a %max%). Desactivando el plugin. Actualiza Verité a una versión compatible con %version%.
 plugin.filter.missing = No se pudieron localizar los tableros del filtro. Desactivando el plugin. La descarga se reintentará en el próximo inicio.
 plugin.native.missing = No se pudo localizar la biblioteca nativa. Desactivando el plugin. La descarga se reintentará en el próximo inicio.
 plugin.tokenisers.missing = No se pudieron localizar los tokenizadores. Desactivando el plugin. La descarga se reintentará en el próximo inicio.
 plugin.skript.failed = La integración con Skript no se pudo inicializar. Considera informar de este error.
 plugin.vanish.failed = El módulo de modo invisible no se pudo inicializar. Considera informar de este error.
+plugin.maison.failed = El módulo Veritémaison no se pudo inicializar. Considera informar de este error.
 plugin.moderation.failed = El módulo de moderación no se pudo inicializar. Considera informar de este error.
 plugin.flagstore.failed = No se pudo abrir el almacén de marcas. Los recuentos de marcas de los jugadores mostrarán 0. Considera informar de este error.
 plugin.filter.interrupted = La carga del filtro se interrumpió durante el arranque. Considera informar de este error.

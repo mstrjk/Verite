@@ -453,6 +453,7 @@ public final class LookupCommands extends CommandBase {
                     }
                     case NOT_FOUND -> err(sender, teacommontea.util.Lang.of("lookup.whois.no.account", "query", query));
                     case UNKNOWN -> err(sender, teacommontea.util.Lang.of("lookup.whois.mojang.unreachable", "query", query));
+                    case RATE_LIMITED -> err(sender, teacommontea.util.Lang.of("lookup.whois.mojang.ratelimited", "query", query));
                 }
             };
             if (sender instanceof org.bukkit.entity.Player p) {
@@ -487,6 +488,18 @@ public final class LookupCommands extends CommandBase {
                     "clients", String.join(", ", pr.clients())));
         } else {
             raw(sender, teacommontea.util.Lang.of("lookup.whois.client", "client", client));
+        }
+
+        String identity = dao().clientIdentity(u);
+        if (identity != null && !identity.isBlank()) {
+            int confidence = dao().clientConfidence(u);
+            raw(sender, teacommontea.util.Lang.of("lookup.whois.client.detected",
+                    "client", identity, "percent", confidence));
+            String mods = dao().clientMods(u);
+            if (mods != null && !mods.isBlank()) {
+                raw(sender, teacommontea.util.Lang.of("lookup.whois.client.mods",
+                        "list", mods.replace(",", ", ")));
+            }
         }
 
         raw(sender, teacommontea.util.Lang.of("lookup.whois.referrer", "referrer",

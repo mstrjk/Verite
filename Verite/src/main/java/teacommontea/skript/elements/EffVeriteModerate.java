@@ -88,24 +88,6 @@ public class EffVeriteModerate extends Effect {
     }
 
     private static long millisOf(Timespan span) {
-        try {
-            Class<?> period = Class.forName("ch.njol.skript.util.Timespan$TimePeriod");
-            Object millisecond = null;
-            for (Object constant : period.getEnumConstants()) {
-                if (((Enum<?>) constant).name().equals("MILLISECOND")) {
-                    millisecond = constant;
-                    break;
-                }
-            }
-            if (millisecond != null) {
-                return (long) Timespan.class.getMethod("getAs", period).invoke(span, millisecond);
-            }
-        } catch (Throwable ignored) {
-        }
-        try {
-            return (long) Timespan.class.getMethod("getMilliSeconds").invoke(span);
-        } catch (Throwable ignored) {
-            return 0L;
-        }
+        return span.getAs(Timespan.TimePeriod.MILLISECOND);
     }
 }

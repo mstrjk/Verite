@@ -167,31 +167,55 @@ public final class SauverListeners implements Listener {
         return candidate.isEmpty() ? null : candidate;
     }
 
-    private static final long BRAND_POLL_TICKS = 20L;
-    private static final int BRAND_POLL_MAX_ATTEMPTS = 15;
-
     private void recordClientDetails(Player p) {
         int protocol = protocolOf(p);
         String referrer = virtualHostOf(p);
         dao().recordClient(p.getUniqueId(), null, protocol, referrer, System.currentTimeMillis());
-        pollClientBrand(p, 1);
+
+        teacommontea.veritesauver.client.ClientDetect detect = sauver.clientDetect();
+        if (detect == null) {
+            return;
+        }
+        detect.inspect(p, profile -> {
+            describe(p, profile);
+            dao().recordClientProfile(p.getUniqueId(), profile, System.currentTimeMillis());
+            if (teacommontea.veritesauver.client.ClientNotice.worthReporting(profile)) {
+                sauver.messages().notify("veritesauver.notify.client_join",
+                        teacommontea.veritesauver.client.ClientNotice.line(p, profile));
+            }
+        });
     }
 
-    private void pollClientBrand(Player p, int attempt) {
-        teacommontea.util.sched.Sched.executeFor(p, () -> {
-            if (!p.isOnline()) {
-                return;
+    private void describe(Player p, teacommontea.veritesauver.client.ClientProfile profile) {
+        int protocol = protocolOf(p);
+        if (protocol > 0) {
+            profile.fact("protocol", teacommontea.util.Lang.of("login.protocol", "protocol", protocol));
+        }
+        String version = teacommontea.veritesauver.util.SauverProtocol.versionName(protocol);
+        if (version != null && !version.isBlank()) {
+            profile.fact("version", teacommontea.util.Lang.of("login.version", "version", version));
+        }
+        String referrer = virtualHostOf(p);
+        if (referrer != null && !referrer.isBlank()) {
+            profile.fact("host", teacommontea.util.Lang.of("login.connected.via", "host", referrer));
+        }
+        profile.fact("locale", teacommontea.util.Lang.of("login.locale", "locale", localeOf(p)));
+    }
+
+    private static String localeOf(Player p) {
+        try {
+            Object l = Player.class.getMethod("locale").invoke(p);
+            if (l != null) {
+                return String.valueOf(l);
             }
-            String brand = p.getClientBrandName();
-            boolean known = brand != null && !brand.isBlank();
-            if (!known && attempt < BRAND_POLL_MAX_ATTEMPTS) {
-                pollClientBrand(p, attempt + 1);
-                return;
-            }
-            String resolved = known ? brand : "vanilla";
-            dao().recordClient(p.getUniqueId(), resolved, 0, null, System.currentTimeMillis());
-            notifyClientBrand(p, resolved);
-        }, BRAND_POLL_TICKS);
+        } catch (Throwable ignored) {
+        }
+        try {
+            Object l = Player.class.getMethod("getLocale").invoke(p);
+            return l == null ? "unknown" : String.valueOf(l);
+        } catch (Throwable t) {
+            return "unknown";
+        }
     }
 
     private static int protocolOf(Player p) {
@@ -220,6 +244,11 @@ public final class SauverListeners implements Listener {
         if (off()) return;
         UUID u = event.getPlayer().getUniqueId();
         pendingRealIp.remove(u);
+        teacommontea.veritesauver.client.ClientDetect detect = sauver.clientDetect();
+        if (detect != null) {
+            detect.cancel(event.getPlayer());
+            detect.forget(u);
+        }
         dao().recordLogout(u, System.currentTimeMillis());
     }
 
@@ -260,65 +289,6 @@ public final class SauverListeners implements Listener {
                 "name", joining.getName(),
                 "alts", String.join(Colours.BRAND_ACCENT_SECONDARY + ", ", alts));
         sauver.messages().notify("veritesauver.notify.dupeip_join", head);
-    }
-
-    private void notifyClientBrand(Player joining, String brand) {
-        if (brand == null || brand.equalsIgnoreCase("vanilla")) {
-            return;
-        }
-        String head = teacommontea.util.Lang.of("login.client.brand", "name", joining.getName(),
-                "client", "<hover:show_text:'" + clientDetails(joining, brand) + "'>"
-                        + prettyBrand(brand) + "</hover>");
-        sauver.messages().notify("veritesauver.notify.client_join", head);
-    }
-
-    private String clientDetails(Player p, String brand) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(teacommontea.util.Lang.of("login.client.label", "client", prettyBrand(brand)));
-
-        int protocol = protocolOf(p);
-        if (protocol > 0) {
-            sb.append("<newline>").append(teacommontea.util.Lang.of("login.protocol", "protocol", protocol));
-        }
-        String version = minecraftVersionOf(p);
-        if (version != null && !version.isBlank()) {
-            sb.append("<newline>").append(teacommontea.util.Lang.of("login.version", "version", version));
-        }
-        String referrer = virtualHostOf(p);
-        if (referrer != null && !referrer.isBlank()) {
-            sb.append("<newline>").append(teacommontea.util.Lang.of("login.connected.via", "host", referrer));
-        }
-        sb.append("<newline>").append(teacommontea.util.Lang.of("login.locale", "locale", localeOf(p)));
-        return sb.toString().replace("'", "’");
-    }
-
-    private static String minecraftVersionOf(Player p) {
-        try {
-            Object v = Player.class.getMethod("getClientVersion").invoke(p);
-            return v == null ? null : String.valueOf(v);
-        } catch (Throwable t) {
-            return null;
-        }
-    }
-
-    private static String localeOf(Player p) {
-        try {
-            Object l = Player.class.getMethod("locale").invoke(p);
-            if (l != null) {
-                return String.valueOf(l);
-            }
-        } catch (Throwable ignored) {
-        }
-        try {
-            Object l = Player.class.getMethod("getLocale").invoke(p);
-            return l == null ? "unknown" : String.valueOf(l);
-        } catch (Throwable t) {
-            return "unknown";
-        }
-    }
-
-    private static String prettyBrand(String brand) {
-        return teacommontea.util.text.Text.capitalise(brand);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

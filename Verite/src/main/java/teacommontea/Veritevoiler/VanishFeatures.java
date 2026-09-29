@@ -239,7 +239,7 @@ public final class VanishFeatures {
             for (org.bukkit.potion.PotionEffectType type : EFFECT_TYPES) {
                 if (type != null) {
                     p.addPotionEffect(new org.bukkit.potion.PotionEffect(
-                            type, INFINITE_DURATION, 0, true, false, false));
+                            type, org.bukkit.potion.PotionEffect.INFINITE_DURATION, 0, true, false, false));
                 }
             }
         }
@@ -253,18 +253,8 @@ public final class VanishFeatures {
     }
 
     private static final org.bukkit.potion.PotionEffectType[] EFFECT_TYPES = {
-            org.bukkit.potion.PotionEffectType.getByName("NIGHT_VISION"),
+            org.bukkit.potion.PotionEffectType.NIGHT_VISION,
     };
-
-    private static final int INFINITE_DURATION = resolveInfiniteDuration();
-
-    private static int resolveInfiniteDuration() {
-        try {
-            return org.bukkit.potion.PotionEffect.class.getField("INFINITE_DURATION").getInt(null);
-        } catch (Throwable t) {
-            return Integer.MAX_VALUE;
-        }
-    }
 
     public static final class GameModeToggle implements Listener {
         private final Plugin plugin;

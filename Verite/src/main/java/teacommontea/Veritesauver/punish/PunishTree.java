@@ -309,7 +309,7 @@ public final class PunishTree implements Listener, InventoryHolder {
     }
 
     private void manual(Player staff, View v, SauverTree tree) {
-        if (SauverConfig.treeUseFields() && atLeast_1_21_7() && openFields(staff, v)) {
+        if (SauverConfig.treeUseFields() && DIALOGS && openFields(staff, v)) {
             return;
         }
         manualChat(staff, v);
@@ -335,28 +335,20 @@ public final class PunishTree implements Listener, InventoryHolder {
                 + label + "</click></hover>" + Colours.BRAND_ACCENT + "]";
     }
 
+    private static final boolean DIALOGS = dialogsAvailable();
+
+    private static boolean dialogsAvailable() {
+        try {
+            Class.forName("io.papermc.paper.dialog.Dialog");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     private boolean openFields(Player staff, View v) {
         staff.closeInventory();
         return new PunishDialog(sauver).open(staff, v.target, v.targetName, v.category);
-    }
-
-    private static boolean atLeast_1_21_7() {
-        try {
-            String raw = Bukkit.getMinecraftVersion();
-            String[] parts = raw.split("[^0-9]+");
-            int major = parts.length > 0 && !parts[0].isEmpty() ? Integer.parseInt(parts[0]) : 0;
-            int minor = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
-            int patch = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
-            if (major != 1) {
-                return major > 1;
-            }
-            if (minor != 21) {
-                return minor > 21;
-            }
-            return patch >= 7;
-        } catch (Throwable t) {
-            return false;
-        }
     }
 
     private static Entry.Type entryType(SauverTree.StepType type) {
@@ -484,7 +476,7 @@ public final class PunishTree implements Listener, InventoryHolder {
     private ItemStack turtleArrow(String name) {
         ItemStack it = new ItemStack(Material.TIPPED_ARROW);
         if (it.getItemMeta() instanceof org.bukkit.inventory.meta.PotionMeta pm) {
-            pm.setBasePotionData(new org.bukkit.potion.PotionData(org.bukkit.potion.PotionType.TURTLE_MASTER));
+            pm.setBasePotionType(org.bukkit.potion.PotionType.TURTLE_MASTER);
             teacommontea.util.text.Text.itemName(pm, name);
             pm.addItemFlags(org.bukkit.inventory.ItemFlag.values());
             it.setItemMeta(pm);
