@@ -2,9 +2,7 @@ package teacommontea.veritemaison;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
@@ -15,44 +13,26 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.ProxiedCommandSender;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import teacommontea.util.Complete;
-import teacommontea.util.ConsoleColours;
 import teacommontea.util.Lang;
-import teacommontea.util.Trace;
 
 final class SpigotTeleportCommand extends Command implements PluginIdentifiableCommand {
 
     private static final Pattern NUMBER = Pattern.compile("-?(\\d+(\\.\\d*)?|\\.\\d+)");
 
     private final Plugin plugin;
-    private final Teleport teleport = new Teleport(
-            (entity, to) -> CompletableFuture.completedFuture(entity.teleport(to, TeleportCause.COMMAND)));
+    private final Teleport teleport;
 
-    private SpigotTeleportCommand(Plugin plugin) {
+    SpigotTeleportCommand(Plugin plugin, Teleport teleport) {
         super(Teleport.LABEL, Lang.of("maison.teleport.description"),
                 "/" + Teleport.LABEL + " [<targets>] <location|destination> [<rotation>]", Teleport.ALIASES);
         this.plugin = plugin;
+        this.teleport = teleport;
         setPermission(Teleport.SELF + ";" + Teleport.OTHERS);
-    }
-
-    static void register(JavaPlugin plugin) {
-        try {
-            SimpleCommandMap map = (SimpleCommandMap) Bukkit.getServer().getClass()
-                    .getMethod("getCommandMap").invoke(Bukkit.getServer());
-            SpigotTeleportCommand command = new SpigotTeleportCommand(plugin);
-            String prefix = plugin.getName().toLowerCase(Locale.ROOT);
-            map.register(prefix, command);
-            Bukkit.getPluginManager().registerEvents(new SpigotCommandTree(plugin, map, command, prefix), plugin);
-        } catch (ReflectiveOperationException | ClassCastException e) {
-            plugin.getLogger().warning(ConsoleColours.bad(Lang.of("maison.teleport.register.failed")) + Trace.of(e));
-        }
     }
 
     @Override
@@ -80,7 +60,7 @@ final class SpigotTeleportCommand extends Command implements PluginIdentifiableC
         }
         List<Entity> targets;
         if (named) {
-            targets = select(sender, args[0]);
+            targets = select(teleport, sender, args[0]);
             if (targets == null) {
                 return true;
             }
@@ -91,7 +71,7 @@ final class SpigotTeleportCommand extends Command implements PluginIdentifiableC
             targets = List.of(executor);
         }
         if (rest == 1) {
-            List<Entity> destination = select(sender, args[from]);
+            List<Entity> destination = select(teleport, sender, args[from]);
             if (destination != null) {
                 teleport.toEntity(sender, executor, targets, destination);
             }
@@ -123,7 +103,7 @@ final class SpigotTeleportCommand extends Command implements PluginIdentifiableC
         return Complete.onlineNames(args[args.length - 1], p -> Teleport.visible(sender, p));
     }
 
-    private List<Entity> select(CommandSender sender, String token) {
+    static List<Entity> select(Teleport teleport, CommandSender sender, String token) {
         if (token.startsWith("@")) {
             try {
                 return Bukkit.selectEntities(sender, token);

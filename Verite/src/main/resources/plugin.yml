@@ -395,6 +395,21 @@ permissions:
     default: op
     children:
       veritemaison.teleport: true
+  veritemaison.tp2p:
+    description: Teleport yourself to a player with /tp2p.
+    default: op
+  veritemaison.tphere:
+    description: Teleport a player to yourself with /tphere.
+    default: op
+  veritemaison.tpa:
+    description: Ask to teleport to a player with /tpa, and cancel it with /tpacancel.
+    default: true
+  veritemaison.tpahere:
+    description: Ask a player to teleport to you with /tpahere, and cancel it with /tpacancel.
+    default: true
+  veritemaison.tpaccept:
+    description: Accept or deny teleport requests with /tpaccept and /tpdeny.
+    default: true
   drigz.staff.invsee:
     description: View a player's inventory.
     default: op

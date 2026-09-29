@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import teacommontea.util.Lang;
 import teacommontea.util.Messages;
+import teacommontea.util.sched.Sched;
 
 final class Teleport {
 
@@ -126,19 +127,7 @@ final class Teleport {
     }
 
     private int deliver(CommandSender sender, Entity executor, List<? extends Entity> targets, Entity destination) {
-        Location to = destination.getLocation();
-        boolean toCaller = executor != null && destination.equals(executor);
-        Location landing = null;
-        for (Entity target : targets) {
-            if (toCaller && SafeLanding.grounded(target)) {
-                if (landing == null) {
-                    landing = SafeLanding.below(to);
-                }
-                move(sender, target, landing.clone());
-            } else {
-                move(sender, target, to.clone());
-            }
-        }
+        transport(sender, targets, destination, executor != null && destination.equals(executor));
         String where = destination.getName();
         if (targets.size() == 1) {
             send(sender, Lang.of("maison.teleport.entity.one", "name", targets.get(0).getName(), "destination", where));
@@ -148,7 +137,32 @@ final class Teleport {
         return targets.size();
     }
 
-    private Player onePlayer(CommandSender sender, List<? extends Entity> named) {
+    void transport(CommandSender failuresTo, List<? extends Entity> targets, Entity destination, boolean safe) {
+        onOwner(destination, () -> {
+            Location to = destination.getLocation();
+            Location landing = null;
+            for (Entity target : targets) {
+                if (safe && SafeLanding.grounded(target)) {
+                    if (landing == null) {
+                        landing = SafeLanding.below(to);
+                    }
+                    move(failuresTo, target, landing.clone());
+                } else {
+                    move(failuresTo, target, to.clone());
+                }
+            }
+        });
+    }
+
+    private static void onOwner(Entity entity, Runnable task) {
+        if (Sched.regionised()) {
+            Sched.executeFor(entity, task);
+        } else {
+            task.run();
+        }
+    }
+
+    Player onePlayer(CommandSender sender, List<? extends Entity> named) {
         List<Player> players = new ArrayList<>();
         for (Entity entity : seen(sender, named)) {
             if (entity instanceof Player player) {

@@ -219,11 +219,22 @@ public final class VeritePlugin extends JavaPlugin
     }
 
     private void bringUpMaison() {
-        if (!gear("maison.enabled", true) || !gear("maison.teleport", true)) {
+        if (!gear("maison.enabled", true)) {
             return;
         }
+        java.util.Set<teacommontea.veritemaison.Maison.Feature> features =
+                java.util.EnumSet.noneOf(teacommontea.veritemaison.Maison.Feature.class);
+        if (gear("maison.teleport", true)) features.add(teacommontea.veritemaison.Maison.Feature.TELEPORT);
+        if (gear("maison.tp2p", true)) features.add(teacommontea.veritemaison.Maison.Feature.TO_PLAYER);
+        if (gear("maison.tphere", true)) features.add(teacommontea.veritemaison.Maison.Feature.HERE);
+        if (gear("maison.tpa", true)) features.add(teacommontea.veritemaison.Maison.Feature.REQUEST);
+        if (gear("maison.tpahere", true)) features.add(teacommontea.veritemaison.Maison.Feature.REQUEST_HERE);
+        File f = new File(getDataFolder(), "config.yml");
+        long expiry = f.isFile()
+                ? teacommontea.api.VeriteDuration.parse(teacommontea.util.Yaml.loadYaml(f).getString("maison.request.expiry", "2m"))
+                : -1;
         try {
-            teacommontea.veritemaison.Teleport.install(this);
+            teacommontea.veritemaison.Maison.enable(this, features, expiry > 0 ? expiry : 120_000L);
         } catch (RuntimeException | LinkageError e) {
             getLogger().warning(teacommontea.util.ConsoleColours.bad(teacommontea.util.Lang.of("plugin.maison.failed")) + teacommontea.util.Trace.of(e));
         }

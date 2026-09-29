@@ -4,7 +4,9 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
@@ -33,13 +35,18 @@ import teacommontea.util.sched.Sched;
 
 final class SpigotCommandTree implements Listener {
 
+    enum Shape { TELEPORT, PLAYER, OPTIONAL_PLAYER }
+
+    private record Entry(org.bukkit.command.Command command, Shape shape, List<String> labels) {}
+
     private record Types(ArgumentType<?> location, ArgumentType<?> rotation,
-                         ArgumentType<?> destination, ArgumentType<?> targets) {}
+                         ArgumentType<?> destination, ArgumentType<?> targets, ArgumentType<?> player) {}
 
     private final Plugin plugin;
     private final SimpleCommandMap map;
-    private final org.bukkit.command.Command command;
-    private final List<String> labels = new ArrayList<>();
+    private final String prefix;
+    private final List<Entry> entries = new ArrayList<>();
+    private final Map<String, WeakReference<CommandNode<?>>> grafted = new HashMap<>();
 
     private Method liveCommands;
     private Method dispatcherOf;
@@ -47,18 +54,22 @@ final class SpigotCommandTree implements Listener {
     private Object server;
     private Field vanillaField;
     private boolean broken;
-    private WeakReference<CommandNode<?>> grafted = new WeakReference<>(null);
 
-    SpigotCommandTree(Plugin plugin, SimpleCommandMap map, org.bukkit.command.Command command, String prefix) {
+    SpigotCommandTree(Plugin plugin, SimpleCommandMap map, String prefix) {
         this.plugin = plugin;
         this.map = map;
-        this.command = command;
-        labels.add(Teleport.LABEL);
-        labels.add(prefix + ":" + Teleport.LABEL);
-        for (String alias : Teleport.ALIASES) {
+        this.prefix = prefix;
+    }
+
+    void add(org.bukkit.command.Command command, Shape shape) {
+        List<String> labels = new ArrayList<>();
+        labels.add(command.getName());
+        labels.add(prefix + ":" + command.getName());
+        for (String alias : command.getAliases()) {
             labels.add(alias);
             labels.add(prefix + ":" + alias);
         }
+        entries.add(new Entry(command, shape, labels));
     }
 
     @EventHandler
@@ -84,20 +95,28 @@ final class SpigotCommandTree implements Listener {
         }
         try {
             CommandDispatcher<?> live = dispatcher(live());
-            if (live == null) {
-                return false;
-            }
-            CommandNode<?> current = live.getRoot().getChild(Teleport.LABEL);
-            if (current != null && current == grafted.get()) {
+            if (live == null || current(live)) {
                 return false;
             }
             CommandDispatcher<?> vanilla = dispatcher(vanillaField.get(server));
             return graft(live, types(vanilla));
         } catch (ReflectiveOperationException | RuntimeException e) {
             broken = true;
-            plugin.getLogger().warning(ConsoleColours.bad(Lang.of("maison.teleport.tree.failed")) + Trace.of(e));
+            plugin.getLogger().warning(ConsoleColours.bad(Lang.of("maison.tree.failed")) + Trace.of(e));
             return false;
         }
+    }
+
+    private boolean current(CommandDispatcher<?> live) {
+        for (Entry entry : entries) {
+            String label = entry.command().getName();
+            CommandNode<?> node = live.getRoot().getChild(label);
+            WeakReference<CommandNode<?>> mine = grafted.get(label);
+            if (node != null && (mine == null || node != mine.get()) && map.getKnownCommands().get(label) == entry.command()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Object live() throws ReflectiveOperationException {
@@ -144,17 +163,22 @@ final class SpigotCommandTree implements Listener {
     private static Types types(CommandDispatcher<?> vanilla) throws NoSuchFieldException {
         CommandNode<?> teleport = child(vanilla.getRoot(), "teleport");
         CommandNode<?> targets = child(teleport, "targets");
+        CommandNode<?> spectate = vanilla.getRoot().getChild("spectate");
+        CommandNode<?> spectatePlayer = spectate == null || spectate.getChild("target") == null
+                ? null : spectate.getChild("target").getChild("player");
+        ArgumentType<?> destination = type(child(teleport, "destination"));
         return new Types(
                 type(child(teleport, "location")),
                 type(child(child(targets, "location"), "rotation")),
-                type(child(teleport, "destination")),
-                type(targets));
+                destination,
+                type(targets),
+                spectatePlayer == null ? destination : type(spectatePlayer));
     }
 
     private static CommandNode<?> child(CommandNode<?> parent, String name) throws NoSuchFieldException {
         CommandNode<?> node = parent.getChild(name);
         if (node == null) {
-            throw new NoSuchFieldException("vanilla teleport node " + name);
+            throw new NoSuchFieldException("vanilla node " + name);
         }
         return node;
     }
@@ -163,31 +187,36 @@ final class SpigotCommandTree implements Listener {
         if (node instanceof ArgumentCommandNode<?, ?> argument) {
             return argument.getType();
         }
-        throw new NoSuchFieldException("vanilla teleport node " + node.getName() + " is not an argument");
+        throw new NoSuchFieldException("vanilla node " + node.getName() + " is not an argument");
     }
 
     private <S> boolean graft(CommandDispatcher<S> live, Types types) throws ReflectiveOperationException {
         boolean changed = false;
-        for (String label : labels) {
-            if (map.getKnownCommands().get(label) != command) {
-                continue;
+        for (Entry entry : entries) {
+            for (String label : entry.labels()) {
+                if (map.getKnownCommands().get(label) != entry.command()) {
+                    continue;
+                }
+                CommandNode<S> existing = live.getRoot().getChild(label);
+                if (existing == null) {
+                    continue;
+                }
+                LiteralCommandNode<S> node = entry.shape() == Shape.TELEPORT
+                        ? teleport(label, existing.getRequirement(), existing.getCommand(), types)
+                        : player(label, existing.getRequirement(), existing.getCommand(), types,
+                                entry.shape() == Shape.OPTIONAL_PLAYER);
+                removeCommand.invoke(live.getRoot(), label);
+                live.getRoot().addChild(node);
+                if (label.equals(entry.command().getName())) {
+                    grafted.put(label, new WeakReference<>(node));
+                }
+                changed = true;
             }
-            CommandNode<S> existing = live.getRoot().getChild(label);
-            if (existing == null) {
-                continue;
-            }
-            LiteralCommandNode<S> node = typed(label, existing.getRequirement(), existing.getCommand(), types);
-            removeCommand.invoke(live.getRoot(), label);
-            live.getRoot().addChild(node);
-            if (label.equals(Teleport.LABEL)) {
-                grafted = new WeakReference<>(node);
-            }
-            changed = true;
         }
         return changed;
     }
 
-    private static <S> LiteralCommandNode<S> typed(String label, Predicate<S> requirement, Command<S> run, Types types) {
+    private static <S> LiteralCommandNode<S> teleport(String label, Predicate<S> requirement, Command<S> run, Types types) {
         return LiteralArgumentBuilder.<S>literal(label)
                 .requires(requirement)
                 .then(SpigotCommandTree.<S>argument("location", types.location()).executes(run)
@@ -198,6 +227,15 @@ final class SpigotCommandTree implements Listener {
                                 .then(SpigotCommandTree.<S>argument("rotation", types.rotation()).executes(run)))
                         .then(SpigotCommandTree.<S>argument("destination", types.destination()).executes(run)))
                 .build();
+    }
+
+    private static <S> LiteralCommandNode<S> player(String label, Predicate<S> requirement, Command<S> run,
+                                                    Types types, boolean optional) {
+        LiteralArgumentBuilder<S> root = LiteralArgumentBuilder.<S>literal(label).requires(requirement);
+        if (optional) {
+            root.executes(run);
+        }
+        return root.then(SpigotCommandTree.<S>argument("player", types.player()).executes(run)).build();
     }
 
     private static <S> RequiredArgumentBuilder<S, ?> argument(String name, ArgumentType<?> type) {
