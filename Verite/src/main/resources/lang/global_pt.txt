@@ -209,7 +209,6 @@ client.unknown.channels = {BRAND_ACCENT_SECONDARY}Canais desconhecidos: {BRAND}%
 client.anomalies = {BRAND_ACCENT_SECONDARY}Anomalias: {WARN}%list%
 client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% declara vanilla, mas parece estar a usar %client%{BRAND_ACCENT_SECONDARY}.
 client.probe.signs.unavailable = A sondagem de cliente por placas não está disponível neste servidor: 
-client.probe.packs.unavailable = A sondagem de pacotes conhecidos não conseguiu ligar-se ao recetor de ligações do servidor.
 login.blacklist.failed = Falha ao interpretar a lista de comandos bloqueados para silenciados. Considere comunicar este erro.
 
 # ---- Moderação ----

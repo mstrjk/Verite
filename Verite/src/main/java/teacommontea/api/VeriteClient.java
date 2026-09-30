@@ -6,6 +6,7 @@ import java.util.UUID;
 import teacommontea.veritesauver.Sauver;
 import teacommontea.veritesauver.client.ClientDetect;
 import teacommontea.veritesauver.client.ClientProfile;
+import teacommontea.veritesauver.client.ClientSignatures;
 import teacommontea.veritesauver.client.ClientVerdict;
 
 public final class VeriteClient {
@@ -51,7 +52,34 @@ public final class VeriteClient {
 
     public static String reportedBrandOf(UUID player) {
         ClientProfile profile = liveProfile(player);
-        return profile == null ? null : profile.reportedBrand();
+        if (profile != null && profile.reportedBrand() != null) {
+            return profile.reportedBrand();
+        }
+        Sauver s = Sauver.instance();
+        return s == null ? null : s.dao().lastClient(player);
+    }
+
+    public static String brandOwnerOf(UUID player) {
+        String brand = reportedBrandOf(player);
+        if (brand == null || brand.equalsIgnoreCase("vanilla")) {
+            return null;
+        }
+        return ClientSignatures.brandOwner(brand);
+    }
+
+    public static boolean vanillaBrand(UUID player) {
+        String brand = reportedBrandOf(player);
+        return brand != null && brand.equalsIgnoreCase("vanilla");
+    }
+
+    public static List<String> brandsOf(UUID player) {
+        Sauver s = Sauver.instance();
+        return s == null ? List.of() : s.dao().clientsOf(player);
+    }
+
+    public static long brandLastSeen(UUID player, String brand) {
+        Sauver s = Sauver.instance();
+        return s == null ? 0L : s.dao().clientSeen(player, brand);
     }
 
     public static List<String> modsOf(UUID player) {

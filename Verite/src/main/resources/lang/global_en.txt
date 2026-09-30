@@ -209,7 +209,6 @@ client.unknown.channels = {BRAND_ACCENT_SECONDARY}Unknown channels: {BRAND}%list
 client.anomalies = {BRAND_ACCENT_SECONDARY}Anomalies: {WARN}%list%
 client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% reports vanilla, but appears to be using %client%{BRAND_ACCENT_SECONDARY}.
 client.probe.signs.unavailable = Sign-based client probing is unavailable on this server: 
-client.probe.packs.unavailable = Known-pack client probing could not attach to the server's connection listener.
 login.blacklist.failed = Failed to parse the mute command blacklist. Consider reporting this error.
 
 # ---- Moderation ----

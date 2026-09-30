@@ -12,10 +12,6 @@ public final class ClientConfig {
         return bool("client.detect.probe.signs", true);
     }
 
-    public static boolean knownPackProbe() {
-        return bool("client.detect.probe.known.packs", true);
-    }
-
     public static boolean cookieProbe() {
         return bool("client.detect.probe.cookies", true);
     }

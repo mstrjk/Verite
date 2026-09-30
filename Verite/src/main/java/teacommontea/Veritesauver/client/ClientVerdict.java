@@ -114,7 +114,7 @@ public final class ClientVerdict {
 
     private static boolean identifying(Signal.Source source) {
         return source == Signal.Source.CHANNEL || source == Signal.Source.SIGN
-                || source == Signal.Source.KNOWN_PACK || source == Signal.Source.BRAND
+                || source == Signal.Source.BRAND
                 || source == Signal.Source.NORMALISED;
     }
 

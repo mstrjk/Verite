@@ -209,7 +209,6 @@ client.unknown.channels = {BRAND_ACCENT_SECONDARY}Canaux inconnus : {BRAND}%list
 client.anomalies = {BRAND_ACCENT_SECONDARY}Anomalies : {WARN}%list%
 client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% déclare vanilla, mais semble utiliser %client%{BRAND_ACCENT_SECONDARY}.
 client.probe.signs.unavailable = Le sondage de client par panneaux n'est pas disponible sur ce serveur : 
-client.probe.packs.unavailable = Le sondage des packs connus n'a pas pu s'attacher à l'écouteur de connexions du serveur.
 login.blacklist.failed = Échec de l'analyse de la liste noire des commandes pour les joueurs réduits au silence. Envisagez de signaler cette erreur.
 
 # ---- Modération ----

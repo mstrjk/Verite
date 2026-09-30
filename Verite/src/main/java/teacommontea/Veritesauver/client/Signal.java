@@ -8,7 +8,6 @@ public record Signal(Source source, String key, String value, int weight) {
         UNKNOWN_CHANNEL,
         CLIENT_INFO,
         SIGN,
-        KNOWN_PACK,
         COOKIE,
         NORMALISED
     }

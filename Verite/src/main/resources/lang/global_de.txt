@@ -209,7 +209,6 @@ client.unknown.channels = {BRAND_ACCENT_SECONDARY}Unbekannte Kanäle: {BRAND}%li
 client.anomalies = {BRAND_ACCENT_SECONDARY}Auffälligkeiten: {WARN}%list%
 client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% gibt vanilla an, scheint aber %client%{BRAND_ACCENT_SECONDARY} zu verwenden.
 client.probe.signs.unavailable = Die Client-Abfrage über Schilder ist auf diesem Server nicht verfügbar: 
-client.probe.packs.unavailable = Die Abfrage bekannter Pakete konnte sich nicht am Verbindungs-Listener des Servers anhängen.
 login.blacklist.failed = Die Blacklist für Befehle bei Stummschaltung konnte nicht gelesen werden. Bitte melde diesen Fehler.
 
 # ---- Moderation ----

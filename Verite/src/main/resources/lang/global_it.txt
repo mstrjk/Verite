@@ -209,7 +209,6 @@ client.unknown.channels = {BRAND_ACCENT_SECONDARY}Canali sconosciuti: {BRAND}%li
 client.anomalies = {BRAND_ACCENT_SECONDARY}Anomalie: {WARN}%list%
 client.brand.disputed = {WARN}⚠ {BRAND_ACCENT_SECONDARY}%name% dichiara vanilla, ma sembra usare %client%{BRAND_ACCENT_SECONDARY}.
 client.probe.signs.unavailable = Il sondaggio del client tramite cartelli non è disponibile su questo server: 
-client.probe.packs.unavailable = Il sondaggio dei pacchetti noti non è riuscito ad agganciarsi al listener di connessioni del server.
 login.blacklist.failed = Impossibile analizzare la lista nera dei comandi per i silenziati. Valuta di segnalare questo errore.
 
 # ---- Moderazione ----

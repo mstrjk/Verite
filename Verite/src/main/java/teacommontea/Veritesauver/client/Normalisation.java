@@ -7,9 +7,9 @@ final class Normalisation {
 
     private Normalisation() {}
 
-    private static final int SUSPICIOUS = 3;
+    private static final int SUSPICIOUS = 2;
 
-    static List<Signal> evaluate(ClientProfile profile, boolean signsRan, boolean packsRan, boolean cookiesRan) {
+    static List<Signal> evaluate(ClientProfile profile, boolean signsRan, boolean cookiesRan) {
         String reported = profile.reportedBrand();
         boolean claimsVanilla = reported == null || reported.isBlank()
                 || reported.equalsIgnoreCase("vanilla");
@@ -21,9 +21,6 @@ final class Normalisation {
         }
         if (signsRan && !profile.has(Signal.Source.SIGN)) {
             scrubbed.add("no translation or keybind leaks");
-        }
-        if (packsRan && !profile.has(Signal.Source.KNOWN_PACK)) {
-            scrubbed.add("no mod known-packs");
         }
         if (cookiesRan && profile.has(Signal.Source.COOKIE)) {
             scrubbed.add("non-vanilla cookie handling");

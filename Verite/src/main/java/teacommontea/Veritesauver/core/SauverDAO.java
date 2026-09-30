@@ -396,6 +396,17 @@ public final class SauverDAO {
         return player(u).getString("clientmods", null);
     }
 
+    public String lastClient(UUID u) {
+        return player(u).getString("lastclient", null);
+    }
+
+    public long clientSeen(UUID u, String brand) {
+        if (brand == null || brand.isBlank()) {
+            return 0L;
+        }
+        return player(u).getLong("client." + brand.toLowerCase(java.util.Locale.ROOT), 0L);
+    }
+
     public void flushSession(UUID u, long now) {
         Scope p = player(u);
         long start = p.getLong("sessionstart", 0L);

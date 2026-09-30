@@ -17,16 +17,14 @@ public final class ClientDetect implements org.bukkit.event.Listener {
 
     private final SignProbe signProbe;
     private final CookieProbe cookieProbe;
-    private final KnownPackProbe knownPackProbe;
     private final ClientInfoProbe clientInfoProbe;
 
     private final Map<UUID, ClientProfile> profiles = new ConcurrentHashMap<>();
 
     private ClientDetect(SignProbe signProbe, CookieProbe cookieProbe,
-                         KnownPackProbe knownPackProbe, ClientInfoProbe clientInfoProbe) {
+                         ClientInfoProbe clientInfoProbe) {
         this.signProbe = signProbe;
         this.cookieProbe = cookieProbe;
-        this.knownPackProbe = knownPackProbe;
         this.clientInfoProbe = clientInfoProbe;
     }
 
@@ -43,13 +41,8 @@ public final class ClientDetect implements org.bukkit.event.Listener {
                         teacommontea.util.Lang.of("client.probe.signs.unavailable")) + u.getMessage());
             }
         }
-        KnownPackProbe packs = ClientConfig.knownPackProbe() ? KnownPackProbe.install() : null;
-        if (ClientConfig.knownPackProbe() && packs == null) {
-            plugin.getLogger().warning(teacommontea.util.ConsoleColours.bad(
-                    teacommontea.util.Lang.of("client.probe.packs.unavailable")));
-        }
         CookieProbe cookies = ClientConfig.cookieProbe() ? new CookieProbe(plugin) : null;
-        ClientDetect detect = new ClientDetect(sign, cookies, packs, ClientInfoProbe.resolve());
+        ClientDetect detect = new ClientDetect(sign, cookies, ClientInfoProbe.resolve());
         org.bukkit.Bukkit.getPluginManager().registerEvents(detect, plugin);
         return detect;
     }
@@ -63,20 +56,12 @@ public final class ClientDetect implements org.bukkit.event.Listener {
     }
 
     public void shutdown() {
-        if (knownPackProbe != null) {
-            knownPackProbe.shutdown();
-        }
         profiles.clear();
     }
 
     public void inspect(Player p, Consumer<ClientProfile> onDone) {
         ClientProfile profile = new ClientProfile(p.getUniqueId());
         profiles.put(p.getUniqueId(), profile);
-
-        if (knownPackProbe != null && p.getAddress() != null) {
-            List<Signal> packs = knownPackProbe.claim(p.getAddress());
-            profile.addAll(packs);
-        }
 
         pollBrand(p, profile, 1, () -> runProbes(p, profile, onDone));
     }
@@ -117,13 +102,12 @@ public final class ClientDetect implements org.bukkit.event.Listener {
         }
 
         boolean signsRan = signProbe != null;
-        boolean packsRan = knownPackProbe != null;
         boolean cookiesRan = cookieProbe != null;
 
         AtomicInteger outstanding = new AtomicInteger(1);
         Runnable settle = () -> {
             if (outstanding.decrementAndGet() == 0) {
-                profile.addAll(Normalisation.evaluate(profile, signsRan, packsRan, cookiesRan));
+                profile.addAll(Normalisation.evaluate(profile, signsRan, cookiesRan));
                 ClientVerdict.decide(profile);
                 onDone.accept(profile);
             }
@@ -150,9 +134,6 @@ public final class ClientDetect implements org.bukkit.event.Listener {
     public void cancel(Player p) {
         if (signProbe != null) {
             signProbe.cancel(p.getUniqueId());
-        }
-        if (knownPackProbe != null && p.getAddress() != null) {
-            knownPackProbe.forget(p.getAddress());
         }
     }
 
